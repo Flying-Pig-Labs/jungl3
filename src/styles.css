@@ -34,10 +34,10 @@
   --color-gold: var(--gold);
   --color-ember: var(--ember);
   --color-jungle: var(--jungle);
-  --font-display: "Cinzel Decorative", "Rye", serif;
-  --font-rough: "Rye", "Cinzel Decorative", serif;
-  --font-sans: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-display: "Monoton", "Cinzel Decorative", serif;
+  --font-rough: "Monoton", serif;
+  --font-sans: "Fira Code", monospace;
+  --font-mono: "Fira Code", monospace;
 }
 
 :root {
