@@ -35,6 +35,7 @@
   --color-ember: var(--ember);
   --color-jungle: var(--jungle);
   --font-display: "Monoton", "Cinzel Decorative", serif;
+  --font-headline: "Monoton", serif;
   --font-rough: "Monoton", serif;
   --font-sans: "Fira Code", monospace;
   --font-mono: "Fira Code", monospace;
