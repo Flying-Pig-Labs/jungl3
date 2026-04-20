@@ -1,9 +1,10 @@
 const ITEMS = [
-  { k: "01", t: "Sandbox innovation environment", d: "Spin up. Break things. No prod blast radius." },
-  { k: "02", t: "Dev + DMV (production-like)", d: "Mirror reality. Down to the latency and the chaos." },
-  { k: "03", t: "Pre-wired infrastructure", d: "Auth, queues, telemetry, payments — already humming." },
-  { k: "04", t: "Simulated traffic", d: "Synthetic users hammering your endpoints 24/7." },
-  { k: "05", t: "Real-world experimentation", d: "Real beta customers. Real signal. Real consequences." },
+  { k: "00", t: "Base Camp", d: "Your workspace, login, and kit. Adventure starts here." },
+  { k: "01", t: "Outposts", d: "Cloud stacks, integrations, deployments — pre-wired." },
+  { k: "02", t: "DMZ Marketplace", d: "Export builds. Real beta customers walk in and use them." },
+  { k: "03", t: "Rope Swing", d: "Research and ideation signals. Where ideas emerge." },
+  { k: "04", t: "Swarms", d: "Automated AI builders and agent clusters." },
+  { k: "05", t: "Streams", d: "Fake data and full system replicas to feed the build." },
 ];
 
 export function ConceptSection() {
@@ -12,27 +13,27 @@ export function ConceptSection() {
       <div className="mx-auto grid max-w-6xl gap-16 md:grid-cols-2 md:gap-20">
         <div>
           <div className="mb-4 font-mono text-xs tracking-[0.4em] text-neon">
-            // 01 — WHAT THIS IS
+            // 01 — THE TERRITORY
           </div>
           <h2 className="font-display text-4xl font-black leading-tight text-foreground sm:text-5xl">
-            Not a lab.
+            A DMZ sandbox
             <br />
-            <span className="text-gradient-headline">A live ecosystem.</span>
+            <span className="text-gradient-headline">where ideas enter raw</span>
+            <br />
+            <span className="text-foreground/80">and leave battle-tested.</span>
           </h2>
           <div className="mt-8 space-y-4 text-base leading-relaxed text-foreground/80">
             <p>
-              Most "innovation programs" are theater. Slide decks. Cardboard
-              prototypes. A demo day with no consequences.
+              Most "innovation programs" are theater. Slide decks, cardboard
+              prototypes, demo days with no consequences.
             </p>
             <p>
-              <span className="text-gold">Jungl3 is the opposite.</span> A
-              sandbox wired to behave like the real thing — pre-built infra,
-              simulated traffic, and beta customers who'll actually use what
-              you ship.
+              <span className="text-gold">Jungl3 is a map.</span> Trails connect
+              your Base Camp to Outposts, the DMZ, the Rope Swing, Swarms, and
+              Streams. You move between them. You ship between them.
             </p>
             <p className="font-mono text-sm text-muted-foreground">
-              You don't pitch here. You build. And the jungle decides what
-              survives.
+              You don't pitch here. You build. The jungle decides what survives.
             </p>
           </div>
         </div>

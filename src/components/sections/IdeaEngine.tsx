@@ -31,18 +31,17 @@ export function IdeaEngine() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
           <div className="mb-3 font-mono text-xs tracking-[0.4em] text-neon">
-            // 03 — IDEA ENGINE
+            // 03 — ROPE SWING
           </div>
           <h2 className="font-display text-4xl font-black text-gradient-headline glint sm:text-5xl">
-            Fire Tower / Bazaar
+            Where Ideas Emerge
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-sm text-muted-foreground">
-            Continuously scanning the noise. Surfacing what survives.
+            Continuously scanning the canopy. Surfacing signals worth chasing.
           </p>
         </div>
 
         <div className="relative mx-auto aspect-square w-full max-w-[640px]">
-          {/* Concentric rings */}
           {[0.35, 0.55, 0.75, 0.95].map((scale, i) => (
             <div
               key={i}
@@ -53,19 +52,15 @@ export function IdeaEngine() {
               }}
             />
           ))}
-          {/* Crosshairs */}
           <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-neon/15 to-transparent" />
           <div className="absolute top-1/2 left-0 h-px w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-neon/15 to-transparent" />
 
-          {/* Radar sweep */}
           <div className="absolute left-1/2 top-1/2 h-[95%] w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-full radar-sweep opacity-70" />
 
-          {/* Center node */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <div className="relative h-4 w-4 rounded-full bg-neon shadow-[0_0_20px_oklch(0.68_0.27_350)] pulse-glow" />
+            <div className="relative h-4 w-4 rounded-full bg-neon shadow-[0_0_20px_oklch(0.78_0.24_145)] pulse-glow" />
           </div>
 
-          {/* Random blips */}
           {[...Array(4)].map((_, i) => {
             const seed = (tick * 7 + i * 53) % 100;
             const angle = (seed / 100) * Math.PI * 2;
@@ -81,7 +76,6 @@ export function IdeaEngine() {
             );
           })}
 
-          {/* Floating idea cards */}
           {IDEAS.map((idea, i) => {
             const pos = POSITIONS[i] ?? POSITIONS[0];
             return (
