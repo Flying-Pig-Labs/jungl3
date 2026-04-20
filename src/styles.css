@@ -98,6 +98,11 @@
     font-family: var(--font-sans);
     overflow-x: hidden;
   }
+  h1, h2, h3, h4, h5, h6, .font-display, .font-headline, .font-rough {
+    font-family: "Monoton", serif !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.02em;
+  }
   ::selection {
     background: oklch(0.78 0.24 145 / 0.4);
     color: oklch(0.98 0.01 80);
