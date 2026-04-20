@@ -1,34 +1,21 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import posterUrl from "@/assets/jungle-poster.png";
 import { FogLayer } from "./effects/Overlays";
 
-const PASSWORD = "Welcome to the Jungl3";
 const STORAGE_KEY = "jungl3_access";
 
 export function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
-  const [value, setValue] = useState("");
-  const [error, setError] = useState(false);
   const [sweeping, setSweeping] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (value.trim() === PASSWORD) {
-      setSweeping(true);
-      setTimeout(() => {
-        try {
-          localStorage.setItem(STORAGE_KEY, "granted");
-        } catch {}
-        onUnlock();
-      }, 1100);
-    } else {
-      setError(true);
-      setTimeout(() => setError(false), 600);
-    }
+    setSweeping(true);
+    setTimeout(() => {
+      try {
+        localStorage.setItem(STORAGE_KEY, "granted");
+      } catch {}
+      onUnlock();
+    }, 1100);
   };
 
   return (
@@ -68,10 +55,7 @@ export function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
 
       {/* Center form */}
       <div className="relative z-10 flex h-full items-center justify-center px-6">
-        <form
-          onSubmit={submit}
-          className={`w-full max-w-md ${error ? "glitch" : ""}`}
-        >
+        <form onSubmit={submit} className="w-full max-w-md">
           <div className="mb-8 text-center">
             <div className="mb-3 font-mono text-[11px] tracking-[0.5em] text-neon/80">
               [ SECURE NODE ]
@@ -80,62 +64,20 @@ export function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
               Welcome to the Jungl3
             </h1>
             <p className="mt-3 font-mono text-xs tracking-widest text-muted-foreground">
-              Authentication required
+              Step into the proving ground
             </p>
-          </div>
-
-          <label
-            htmlFor="passphrase"
-            className="mb-2 block font-mono text-xs tracking-[0.3em] text-neon"
-          >
-            &gt; ENTER PASSPHRASE
-          </label>
-          <div
-            className={`relative rounded-md border bg-black/60 backdrop-blur-sm transition-all ${
-              error
-                ? "border-destructive shadow-[0_0_30px_oklch(0.65_0.27_20_/_0.5)]"
-                : "border-neon/50 shadow-[0_0_24px_oklch(0.78_0.24_145_/_0.35)] focus-within:border-neon focus-within:shadow-[0_0_40px_oklch(0.78_0.24_145_/_0.6)]"
-            }`}
-          >
-            <input
-              ref={inputRef}
-              id="passphrase"
-              type="password"
-              autoComplete="off"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              className={`w-full bg-transparent px-4 py-4 font-mono text-base tracking-wider text-foreground placeholder:text-muted-foreground/50 outline-none ${
-                error ? "glitch-text" : ""
-              }`}
-              placeholder="••••••••••••••••"
-              aria-invalid={error}
-              aria-describedby={error ? "pass-error" : undefined}
-            />
-            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 font-mono text-neon blink-caret">
-              _
-            </span>
-          </div>
-
-          <div className="mt-3 min-h-[1.5rem] text-center">
-            {error && (
-              <p
-                id="pass-error"
-                className="font-mono text-xs tracking-wide text-destructive"
-              >
-                ▲ ACCESS DENIED. You're not ready for the jungle.
-              </p>
-            )}
           </div>
 
           <button
             type="submit"
-            className="group mt-4 w-full rounded-md border border-gold/50 bg-gradient-to-r from-neon/90 via-moss/90 to-neon/90 px-6 py-3 font-mono text-sm font-semibold uppercase tracking-[0.3em] text-primary-foreground shadow-[0_0_20px_oklch(0.78_0.24_145_/_0.5)] transition-all hover:shadow-[0_0_36px_oklch(0.78_0.24_145_/_0.8)] hover:scale-[1.01] active:scale-[0.99]"
+            autoFocus
+            className="group mt-4 w-full rounded-md border border-gold/50 bg-gradient-to-r from-neon/90 via-moss/90 to-neon/90 px-6 py-4 font-mono text-sm font-semibold uppercase tracking-[0.3em] text-primary-foreground shadow-[0_0_20px_oklch(0.78_0.24_145_/_0.5)] transition-all hover:shadow-[0_0_36px_oklch(0.78_0.24_145_/_0.8)] hover:scale-[1.01] active:scale-[0.99]"
           >
             Enter the Jungl3 &rarr;
           </button>
 
           <p className="mt-6 text-center font-mono text-[10px] tracking-[0.3em] text-muted-foreground/60 uppercase">
-            Unauthorized signal will be flagged
+            No badge required
           </p>
         </form>
       </div>
