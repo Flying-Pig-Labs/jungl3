@@ -6,6 +6,7 @@ import { ConceptSection } from "@/components/sections/Concept";
 import { SystemModules } from "@/components/sections/SystemModules";
 import { IdeaEngine } from "@/components/sections/IdeaEngine";
 import { CTASection } from "@/components/sections/CTA";
+import { Architecture } from "@/components/sections/Architecture";
 import { Footer } from "@/components/sections/Footer";
 import { GrainOverlay, ScanlinesOverlay, Vignette } from "@/components/effects/Overlays";
 
@@ -55,6 +56,7 @@ function Index() {
         <ConceptSection />
         <SystemModules />
         <IdeaEngine />
+        <Architecture />
         <CTASection />
         <Footer onLockOut={() => setUnlocked(false)} />
       </main>
