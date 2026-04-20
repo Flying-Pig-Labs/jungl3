@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import posterUrl from "@/assets/jungle-poster.jpg";
+import posterUrl from "@/assets/jungle-poster.png";
 import { FogLayer } from "../effects/Overlays";
 
 export function Hero() {
@@ -37,8 +37,8 @@ export function Hero() {
         <img
           src={posterUrl}
           alt=""
-          className="h-full w-full object-cover opacity-55"
-          style={{ filter: "saturate(0.85) contrast(1.05)" }}
+          className="h-full w-full object-cover object-center opacity-70"
+          style={{ filter: "saturate(0.9) contrast(1.05)" }}
         />
       </div>
 
@@ -48,7 +48,16 @@ export function Hero() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at center, transparent 25%, oklch(0.08 0.02 320 / 0.7) 70%, oklch(0.05 0.01 320) 100%)",
+            "radial-gradient(ellipse at center, transparent 30%, oklch(0.08 0.02 320 / 0.6) 75%, oklch(0.05 0.01 320) 100%)",
+        }}
+      />
+      {/* Bottom-up dark gradient for subhead/CTA legibility */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to top, oklch(0.05 0.01 320 / 0.85) 0%, transparent 45%)",
         }}
       />
       <FogLayer />
@@ -56,7 +65,7 @@ export function Hero() {
       {/* SVG leaf parallax accents */}
       <svg
         aria-hidden
-        className="pointer-events-none absolute -left-10 top-1/4 h-[60%] w-auto opacity-40"
+        className="pointer-events-none absolute -left-10 top-1/4 h-[60%] w-auto opacity-25"
         viewBox="0 0 200 400"
         style={{
           transform: "translate3d(calc(var(--px,0) * -1.5), calc(var(--py,0) * -1.5), 0)",
@@ -71,7 +80,7 @@ export function Hero() {
       </svg>
       <svg
         aria-hidden
-        className="pointer-events-none absolute -right-10 bottom-0 h-[55%] w-auto opacity-40"
+        className="pointer-events-none absolute -right-10 bottom-0 h-[55%] w-auto opacity-25"
         viewBox="0 0 200 400"
         style={{
           transform: "translate3d(calc(var(--px,0) * 1.5), calc(var(--py,0) * 1.5), 0) scaleX(-1)",
