@@ -1,5 +1,5 @@
 import { useState } from "react";
-import posterUrl from "@/assets/jungle-poster.png";
+import posterUrl from "@/assets/jungle-bg.jpg";
 import { FogLayer } from "./effects/Overlays";
 
 const STORAGE_KEY = "jungl3_access";
