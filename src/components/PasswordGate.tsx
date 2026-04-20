@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import posterUrl from "@/assets/jungle-poster.jpg";
+import posterUrl from "@/assets/jungle-poster.png";
 import { FogLayer } from "./effects/Overlays";
 
 const PASSWORD = "Welcome to the Jungl3";
@@ -38,15 +38,24 @@ export function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
         src={posterUrl}
         alt=""
         aria-hidden
-        className="absolute inset-0 h-full w-full object-cover opacity-40"
-        style={{ filter: "saturate(0.7) contrast(1.1)" }}
+        className="absolute inset-0 h-full w-full object-cover object-center opacity-65"
+        style={{ filter: "saturate(0.95) contrast(1.05)" }}
+      />
+      {/* Vertical fade so the input area stays legible against the artwork */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, oklch(0.05 0.01 320 / 0.4) 0%, oklch(0.08 0.02 320 / 0.78) 45%, oklch(0.08 0.02 320 / 0.78) 60%, oklch(0.05 0.01 320 / 0.5) 100%)",
+        }}
       />
       <div
         aria-hidden
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at center, transparent 30%, oklch(0.08 0.02 320 / 0.85) 75%, oklch(0.05 0.01 320) 100%)",
+            "radial-gradient(ellipse at center, transparent 35%, oklch(0.05 0.01 320 / 0.7) 80%, oklch(0.03 0.01 320) 100%)",
         }}
       />
       <FogLayer />
