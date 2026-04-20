@@ -94,7 +94,7 @@ export function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
             className={`relative rounded-md border bg-black/60 backdrop-blur-sm transition-all ${
               error
                 ? "border-destructive shadow-[0_0_30px_oklch(0.65_0.27_20_/_0.5)]"
-                : "border-neon/50 shadow-[0_0_24px_oklch(0.68_0.27_350_/_0.35)] focus-within:border-neon focus-within:shadow-[0_0_40px_oklch(0.68_0.27_350_/_0.6)]"
+                : "border-neon/50 shadow-[0_0_24px_oklch(0.78_0.24_145_/_0.35)] focus-within:border-neon focus-within:shadow-[0_0_40px_oklch(0.78_0.24_145_/_0.6)]"
             }`}
           >
             <input
@@ -129,9 +129,9 @@ export function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
 
           <button
             type="submit"
-            className="group mt-4 w-full rounded-md border border-gold/50 bg-gradient-to-r from-neon/90 via-magenta/90 to-neon/90 px-6 py-3 font-mono text-sm font-semibold uppercase tracking-[0.3em] text-primary-foreground shadow-[0_0_20px_oklch(0.68_0.27_350_/_0.5)] transition-all hover:shadow-[0_0_36px_oklch(0.68_0.27_350_/_0.8)] hover:scale-[1.01] active:scale-[0.99]"
+            className="group mt-4 w-full rounded-md border border-gold/50 bg-gradient-to-r from-neon/90 via-moss/90 to-neon/90 px-6 py-3 font-mono text-sm font-semibold uppercase tracking-[0.3em] text-primary-foreground shadow-[0_0_20px_oklch(0.78_0.24_145_/_0.5)] transition-all hover:shadow-[0_0_36px_oklch(0.78_0.24_145_/_0.8)] hover:scale-[1.01] active:scale-[0.99]"
           >
-            Breach &rarr;
+            Enter the Jungl3 &rarr;
           </button>
 
           <p className="mt-6 text-center font-mono text-[10px] tracking-[0.3em] text-muted-foreground/60 uppercase">

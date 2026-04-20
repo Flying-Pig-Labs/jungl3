@@ -1,35 +1,41 @@
-import { Boxes, Server, Plug, Activity, Radar } from "lucide-react";
+import { Tent, Server, ShieldCheck, Sparkles, Bot, Database } from "lucide-react";
 
 const MODULES = [
   {
-    icon: Boxes,
-    title: "Sandbox Environments",
-    desc: "Isolated, disposable, real. Spin a world up. Tear it down. Repeat.",
-    tag: "ENV-01",
+    icon: Tent,
+    title: "Base Camp",
+    desc: "Your workspace. Login state, projects, kit. Every adventure starts here.",
+    tag: "NODE-00",
   },
   {
     icon: Server,
-    title: "DMV — Production-like Layer",
-    desc: "Mirrors prod topology, latencies, and failure modes. No surprises at launch.",
-    tag: "ENV-02",
+    title: "Outposts",
+    desc: "Your cloud stacks. Infrastructure, integrations, deployments — pre-wired and humming.",
+    tag: "NODE-01",
   },
   {
-    icon: Plug,
-    title: "Preloaded Integrations",
-    desc: "Auth, payments, queues, observability — pre-wired so day one feels like day ninety.",
-    tag: "INT-03",
+    icon: ShieldCheck,
+    title: "DMZ Marketplace",
+    desc: "Push a build over the trail. Real beta customers walk in and stress-test it for you.",
+    tag: "NODE-02",
   },
   {
-    icon: Activity,
-    title: "Traffic Simulation",
-    desc: "Synthetic load that behaves like humans. Stress your assumptions, not your weekends.",
-    tag: "SIM-04",
+    icon: Sparkles,
+    title: "Rope Swing",
+    desc: "Research and ideation signals. Where ideas emerge before they have names.",
+    tag: "NODE-03",
   },
   {
-    icon: Radar,
-    title: "Idea Engine — Fire Tower",
-    desc: "Always scanning. Surfacing. Scoring. The bazaar of what to build next.",
-    tag: "ENG-05",
+    icon: Bot,
+    title: "Swarms",
+    desc: "Automated AI builders. Agent clusters and pre-built systems for rapid prototyping.",
+    tag: "NODE-04",
+  },
+  {
+    icon: Database,
+    title: "Streams",
+    desc: "Fake data and full system replicas. Feed your build until it learns to swim.",
+    tag: "NODE-05",
   },
 ];
 
@@ -39,13 +45,13 @@ export function SystemModules() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-14 text-center">
           <div className="mb-3 font-mono text-xs tracking-[0.4em] text-neon">
-            // 02 — INSIDE THE JUNGLE
+            // 02 — THE MAP
           </div>
           <h2 className="font-display text-4xl font-black text-gradient-headline glint sm:text-5xl">
-            System Modules
+            Nodes of the Jungl3
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
-            Each module is a primitive. Compose them however you want.
+            Six locations on the map. Connected by trails. Compose your route.
           </p>
         </div>
 
@@ -63,13 +69,12 @@ export function SystemModules() {
                   {m.tag}
                 </span>
               </div>
-              <h3 className="font-display text-lg font-bold text-foreground">
+              <h3 className="font-display text-xl font-bold text-foreground">
                 {m.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {m.desc}
               </p>
-              {/* tactical scan line accent */}
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-neon/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
             </article>
           ))}
