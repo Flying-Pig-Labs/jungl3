@@ -1,64 +1,32 @@
 
 
-# Welcome to the Jungl3 — Immersive Gated Experience
+# Wire in the Real Poster
 
-A cinematic, password-gated single-page experience styled like a hidden tactical system buried in neon jungle.
+Replace the AI-generated placeholder (`src/assets/jungle-poster.jpg`) with the real poster you just uploaded, and tune the surrounding visuals so the poster reads as the visual anchor — not just a faded backdrop.
 
-## 1. Password Gate (full-screen, route: `/`)
-- Dark, layered hero: poster image (once you re-upload) as a desaturated, vignetted background with grain + faint scanlines + drifting fog (CSS-animated radial gradients).
-- Centered terminal-meets-neon password input with pink/purple glow ring, blinking caret, label `> ENTER PASSPHRASE`.
-- Submit triggers check against `Welcome to the Jungl3`.
-  - **Wrong** → glitch shake + RGB-split distortion on the input + message "Access denied. You're not ready for the jungle."
-  - **Correct** → scanline sweep + jungle reveal transition (1.2s), then mounts the main experience.
-- Access persists in `localStorage` (`jungl3_access=granted`) so returning users skip the gate. Small "lock out" link in corner to clear it.
+## Changes
 
-## 2. Hero — "Welcome to the Jungl3"
-- Full-viewport section. Poster art layered behind with parallax leaves (SVG silhouettes) drifting on mouse-move.
-- Headline in a bold metallic display face (Cinzel / Unbounded) with a pink→gold gradient text-fill, animated glint sweep every few seconds, subtle sparkle particles.
-- Subheadline: *Hack in a DMZ with real beta customers.*
-- Tagline tag: `SUMMER 2026` in a thin neon-pink outlined pill.
-- Scroll indicator (animated chevron + "descend" label).
+### 1. Asset swap
+- Copy `user-uploads://228CE6BD-BD4A-4C0B-B2FB-732683537FF6.PNG` → `src/assets/jungle-poster.png`.
+- Update both imports (`PasswordGate.tsx`, `Hero.tsx`) to point at the new `.png` file. Delete the stale `jungle-poster.jpg`.
 
-## 3. "What This Is" — Concept
-- Two-column: left = stylized manifesto copy (confident, slightly rebellious tone); right = stacked translucent panels listing: sandbox innovation environment, dev + DMV, pre-wired infrastructure, simulated traffic, real-world experimentation.
-- Faint scanline texture, gold corner brackets on panels (tactical HUD feel).
+### 2. Password Gate — let the poster breathe
+- Raise background opacity from `0.4` → `~0.65` and soften the `saturate(0.7)` filter to `saturate(0.95)` so the gold/pink hand-lettering is recognizable behind the form.
+- Use `object-cover object-center` and add a vertical gradient mask so the poster fades toward the center where the input sits (keeps the passphrase legible without flattening the art).
+- Slightly tighten the radial vignette so the corners stay dark but the poster's monstera leaves remain visible.
 
-## 4. "Inside the Jungle" — System Modules
-- 5 cards as tactical/radar overlays:
-  1. Sandbox Environments
-  2. DMV (Production-like Layer)
-  3. Preloaded Integrations
-  4. Traffic Simulation
-  5. Idea Engine (Fire Tower / Bazaar)
-- Each card: dark glass, neon-pink border on hover, pulse glow, slight RGB-split distortion on hover, custom monoline icon, short tactical-tone description.
+### 3. Hero — recreate the poster's composition in UI form
+- Increase poster opacity from `0.55` → `~0.7` and recenter it (`object-center`) so the brushstroke "Welcome / To The / Jungle" lockup is partially visible behind our typeset headline.
+- Add a subtle bottom-to-top dark gradient so the bottom subhead/CTA area stays high-contrast.
+- Keep the parallax SVG leaves but reduce their opacity (`0.4` → `0.25`) so they layer with — not fight — the poster's real palm fronds.
+- Keep our typeset "Welcome to the Jungl3" headline on top (the poster says "Jungle" with an "e"; our product is "Jungl3"), so the poster acts as atmosphere while our headline carries the brand spelling.
 
-## 5. Idea Engine — Fire Tower / Bazaar
-- Centerpiece: animated **radar sweep** (SVG circle with rotating conic gradient + concentric rings).
-- Random "blips" appear on the radar and resolve into floating idea cards around it (title + score + upvote arrow). 4–6 sample ideas cycle in/out.
-- Caption: "Continuously scanning the noise. Surfacing what survives."
+### 4. No other changes
+- Concept, System Modules, Idea Engine, CTA, Footer, and global effects (grain, fog, scanlines) are untouched.
+- `localStorage` gate behavior, passphrase, and CTA scroll behavior all remain as previously approved.
 
-## 6. CTA Section
-- Headline: *Enter the system. Build something that survives.*
-- Two buttons:
-  - **Enter Your Sandbox** — primary, neon-pink fill with gold edge, smooth-scrolls back to hero.
-  - **Request Access** — secondary, ghost outline, smooth-scrolls to hero (placeholder for backend later).
-- Background: dense jungle silhouette + heavy vignette.
-
-## 7. Footer
-- Minimal: `JUNGL3 // SUMMER 2026 // CLASSIFIED` in monospaced muted text + tiny lock icon to clear access.
-
-## Design System
-- **Palette**: near-black `#0a0608` base, deep purple `#1a0b2e`, neon pink `#ff2d87`, electric magenta glow, gold `#d4a437`, off-white text.
-- **Type**: Display = Unbounded/Cinzel (heavy, metallic feel); Body = Inter; Mono accents = JetBrains Mono.
-- **Effects (subtle, not noisy)**: global grain overlay, faint scanlines, ambient drifting fog layer, hover-glow on interactive elements, glint sweep on key headlines.
-- **Motion**: respect `prefers-reduced-motion` — disables fog, glints, radar rotation.
-
-## Architecture
-- TanStack Start routes:
-  - `/` — gate + experience (gate overlays the page; once unlocked, full site renders).
-- Components: `PasswordGate`, `Hero`, `ConceptSection`, `SystemModules`, `IdeaEngineRadar`, `CTASection`, `Footer`, plus shared `GrainOverlay`, `FogLayer`, `ScanlineOverlay`.
-- State: simple `useState` + `localStorage` for unlock; no backend yet.
-- Desktop-first layout, gracefully collapses to single column on mobile; radar scales down.
-
-**Note**: Re-upload the poster image when ready and I'll wire it into the gate + hero backgrounds. If it's not attached at implementation time, I'll use a layered SVG/gradient stand-in you can swap later.
+## Technical notes
+- Vite handles `.png` imports identically to `.jpg`, so the `import posterUrl from "@/assets/jungle-poster.png"` swap is a one-line change in two files.
+- Image is ~1040×1480 portrait; `object-cover` will crop sides on wide viewports — `object-center` keeps the headline lockup centered. On mobile portrait the full poster will show through naturally.
+- No new dependencies, no route changes, no schema work.
 
