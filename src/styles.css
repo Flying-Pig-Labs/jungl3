@@ -1,7 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
-@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rye&family=Cinzel+Decorative:wght@700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -33,47 +33,49 @@
   --color-gold: var(--gold);
   --color-magenta: var(--magenta);
   --color-jungle: var(--jungle);
-  --font-display: "Unbounded", sans-serif;
+  --font-display: "Cinzel Decorative", "Rye", serif;
+  --font-rough: "Rye", "Cinzel Decorative", serif;
   --font-sans: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 }
 
 :root {
   --radius: 0.375rem;
-  /* Jungl3 dark palette */
-  --background: oklch(0.12 0.02 320);
-  --foreground: oklch(0.96 0.01 80);
-  --card: oklch(0.16 0.04 310);
-  --card-foreground: oklch(0.96 0.01 80);
-  --popover: oklch(0.14 0.03 315);
-  --popover-foreground: oklch(0.96 0.01 80);
-  --primary: oklch(0.68 0.27 350);          /* neon pink */
-  --primary-foreground: oklch(0.1 0.02 320);
-  --secondary: oklch(0.25 0.08 305);
-  --secondary-foreground: oklch(0.96 0.01 80);
-  --muted: oklch(0.2 0.04 310);
-  --muted-foreground: oklch(0.7 0.04 320);
-  --accent: oklch(0.78 0.16 85);            /* gold */
-  --accent-foreground: oklch(0.1 0.02 320);
-  --destructive: oklch(0.65 0.27 20);
+  /* Jungl3 deep-jungle palette — greens forward, gold accents, ember pink as a rare highlight */
+  --background: oklch(0.13 0.03 155);
+  --foreground: oklch(0.96 0.02 95);
+  --card: oklch(0.17 0.05 150);
+  --card-foreground: oklch(0.96 0.02 95);
+  --popover: oklch(0.15 0.04 150);
+  --popover-foreground: oklch(0.96 0.02 95);
+  --primary: oklch(0.72 0.22 145);             /* neon jungle green */
+  --primary-foreground: oklch(0.1 0.02 150);
+  --secondary: oklch(0.25 0.08 150);
+  --secondary-foreground: oklch(0.96 0.02 95);
+  --muted: oklch(0.2 0.04 150);
+  --muted-foreground: oklch(0.72 0.05 130);
+  --accent: oklch(0.78 0.16 85);                /* gold */
+  --accent-foreground: oklch(0.1 0.02 150);
+  --destructive: oklch(0.65 0.27 25);
   --destructive-foreground: oklch(0.98 0.01 80);
-  --border: oklch(0.3 0.06 320 / 0.4);
-  --input: oklch(0.25 0.06 320 / 0.5);
-  --ring: oklch(0.68 0.27 350);
+  --border: oklch(0.4 0.1 145 / 0.35);
+  --input: oklch(0.25 0.06 150 / 0.5);
+  --ring: oklch(0.72 0.22 145);
 
-  --neon: oklch(0.68 0.27 350);             /* hot pink */
-  --magenta: oklch(0.6 0.3 320);            /* electric magenta */
-  --gold: oklch(0.78 0.16 85);              /* metallic gold */
-  --jungle: oklch(0.22 0.08 305);           /* deep purple */
+  --neon: oklch(0.78 0.24 145);                 /* bright lime/jungle green */
+  --moss: oklch(0.55 0.16 150);                 /* mid moss */
+  --gold: oklch(0.78 0.16 85);                  /* metallic gold */
+  --jungle: oklch(0.2 0.08 150);                /* deep jungle */
+  --ember: oklch(0.68 0.27 350);                /* rare hot-pink ember accent */
 
   --gradient-headline: linear-gradient(
     135deg,
-    oklch(0.78 0.16 85) 0%,
-    oklch(0.68 0.27 350) 50%,
-    oklch(0.6 0.3 320) 100%
+    oklch(0.82 0.16 90) 0%,
+    oklch(0.78 0.24 145) 55%,
+    oklch(0.55 0.16 150) 100%
   );
-  --shadow-neon: 0 0 24px oklch(0.68 0.27 350 / 0.5),
-    0 0 60px oklch(0.6 0.3 320 / 0.25);
+  --shadow-neon: 0 0 24px oklch(0.78 0.24 145 / 0.5),
+    0 0 60px oklch(0.55 0.16 150 / 0.25);
   --shadow-gold: 0 0 18px oklch(0.78 0.16 85 / 0.4);
 }
 
