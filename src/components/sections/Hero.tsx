@@ -73,8 +73,8 @@ export function Hero() {
       >
         <path
           d="M100 0 C 60 80, 20 160, 40 260 S 90 380, 100 400 C 110 380, 160 320, 160 260 S 140 80, 100 0 Z"
-          fill="oklch(0.15 0.05 310)"
-          stroke="oklch(0.68 0.27 350 / 0.5)"
+          fill="oklch(0.18 0.06 150)"
+          stroke="oklch(0.78 0.16 85 / 0.5)"
           strokeWidth="1.5"
         />
       </svg>
@@ -88,8 +88,8 @@ export function Hero() {
       >
         <path
           d="M100 0 C 60 80, 20 160, 40 260 S 90 380, 100 400 C 110 380, 160 320, 160 260 S 140 80, 100 0 Z"
-          fill="oklch(0.15 0.05 310)"
-          stroke="oklch(0.6 0.3 320 / 0.5)"
+          fill="oklch(0.18 0.06 150)"
+          stroke="oklch(0.78 0.24 145 / 0.5)"
           strokeWidth="1.5"
         />
       </svg>
@@ -97,7 +97,7 @@ export function Hero() {
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-4xl text-center">
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-neon/60 bg-black/40 px-4 py-1.5 font-mono text-[11px] tracking-[0.4em] text-neon backdrop-blur-sm">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-neon shadow-[0_0_8px_oklch(0.68_0.27_350)]" />
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-neon shadow-[0_0_8px_oklch(0.78_0.24_145)]" />
           SUMMER 2026
         </div>
         <h1 className="font-display text-5xl font-black leading-[1.05] tracking-tight text-gradient-headline glint sm:text-7xl md:text-8xl">
@@ -106,10 +106,10 @@ export function Hero() {
           the Jungl3
         </h1>
         <p className="mx-auto mt-8 max-w-xl font-display text-lg font-light text-foreground/90 sm:text-xl">
-          Hack in a DMZ with real beta customers.
+          A DMZ sandbox where ideas enter raw and leave battle-tested.
         </p>
         <p className="mx-auto mt-3 max-w-md font-mono text-xs tracking-[0.3em] text-muted-foreground uppercase">
-          A hidden system. Built by people who ship.
+          Base Camp · Outposts · DMZ · Rope Swing · Swarms · Streams
         </p>
 
         <div className="mt-14 flex flex-col items-center gap-2 font-mono text-[10px] tracking-[0.4em] text-muted-foreground">
