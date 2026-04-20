@@ -1,34 +1,21 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import posterUrl from "@/assets/jungle-poster.png";
 import { FogLayer } from "./effects/Overlays";
 
-const PASSWORD = "Welcome to the Jungl3";
 const STORAGE_KEY = "jungl3_access";
 
 export function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
-  const [value, setValue] = useState("");
-  const [error, setError] = useState(false);
   const [sweeping, setSweeping] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (value.trim() === PASSWORD) {
-      setSweeping(true);
-      setTimeout(() => {
-        try {
-          localStorage.setItem(STORAGE_KEY, "granted");
-        } catch {}
-        onUnlock();
-      }, 1100);
-    } else {
-      setError(true);
-      setTimeout(() => setError(false), 600);
-    }
+    setSweeping(true);
+    setTimeout(() => {
+      try {
+        localStorage.setItem(STORAGE_KEY, "granted");
+      } catch {}
+      onUnlock();
+    }, 1100);
   };
 
   return (
