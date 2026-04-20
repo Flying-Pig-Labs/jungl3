@@ -102,7 +102,7 @@ export function Hero() {
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-neon shadow-[0_0_8px_oklch(0.78_0.24_145)]" />
             SUMMER 2026
           </div>
-          <h1 className="font-display text-5xl leading-[1.05] tracking-tight text-gradient-headline glint sm:text-6xl md:text-7xl">
+          <h1 className="font-display text-5xl leading-[1.05] tracking-tight text-gradient-headline glint sm:text-6xl md:text-7xl" style={{ fontFamily: '"Monoton", serif', fontWeight: 400 }}>
             Welcome to
             <br />
             the Jungl3
