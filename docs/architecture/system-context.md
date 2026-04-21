@@ -40,6 +40,7 @@ All of the above lives inside a single customer's AWS account, installed from th
 - **AWS topology** (accounts, VPCs, ECS, ALB, WAF). Deployment topology is a separate concern and gets its own doc when we commit to it. See `CLAUDE.md` §9 for what's still undecided there.
 - **Agent specialists** (Data, API, Event, Auth, etc.). The Agent Layer is shown as a single block. A dedicated agent-architecture diagram earns its place the first time we implement a sub-agent.
 - **Synthetic Runtime internals** (generators, emitters, stubs). Same reasoning — diagram when we build, not before.
+- **Frankenstein-app service decomposition.** The `Jungle` block in the diagram is a single layer; what the Frankenstein app running inside it is *made of* (services, modules, tables) is a separate concern. [`../research/research2-v1-service-build-plan.md`](../research/research2-v1-service-build-plan.md) proposes one such decomposition (ten services anchored on a Work Item / Case). Whether Jungle3 adopts that decomposition is open — see [`../../CLAUDE.md`](../../CLAUDE.md) §11.
 
 Splitting those concerns into their own focused diagrams is the point. One crowded diagram is worse than five small ones.
 

@@ -27,7 +27,7 @@ This is the paper trail behind ADRs, not a substitute for them.
 | # | Captured | Subject | Status |
 | --- | --- | --- | --- |
 | [research1-aws-installable-shape.md](./research1-aws-installable-shape.md) | 2026-04-21 | Analyst memo: installable-vs-hosted; proposed v1 AWS service set | Installable-vs-hosted accepted by [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md); other recommendations open in §11. |
-| [research2-v1-service-build-plan.md](./research2-v1-service-build-plan.md) | 2026-04-21 | Service-by-service v1 build plan (10 services, Work Item anchor); derived from research1 | Not yet routed. Substantially overlaps §11 items 2, 7, 11; candidate for future ADRs. |
+| [research2-v1-service-build-plan.md](./research2-v1-service-build-plan.md) | 2026-04-21 | Service-by-service v1 build plan (10 services, Work Item anchor); derived from research1 | Partially routed: observations landed in `CLAUDE.md` §11 (items 7, 11, 16–19) and as pointers from `architecture/system-context.md`, `architecture/dmz.md`, and the `Domain Starter` glossary entry. Service-set decomposition, Control Plane runtime, realism threshold, Admin-vs-Agent-Layer overlap, and Domain Starter anchor remain open; each is a candidate for a future ADR. |
 
 ## Related
 

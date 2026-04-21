@@ -241,23 +241,27 @@ Flag these when they become relevant to a task. Do **not** guess an answer; ask 
 4. **Minimum IAM permissions.** The permission set the install requires from the subscribing customer. Every additional permission is a security-team conversation; fewer is better.
 5. **Supported AWS regions at launch.** No region list decided.
 6. **Supported customer account scenarios.** Single-account customer? Mandatory Control Tower / multi-account? Both? Each scenario adds install-time branching.
-7. **IaC authoring tool.** The listing is CloudFormation at publish time; authoring can be CFN directly, CDK compiled to CFN, SAM, or Pulumi compiled. Not decided.
+7. **IaC authoring tool.** The listing is CloudFormation at publish time; authoring can be CFN directly, CDK compiled to CFN, SAM, or Pulumi compiled. Not decided. (Both [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) and [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) implicitly assume CloudFormation via Marketplace without committing to an authoring tool.)
 8. **CI/CD for the listing itself.** GitHub Actions + OIDC into Jungle3's own build account to publish listing versions. Not yet set up.
 
 ### In-install operation (customer's AWS account)
 
 9. **DMZ authentication for external users.** Recommendation on record: magic link + password-guest access + seeded persona/test accounts + role-based access (judge, beta user, builder, admin). Not yet decided. See [`docs/architecture/dmz.md`](./docs/architecture/dmz.md).
 10. **DMZ AWS topology within a customer account.** VPC shape, ALB/WAF pattern, per-team subdomain or path routing, DNS apex strategy (customer-provided vs install-generated).
-11. **Control Plane runtime.** Lambda vs ECS/Fargate vs other. `doc.md`'s ECS-Fargate recommendation was for a Jungle3-hosted shape; the installable's cost and idle-footprint profile is different.
+11. **Control Plane runtime.** Lambda vs ECS/Fargate vs other. `doc.md`'s ECS-Fargate recommendation was for a Jungle3-hosted shape; the installable's cost and idle-footprint profile is different. [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) argues ECS/Fargate for **packaging**; [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) implicitly proposes Lambda for **application compute**. These are easily conflated but not in conflict — a decision here must name both.
 12. **DMZ prototype lifespan.** Ephemeral by default per glossary; retention criteria, extension path, and teardown enforcement mechanism within a customer-installed deployment are TBD.
 13. **Required DMZ telemetry and feedback capture.** What every DMZ-deployed prototype must emit (session activity, feedback, task completion). Affects judging and cross-team comparison.
 14. **Data classification rules.** `doc.md` §8 says "synthetic, public, or scrubbed only." Under the installable model, Jungle3 advises; the customer enforces. Recommendation shape, exception-approval flow, and how they're expressed inside a DMZ's data boundary are TBD.
 15. **Cross-install discoverability.** Can a Gallery in Customer A's install surface prototypes from Customer B's install (for multi-company events)? Default under [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md) is no. A federated model would require a new design.
+16. **v1 service set and decomposition.** [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) proposes ten services (Identity, Work Item, Party/Account, Task/Queue, Document, Notification, Stub, Event/Workflow, Simulation, Admin/Ops) as the shape of a first Jungle. Whether a Jungle's Frankenstein app ships with that decomposition, a smaller one, or something domain-shaped is undecided. Interacts with #2 and #11.
+17. **Realism threshold for a first Jungle.** [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) names a "minimum viable realism" floor (5–8 entities, 3–5 roles, 4–6 async event types, 2–4 stubs, scheduled background activity, observable queues/failures, basic authz/audit, flags, dashboards). Whether Jungle3 adopts that as the floor every Domain Starter ships above — or defines its own — is undecided.
+18. **Admin/observability surface vs Agent Layer inspection specialists.** [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) describes an "Admin and observability service" (conventional API + CloudWatch + DynamoDB views) for inspecting events, queues, failures, configs. [`docs/architecture/agent-layer.md`](./docs/architecture/agent-layer.md) describes a routed network of inspection specialists with the [ADR 0002](./docs/decisions/0002-sub-agent-response-contract.md) response contract. Overlap is real; whether they are the same surface, complementary layers, or one-replaces-the-other is undecided.
+19. **Domain Starter anchor for v1.** [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) §8 proposes six candidate anchors (insurance-like case ops, service request processing, benefits enrollment, order exception handling, loan/application review, permit/compliance workflow) chosen on realism-per-unit-of-complexity. Which one ships first — independent of who the first customer is (#21) — is undecided.
 
 ### Other
 
-16. **Kiro CLI vs custom CLI.** `doc2.md` floats wiring in Kiro CLI/IDE for architecture + deploy. Undecided.
-17. **First-sponsor / first-customer context.** Docs are intentionally sponsor-agnostic. Specific first-customer context (who, sprint name, dates, domain-starter priorities) accumulates separately when relevant.
+20. **Kiro CLI vs custom CLI.** `doc2.md` floats wiring in Kiro CLI/IDE for architecture + deploy. Undecided.
+21. **First-sponsor / first-customer context.** Docs are intentionally sponsor-agnostic. Specific first-customer context (who, sprint name, dates, domain-starter priorities) accumulates separately when relevant.
 
 For **decided** things, see [`docs/decisions/`](./docs/decisions/).
 

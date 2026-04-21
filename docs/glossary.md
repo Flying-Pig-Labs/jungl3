@@ -58,6 +58,8 @@ A **pre-configured variant** of the Frankenstein app with domain-native UI, data
 
 Domain Starters share the same underlying platform primitives — Synthetic Runtime, Agent Layer, auth, storage — but diverge in the surface a team sees on day one. Their purpose is to get teams to "interesting" faster. See [`architecture/dmz.md`](./architecture/dmz.md).
 
+An alternative candidate list — framed around realism-per-unit-of-complexity rather than UI shape — is proposed in [`research/research2-v1-service-build-plan.md`](./research/research2-v1-service-build-plan.md) (insurance-like case operations, service request processing, benefits enrollment, order exception handling, loan/application review, permit/compliance workflow). Which anchor ships first is open — see [`../CLAUDE.md`](../CLAUDE.md) §11.
+
 ## Agent Layer
 
 The **AI-driven components** that operate inside and alongside a Jungle. Two roles, sharing a deployment surface but not a responsibility:
@@ -85,6 +87,12 @@ The **standard interface** a team's prototype implements so the Gallery can surf
 - `/events` (optional) — telemetry stream
 
 A prototype that satisfies the contract can auto-register to the Gallery.
+
+## Inspection surface
+
+The **real, programmatically checkable state** an inspection specialist is attached to — live connection config, a queryable schema registry, actual queue depth, real health-check endpoints, the current deployment manifest, the live Gallery listing. A specialist without an inspection surface is prompt memory with a hard hat on; its `evidence` cannot be independently verified.
+
+Inspection surface is the guardrail on the [Agent Layer](#agent-layer). See [`architecture/agent-layer.md`](./architecture/agent-layer.md).
 
 ## Sprint / Event
 

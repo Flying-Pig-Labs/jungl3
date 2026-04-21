@@ -26,7 +26,7 @@ A visitor entering the DMZ should not feel like they are entering raw infrastruc
 - **Externally accessible prototype URLs.** The prototype is reachable without VPN gymnastics.
 - **Lightweight authentication.** Enough to gate access; not an identity-architecture project. See open questions below.
 - **Isolation per prototype.** One team's prototype cannot accidentally read another's data, users, or events.
-- **Seeded personas and test accounts.** Users do not invent credentials; they pick a persona.
+- **Seeded personas and test accounts.** Users do not invent credentials; they pick a persona. One concrete proposal for the role mix inside a running prototype — Builder Operator, Supervisor, Ops Admin, Auditor Observer, Partner, optional Customer — lives in [`../research/research2-v1-service-build-plan.md`](../research/research2-v1-service-build-plan.md); not yet adopted.
 - **Minimum-necessary data and service access.** The DMZ sees only what the prototype needs to demonstrate its behavior. Nothing more.
 - **Logging and analytics.** Session activity, feedback, interaction telemetry — captured for the team to learn from.
 - **A feedback mechanism.** Built in, not bolted on.
