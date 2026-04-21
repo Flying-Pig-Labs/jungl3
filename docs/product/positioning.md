@@ -68,11 +68,15 @@ Each of these is elaborated elsewhere; listed here only to show how the product 
 | AI-driven architecture + deployment | [Control Plane](../glossary.md#control-plane) |
 | Trim-first development model | Repo-wide principle — see [`../../CLAUDE.md`](../../CLAUDE.md) §1 |
 | Built-in integrations | [Synthetic Runtime](../glossary.md#synthetic-runtime) |
-| Marketplace-first | [Marketplace](../glossary.md#marketplace) + [Integration Contract](../glossary.md#integration-contract) |
+| Gallery-first | [Gallery](../glossary.md#gallery) + [Integration Contract](../glossary.md#integration-contract) |
 | Synthetic system + synthetic users | [Synthetic Runtime](../glossary.md#synthetic-runtime) + [Agent Layer](../glossary.md#agent-layer) (user-simulation) |
 | CLI-native control plane | [Control Plane](../glossary.md#control-plane) operator surface |
 
 No new concepts introduced here. If a pillar can't be expressed in existing vocabulary, the glossary is wrong and should be fixed first.
+
+## How it ships
+
+Jungle3 is distributed as an **AWS Marketplace listing**. A customer subscribes, launches the CloudFormation template into their own AWS account, and from that moment forward operates their own Jungle3 instance — Control Plane, Jungles, DMZs, Gallery, all of it — inside their account. Jungle3 the company does not run a hosted multi-tenant platform. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md).
 
 ## Pitch form
 

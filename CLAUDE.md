@@ -11,7 +11,7 @@ jungl3 (pronounced "jungle three") is the working name for an **AI-native protot
 
 Canonical term definitions live in [`docs/glossary.md`](./docs/glossary.md). The current high-level shape, diagrammed: [`docs/architecture/system-context.md`](./docs/architecture/system-context.md).
 
-One-line summary: **Jungle3 vends isolated "Jungles" (builder environments that are alive on day one), prototypes deploy from a Jungle to a matching DMZ (the customer-facing runtime), and DMZs appear as tiles in a shared Marketplace for users and judges.** A Control Plane vends and manages all of it.
+One-line summary: **Jungle3 is distributed as an AWS Marketplace listing; once installed in a customer's AWS account, an in-account Control Plane vends isolated "Jungles" (builder environments that are alive on day one), prototypes deploy from a Jungle to a matching DMZ (the customer-facing runtime), and DMZs appear as tiles in a shared Gallery for users and judges.** Everything above the AWS account boundary is the customer's to operate. See [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md).
 
 Design principle carried throughout: **start with too much, trim down**. The primary development motion is **subtraction**, not addition: teams do not build up from a blank scaffold, they shape a [Frankenstein app](./docs/glossary.md#frankenstein-app) that already runs. See [`docs/product/positioning.md`](./docs/product/positioning.md) for the full framing.
 
@@ -19,9 +19,9 @@ Design principle carried throughout: **start with too much, trim down**. The pri
 
 ## 2. What this repo currently contains
 
-The repo root is a **TanStack Start + React 19 + Tailwind v4 + shadcn/ui** app scaffolded by [Lovable.dev](https://lovable.dev), with Cloudflare Workers as the deploy target (`wrangler.jsonc`, `@cloudflare/vite-plugin`). It is the **marketplace landing page** — currently a password-gated hero + "System Modules / Idea Engine" sections, styled around a "Welcome to the Jungl3" poster.
+The repo root is a **TanStack Start + React 19 + Tailwind v4 + shadcn/ui** app scaffolded by [Lovable.dev](https://lovable.dev), with Cloudflare Workers as the deploy target (`wrangler.jsonc`, `@cloudflare/vite-plugin`). It is the **AWS Marketplace listing landing page** — the public-facing sales and documentation surface for the Jungle3 AWS Marketplace listing. Currently a password-gated hero + "System Modules / Idea Engine" sections, styled around a "Welcome to the Jungl3" poster.
 
-This is one domain of the larger platform. It is **not** the whole platform.
+This is one domain of the larger platform. It is **not** the whole platform, and it is **not** a Jungle3 instance — a Jungle3 instance runs in a customer's AWS account after they subscribe via AWS Marketplace. See [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md).
 
 ---
 
@@ -71,20 +71,22 @@ components.json
 
 Policy: **each platform domain lives in its own top-level subdirectory of the repo.** The sole exception is the website, which must stay at repo root because of the Lovable boundary (§3).
 
-Expected domain subdirs (create on first use, not speculatively):
+Expected domain subdirs (create on first use, not speculatively). Framing is **per-install**: these components ship inside the AWS Marketplace listing and run in the customer's AWS account. They are *not* Jungle3-hosted services.
 
 | Subdir | What lives there |
 | --- | --- |
-| `control-plane/` | Environment vending, orchestration, account/OU provisioning, lifecycle. |
-| `marketplace-api/` | Backend for marketplace listings, judging workflow, feedback capture. |
-| `dmz/` | Per-team DMZ runtime templates and provisioning (IaC). |
-| `synthetic-runtime/` | Fake data generators, event emitters, queue producers, stubbed services. |
-| `agents/` | Data/API/Event/Auth/Marketplace/Environment sub-agents + orchestrator. |
+| `marketplace-listing/` | AWS Marketplace packaging: the CloudFormation/CDK template the customer launches, metadata, pricing config, security-review artifacts, and listing docs. |
+| `control-plane/` | In-account orchestration code: vending Jungles and DMZs within the customer's account, lifecycle, install-scoped DNS and routing. |
+| `gallery-api/` | Backend for the in-install Gallery: listings, judging workflow, feedback capture. Surfaced by the customer's ALB, not Jungle3's. |
+| `dmz/` | DMZ provisioning templates (IaC) that stand up the exposure surface inside the customer's VPC. |
+| `synthetic-runtime/` | Fake data generators, event emitters, queue producers, stubbed services. Installed per-Jungle. |
+| `agents/` | Data/API/Event/Auth/Gallery/Environment sub-agents + orchestrator. See [ADR 0002](./docs/decisions/0002-sub-agent-response-contract.md) and [`docs/architecture/agent-layer.md`](./docs/architecture/agent-layer.md). |
 | `cli/` | The Claude-Code-CLI-style operator console. |
-| `infra/` | Shared AWS foundation — Organizations, Control Tower, OIDC, WAF, Route 53. |
-| `contracts/` | Shared types: integration contract, persona schemas, event schemas. |
+| `contracts/` | Shared types: integration contract, persona schemas, event schemas, sub-agent response contract. |
 
 None of these exist yet. Create them only when starting real work in them. Each should carry its own `README.md` and its own dependency manifest (`package.json`, `pyproject.toml`, `go.mod`, CDK app, etc.) so it can be built, tested, and deployed independently. **Do not create a root-level monorepo manager (workspaces, Turborepo, Nx) until there is a second subdir that proves the need.** Favor deletion over addition.
+
+There is no `infra/` subdir. Under the installable model there is no "shared AWS foundation" — Jungle3 does not run its own AWS Org or host anything other than the Marketplace listing build/test. See [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md).
 
 ---
 
@@ -107,9 +109,15 @@ aws sts get-caller-identity --profile anything
 
 AWS infrastructure actions are **read-only by default**. You may run `describe`, `list`, `get`, `head` freely. You may **not** deploy, modify, or delete AWS resources — including `cdk deploy`, `terraform apply`, `aws ... create-*`, `aws ... put-*`, `aws ... delete-*` — without the user's explicit go-ahead in the current turn.
 
-### Target architecture
+### Scope of these rules
 
-Per `doc.md`, the platform uses an **AWS Organizations + Control Tower** model: one control-plane account, per-team DMZ accounts vended through Account Factory, shared sandbox account for lightweight experiments. Primary runtime for team apps is **ECS on Fargate** behind **ALB + WAF**, with Route 53, ACM, S3, DynamoDB, Secrets Manager, SSM Parameter Store, CloudWatch, and VPC Flow Logs as defaults. Read `doc.md` §2–§13 before designing anything that touches AWS.
+The profile and read-only rules apply to **Jungle3's own AWS account** — the account used to build, test, and publish the AWS Marketplace listing. That is the only AWS account Jungle3 operates directly. Customer accounts are the customer's responsibility; Jungle3 does not have credentials into them.
+
+### Target architecture (within a customer's account)
+
+The installed Jungle3 runs inside a single customer AWS account. Concrete topology — whether the Control Plane runs on Lambda or ECS/Fargate, single CFN stack vs nested components, IAM role minimums — is intentionally not fixed yet. Open in §11.
+
+Historical note: `doc.md` §§2–13 describe a **Jungle3-hosted** shape (Organizations, Control Tower, a Jungle3-owned sandbox account, a Jungle3-owned ALB). That framing is pre-[ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md). Read `doc.md` for the security-posture reasoning (synthetic-only data, private subnets, egress controls, TTL teardown, least-privilege IAM) — those principles translate to the customer-account install. Do not read `doc.md`'s account-structure recommendations as current architecture.
 
 ---
 
@@ -215,7 +223,7 @@ Patterns to watch for. Each gets promoted to a real skill the second time we do 
 
 - **`aws-deployment-synthesis`** — turning an architecture decision into concrete AWS service selection (account, region, runtime, networking). Promote once the first domain deploys.
 - **`vend-a-jungle`** — the repeatable flow for provisioning a new per-team Jungle+DMZ. Promote once the control plane has its first working vend.
-- **`register-to-marketplace`** — the Integration Contract implementation checklist. Promote once the contract is finalized and the marketplace-api consumes it.
+- **`register-to-gallery`** — the Integration Contract implementation checklist. Promote once the contract is finalized and the `gallery-api` consumes it.
 - **`synthetic-data-seed`** — authoring + wiring a new fake-data generator / event emitter for a domain starter. Promote once there are two of them.
 - **`sub-agent-author`** — the `{status, summary, evidence, recommended_action}` response contract (pinned in [ADR 0002](./docs/decisions/0002-sub-agent-response-contract.md); architecture in [`docs/architecture/agent-layer.md`](./docs/architecture/agent-layer.md)) plus tooling scaffold for a new specialist agent. Promote on the second sub-agent.
 - **`cli-command-author`** — adding a new command to the operator CLI. Promote once the CLI has three commands.
@@ -227,18 +235,32 @@ Patterns to watch for. Each gets promoted to a real skill the second time we do 
 
 Flag these when they become relevant to a task. Do **not** guess an answer; ask the user. When a question here is resolved, promote it to `docs/decisions/NNNN-slug.md` and remove it from this list.
 
-1. **Website deploy target.** Today: Cloudflare Workers via Wrangler (Lovable default). Stated user intent: AWS. Likely resolution: website stays on Cloudflare for Lovable's publish loop; all other domains deploy to AWS. Not confirmed yet.
-2. **Domain(s) and DNS.** No domain chosen. `doc.md` hints at a scheme like `team-x.dmz.example.com`; the real apex is TBD.
-3. **IaC tool.** CDK vs Terraform vs SAM vs Pulumi — not decided. `doc.md` mentions both CDK and Terraform. Pick one per-domain, or one for the whole platform — TBD.
-4. **Account strategy for v1.** `doc.md` recommends Control Tower + per-team accounts. Acceptable fallback: single sandbox account with namespace isolation. Which one for the first event is TBD.
-5. **GitHub Actions + OIDC role ARN.** Not yet set up.
-6. **Sprint / event name and dates.** The TTL tags in `doc.md` imply an event calendar — not yet provided.
-7. **Data classification rules.** `doc.md` §8 says "synthetic, public, or scrubbed only." Who approves exceptions, and how that approval is expressed inside a DMZ's data boundary, is TBD.
-8. **Kiro CLI vs custom CLI.** `doc2.md` floats wiring in Kiro CLI/IDE for architecture + deploy. Undecided.
+### AWS Marketplace listing & packaging
+
+1. **Pricing model.** Free, subscription, usage-based, private-offer-only contract. Analyst recommendation on record: free or low-cost subscription initially. Not decided.
+2. **Stack structure.** Single CloudFormation stack vs a root template that nests optional components (modular, parameterized, partial-install). Affects upgrade strategy.
+3. **Update/upgrade strategy.** How new listing versions ship to existing installs without destroying customer data or orphaning resources. This is the hard problem.
+4. **Minimum IAM permissions.** The permission set the install requires from the subscribing customer. Every additional permission is a security-team conversation; fewer is better.
+5. **Supported AWS regions at launch.** No region list decided.
+6. **Supported customer account scenarios.** Single-account customer? Mandatory Control Tower / multi-account? Both? Each scenario adds install-time branching.
+7. **IaC authoring tool.** The listing is CloudFormation at publish time; authoring can be CFN directly, CDK compiled to CFN, SAM, or Pulumi compiled. Not decided.
+8. **CI/CD for the listing itself.** GitHub Actions + OIDC into Jungle3's own build account to publish listing versions. Not yet set up.
+
+### In-install operation (customer's AWS account)
+
 9. **DMZ authentication for external users.** Recommendation on record: magic link + password-guest access + seeded persona/test accounts + role-based access (judge, beta user, builder, admin). Not yet decided. See [`docs/architecture/dmz.md`](./docs/architecture/dmz.md).
-10. **DMZ AWS topology.** VPC shape, ALB/WAF pattern, per-team subdomain or path routing, DNS apex. `doc.md` §§2–5 sketch a shape; it is not committed to.
-11. **DMZ prototype lifespan past the sprint.** Ephemeral by default per glossary; retention criteria, extension path, and teardown enforcement mechanism are TBD.
-12. **Required DMZ telemetry and feedback capture.** What every DMZ-deployed prototype must emit (session activity, feedback, task completion) is TBD. Affects judging and cross-team comparison.
+10. **DMZ AWS topology within a customer account.** VPC shape, ALB/WAF pattern, per-team subdomain or path routing, DNS apex strategy (customer-provided vs install-generated).
+11. **Control Plane runtime.** Lambda vs ECS/Fargate vs other. `doc.md`'s ECS-Fargate recommendation was for a Jungle3-hosted shape; the installable's cost and idle-footprint profile is different.
+12. **DMZ prototype lifespan.** Ephemeral by default per glossary; retention criteria, extension path, and teardown enforcement mechanism within a customer-installed deployment are TBD.
+13. **Required DMZ telemetry and feedback capture.** What every DMZ-deployed prototype must emit (session activity, feedback, task completion). Affects judging and cross-team comparison.
+14. **Data classification rules.** `doc.md` §8 says "synthetic, public, or scrubbed only." Under the installable model, Jungle3 advises; the customer enforces. Recommendation shape, exception-approval flow, and how they're expressed inside a DMZ's data boundary are TBD.
+15. **Cross-install discoverability.** Can a Gallery in Customer A's install surface prototypes from Customer B's install (for multi-company events)? Default under [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md) is no. A federated model would require a new design.
+
+### Other
+
+16. **Kiro CLI vs custom CLI.** `doc2.md` floats wiring in Kiro CLI/IDE for architecture + deploy. Undecided.
+17. **First-sponsor / first-customer context.** Docs are intentionally sponsor-agnostic. Specific first-customer context (who, sprint name, dates, domain-starter priorities) accumulates separately when relevant.
+18. **Website terminology sync.** The Lovable-maintained website (`src/`) still contains copy referring to the Jungle3 concept as "Marketplace." Renaming happens through Lovable on the next visual/content pass; cannot be done directly per §3.
 
 For **decided** things, see [`docs/decisions/`](./docs/decisions/).
 

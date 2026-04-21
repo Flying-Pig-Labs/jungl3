@@ -7,7 +7,7 @@ The AI components that operate inside and alongside a Jungle. For the term itsel
 Agents in a Jungle divide into two distinct roles. They share a deployment surface; they do not share a responsibility.
 
 - **Operational agents** *modify* the system. Builder/modifier agents change code, schema, UI. A future clicker agent exercises the UI. User-simulation agents generate persona-based feedback. Their output is action — edits, clicks, interactions.
-- **Inspection specialists** *explain and validate* the system. One per domain: Data, API, Event, Auth, Environment, Marketplace. Their output is structured answers grounded in real state, not action.
+- **Inspection specialists** *explain and validate* the system. One per domain: Data, API, Event, Auth, Environment, Gallery. Their output is structured answers grounded in real state, not action.
 
 This doc is about inspection specialists. Operational agents warrant their own doc when there is real material to commit to.
 
@@ -23,7 +23,7 @@ flowchart LR
   O -->|delegates| E[Event Agent]
   O -->|delegates| AU[Auth Agent]
   O -->|delegates| EN[Environment Agent]
-  O -->|delegates| M[Marketplace Agent]
+  O -->|delegates| M[Gallery Agent]
 ```
 
 What each half does:
@@ -41,7 +41,7 @@ This is the guardrail that keeps the pattern from degenerating into eloquent lyi
 
 A Data Agent that "remembers" which datasets are connected is worse than no Data Agent. It will answer confidently, cite nothing checkable, and be wrong whenever state has changed since its prompt was composed. The same is true for every other specialist.
 
-Concretely, an inspection surface means the specialist has programmatic access to the live truth of its domain: current connection config, a queryable schema registry, actual queue depth, real health-check endpoints, the current deployment manifest, the live Marketplace listing. If a claim appears in a specialist's `summary`, its `evidence` must point at something another human could independently check.
+Concretely, an inspection surface means the specialist has programmatic access to the live truth of its domain: current connection config, a queryable schema registry, actual queue depth, real health-check endpoints, the current deployment manifest, the live Gallery listing. If a claim appears in a specialist's `summary`, its `evidence` must point at something another human could independently check.
 
 A specialist with no inspection surface is not a specialist. It is a liability with a hard hat on.
 
@@ -56,7 +56,7 @@ Each row lists the domain owned, the kind of question the specialist answers, an
 | Event Agent | Queue health, event emission, event schemas, background-activity flow | Queue depth and throughput, emitter status, event-schema registry, recent-event samples |
 | Auth Agent | Login state, user roles, permissions, access failures | Current session, role/permission store, recent auth decisions, access logs |
 | Environment Agent | Overall Jungle/DMZ health, deployment status, provisioned services, feature flags | Deployment manifest, service inventory, platform health, enablement flags |
-| Marketplace Agent | Prototype registration, listing metadata, contract compliance, judge-visible surface | Current listing record, [Integration Contract](../glossary.md#integration-contract) probe results, rendered preview |
+| Gallery Agent | Prototype registration, listing metadata, contract compliance, judge-visible surface | Current listing record, [Integration Contract](../glossary.md#integration-contract) probe results, rendered preview |
 
 ## The response contract
 

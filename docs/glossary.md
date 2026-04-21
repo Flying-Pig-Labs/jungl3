@@ -4,6 +4,8 @@ Canonical terminology for Jungle3. **Single source of truth.** Other docs should
 
 If you introduce a new term, add it here in the same pass. If a term drifts in usage, fix the drift here first, then propagate.
 
+**Terminology rule.** The word "Marketplace" in Jungle3 documentation always means **AWS Marketplace** (where Jungle3 is distributed per [ADR 0003](./decisions/0003-installable-via-aws-marketplace.md)). The Jungle3 concept previously called "Marketplace" — the in-install judging and discovery layer — is now called **[Gallery](#gallery)**.
+
 ---
 
 ## Jungle3
@@ -14,7 +16,7 @@ The platform itself. Also the name of this repo. Not the name of any one compone
 
 The **builder environment** — a pre-provisioned workspace where a team (and its AI agents) shape a prototype by modifying a living system rather than scaffolding from scratch. A Jungle includes a [Frankenstein app](#frankenstein-app), database, storage, auth, seeded users, synthetic runtime, and connected APIs, all already running. Plural: *jungles*.
 
-Jungles are vended by the Control Plane. Each team gets its own.
+Jungles are vended by the Control Plane inside the customer's AWS account. Each team gets its own, isolated by namespace, IAM, and tagging within that account. Cross-customer isolation is by AWS account boundary (different installs, different accounts).
 
 ## Frankenstein app
 
@@ -26,17 +28,21 @@ The **customer-facing runtime** — an isolated, externally accessible environme
 
 A DMZ is the **exposure surface**; a Jungle is the **build surface**. They are distinct isolation boundaries with distinct users and distinct risk profiles — conflating them is the most common mistake in reading the architecture. See [`architecture/dmz.md`](./architecture/dmz.md) for the three-layer model (builder, pipeline, experience), security posture, and what the experience layer must provide.
 
+A DMZ lives inside the customer's AWS account, behind the customer's ALB, under the customer's DNS apex. Jungle3 provides the provisioning templates and operational patterns; the customer owns the network boundary.
+
 "DMZ" is used in the networking-inspired sense:
 
 > Public-ish in access, private in blast radius.
 
-## Marketplace
+## Gallery
 
-The **shared discovery and judging layer** — the front door where users, beta testers, and judges browse all deployed prototypes, select a persona or test scenario, and launch into a prototype's DMZ through a controlled gateway. Each team gets a tile. The Marketplace does not host the prototype itself; it routes into it.
+The **shared discovery and judging layer** — the front door where users, beta testers, and judges browse all deployed prototypes within a Jungle3 install, select a persona or test scenario, and launch into a prototype's DMZ through a controlled gateway. Each team gets a tile. The Gallery does not host the prototype itself; it routes into it.
+
+Previously called "Marketplace." Renamed by [ADR 0003](./decisions/0003-installable-via-aws-marketplace.md) to avoid collision with AWS Marketplace, which is how Jungle3 itself is distributed.
 
 ## Control Plane
 
-The **orchestration layer** — the system that vends Jungles and DMZs on demand, manages templates, handles DNS and routing, bootstraps auth, and enforces lifecycle (creation, expiration, teardown). The Control Plane runs in a dedicated platform account; Jungles and DMZs are vended into separate isolated environments.
+The **orchestration layer** — the system that vends Jungles and DMZs on demand, manages templates, handles DNS and routing within the install's scope, bootstraps auth, and enforces lifecycle (creation, expiration, teardown). The Control Plane runs **inside the customer's AWS account**, provisioned by the Jungle3 CloudFormation stack; it is not a Jungle3-hosted service. See [ADR 0003](./decisions/0003-installable-via-aws-marketplace.md).
 
 The operator surface for the Control Plane is a Claude-Code-CLI-style text-forward console, not a dashboard.
 
@@ -62,7 +68,7 @@ The **AI-driven components** that operate inside and alongside a Jungle. Two rol
 - **Clicker agent** (future) — a computer-use agent that navigates the UI and attempts workflows.
 - **User-simulation agent** — generates persona-based dialogue feedback on the prototype.
 
-**Inspection specialists** — they *explain and validate* the system, one per domain (Data, API, Event, Auth, Environment, Marketplace). Each owns inspection for its slice and is fronted by an orchestrator that handles routing, composition, and rendering. Specialists must be attached to a real inspection surface rather than prompt memory. See [`architecture/agent-layer.md`](./architecture/agent-layer.md).
+**Inspection specialists** — they *explain and validate* the system, one per domain (Data, API, Event, Auth, Environment, Gallery). Each owns inspection for its slice and is fronted by an orchestrator that handles routing, composition, and rendering. Specialists must be attached to a real inspection surface rather than prompt memory. See [`architecture/agent-layer.md`](./architecture/agent-layer.md).
 
 Every inspection specialist returns the same structured shape: `{status, summary, evidence, recommended_action}`. The contract is pinned in [ADR 0002](./decisions/0002-sub-agent-response-contract.md).
 
@@ -70,7 +76,7 @@ The Agent Layer is not a single orchestrator pretending to know everything. It i
 
 ## Integration Contract
 
-The **standard interface** a team's prototype implements so the Marketplace can surface it consistently. At minimum:
+The **standard interface** a team's prototype implements so the Gallery can surface it consistently. At minimum:
 
 - `/metadata` — name, description, team, persona, screenshot, status
 - `/health` — is the prototype available
@@ -78,7 +84,7 @@ The **standard interface** a team's prototype implements so the Marketplace can 
 - `/demo-reset` (optional) — resets demo state between judges
 - `/events` (optional) — telemetry stream
 
-A prototype that satisfies the contract can auto-register to the Marketplace.
+A prototype that satisfies the contract can auto-register to the Gallery.
 
 ## Sprint / Event
 

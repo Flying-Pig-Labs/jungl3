@@ -31,7 +31,7 @@ Use the workspace-level authoring skill: `/Users/williamprior/.cursor/skills-cur
 
 ## Scope boundary
 
-These skills are **repo-specific**. They should reference jungl3 concepts (jungle, DMZ, marketplace, synthetic runtime, the Lovable boundary, our AWS account structure). General-purpose skills — CLI hygiene, git workflow, review habits — belong at the workspace level, not here.
+These skills are **repo-specific**. They should reference jungl3 concepts (jungle, DMZ, gallery, synthetic runtime, the Lovable boundary, AWS Marketplace listing packaging). General-purpose skills — CLI hygiene, git workflow, review habits — belong at the workspace level, not here.
 
 ## Lovable safety
 

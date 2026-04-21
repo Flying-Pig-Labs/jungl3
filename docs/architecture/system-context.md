@@ -17,20 +17,22 @@ flowchart LR
   end
 
   DMZ[DMZ - runtime]
-  MP[Marketplace]
+  GAL[Gallery]
 
   CP -->|vends| J
   J -->|deploys to| DMZ
-  DMZ -->|registers with| MP
-  MP -->|launches into| DMZ
+  DMZ -->|registers with| GAL
+  GAL -->|launches into| DMZ
 ```
+
+All of the above lives inside a single customer's AWS account, installed from the Jungle3 AWS Marketplace listing. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md).
 
 ## Reading the diagram
 
-- **Control Plane** sits outside any Jungle. It is the orchestration brain; it *vends* Jungles (and their matching DMZs) on demand.
+- **Control Plane** sits outside any Jungle. It is the orchestration brain; it *vends* Jungles (and their matching DMZs) on demand. It runs inside the customer's AWS account, not as a Jungle3-hosted service.
 - A **Jungle** is a composite: a [Frankenstein app](../glossary.md#frankenstein-app) that runs on top of a Synthetic Runtime, with an Agent Layer operating within it. These three are not separate deployables — they are layers of one environment.
-- The **DMZ** is a separate, externally accessible runtime. A prototype built in a Jungle *deploys to* its DMZ. The Jungle and DMZ have distinct isolation boundaries (the Jungle may be shared-ish; the DMZ is the public-facing surface and is tightly controlled).
-- The **Marketplace** is the shared front door. A DMZ *registers with* the Marketplace once its prototype implements the [Integration Contract](../glossary.md#integration-contract). Users and judges then *launch into* a DMZ from the Marketplace.
+- The **DMZ** is a separate, externally accessible runtime. A prototype built in a Jungle *deploys to* its DMZ. The Jungle and DMZ have distinct isolation boundaries (the Jungle may be shared-ish; the DMZ is the public-facing surface and is tightly controlled). Both live inside the customer's AWS account.
+- The **Gallery** is the shared front door within a Jungle3 install. A DMZ *registers with* the Gallery once its prototype implements the [Integration Contract](../glossary.md#integration-contract). Users and judges then *launch into* a DMZ from the Gallery.
 
 ## What the diagram deliberately omits
 
@@ -44,7 +46,7 @@ Splitting those concerns into their own focused diagrams is the point. One crowd
 ## What is deliberately implied, not stated
 
 - Jungles and DMZs are **ephemeral**. The diagram shows the steady-state relationship; the lifecycle (provision → live → expire → teardown) is a flow diagram for a different doc.
-- The Control Plane also handles Marketplace registration plumbing, DNS, and lifecycle — not just initial vending. This will be expanded the first time we document the Control Plane in its own file.
+- The Control Plane also handles Gallery registration plumbing, DNS within the install's scope, and lifecycle — not just initial vending. This will be expanded the first time we document the Control Plane in its own file.
 
 ## Related
 
