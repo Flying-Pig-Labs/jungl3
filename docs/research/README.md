@@ -20,14 +20,14 @@ This is the paper trail behind ADRs, not a substitute for them.
 
 ## Filename convention
 
-`researchN.md` for numbered captures, monotonically increasing. No renumbering. If a file is obsolete, keep it and mark status in the frontmatter; don't delete.
+`researchN.md` or `researchN-short-slug.md` for numbered captures, monotonically increasing. No renumbering. If a file is obsolete, keep it and mark status in the frontmatter; don't delete. The slug (if present) is kebab-case and names the subject of the capture, not just its position.
 
 ## Files
 
 | # | Captured | Subject | Status |
 | --- | --- | --- | --- |
-| [research1.md](./research1.md) | 2026-04-21 | AWS-first installable innovation environment (v1 shape, service set, packaging) | Installable-vs-hosted accepted by [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md); other recommendations open in §11. |
-| [research2.md](./research2.md) | 2026-04-21 | V1 architecture spec derived from research1 | Not yet routed. Substantially overlaps §11 items 2, 7, 11; candidate for future ADRs. |
+| [research1-aws-installable-shape.md](./research1-aws-installable-shape.md) | 2026-04-21 | Analyst memo: installable-vs-hosted; proposed v1 AWS service set | Installable-vs-hosted accepted by [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md); other recommendations open in §11. |
+| [research2-v1-service-build-plan.md](./research2-v1-service-build-plan.md) | 2026-04-21 | Service-by-service v1 build plan (10 services, Work Item anchor); derived from research1 | Not yet routed. Substantially overlaps §11 items 2, 7, 11; candidate for future ADRs. |
 
 ## Related
 

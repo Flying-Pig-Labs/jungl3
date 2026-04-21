@@ -1,4 +1,4 @@
-> **What this is:** A v1 architecture spec derived from [research1.md](./research1.md). Written as if it were a build plan.
+> **What this is:** A v1 service-by-service build plan derived from [research1](./research1-aws-installable-shape.md), structured as if it were an engineering spec.
 > **Captured:** 2026-04-21.
 > **Status:** **Not adopted as architecture.** No ADR has consumed it. It substantially overlaps open questions in `../../CLAUDE.md` §11 (stack structure, Control Plane runtime, AWS service set) and is a strong candidate for future ADRs, but until those ADRs exist, nothing here is repo policy.
 > **How to read:** as a proposal. Do not cite this file as justification for a decision; cite an ADR or an open question.

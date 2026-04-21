@@ -1,4 +1,4 @@
-> **What this is:** Third-party analyst research memo on Jungle3's shape as an installable AWS-first innovation environment.
+> **What this is:** Third-party analyst memo arguing Jungle3's v1 should be a single installable operational slice delivered via AWS Marketplace, with a specific AWS service set.
 > **Captured:** 2026-04-21.
 > **What it argued:** v1 is a single installable operational slice delivered via AWS Marketplace (CloudFormation, ECS/Fargate packaging), with a specific recommended AWS service set (React + API Gateway + Lambda + DynamoDB + S3 + EventBridge + SQS + Step Functions + Cognito + CloudWatch + AppConfig).
 > **Status:** Its load-bearing conclusion — installable rather than hosted — informed and was accepted by [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md). Its specific AWS service recommendations, packaging path, feature-vs-complexity trade-offs, and v1 scoping are **not** adopted as repo policy — they are open questions tracked in `CLAUDE.md` §11.
