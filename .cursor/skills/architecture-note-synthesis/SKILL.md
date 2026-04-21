@@ -98,7 +98,7 @@ Creating a new top-level file under `docs/architecture/` or `docs/product/` requ
 
 Rules that keep synthesis from bloating the docs:
 
-- **Link to the glossary** for any term on its first use in the doc, e.g. `[Frankenstein app](../glossary.md#frankenstein-app)`.
+- **Link to the glossary** for any term on its first use in the doc, e.g. `[Understory](../glossary.md#understory)`.
 - **Link across docs** instead of restating. `agent-layer.md` references the response contract in ADR 0002; it does not redefine it.
 - **Short title + one-sentence purpose line** at the top. See the top of `agent-layer.md` for the shape.
 - **Use the pattern** `## What this doc deliberately omits` at the bottom. This is where you park adjacent topics that don't belong here, so future readers don't mistake the doc for being incomplete.
@@ -120,7 +120,7 @@ Examples from existing docs:
 While synthesizing, you'll notice drift. Fix it in the same pass, and tell the user:
 
 - Terminology the glossary doesn't cover → add it.
-- A stale reference to "Marketplace" where "Gallery" is meant (post-ADR 0003) → fix it.
+- A stale reference to *Marketplace* (the Jungle3-concept sense), *Gallery*, or *Frankenstein app* → fix it per [ADR 0003](../../../docs/decisions/0003-installable-via-aws-marketplace.md) and [ADR 0004](../../../docs/decisions/0004-canonical-platform-vocabulary.md). Current canonical names: [DMZ](../../../docs/glossary.md#dmz) (exposure surface, absorbs former Gallery) and [Understory](../../../docs/glossary.md#understory) (baseline app, formerly Frankenstein).
 - A concept defined in two places → collapse to one + links.
 - An open question in `CLAUDE.md` §11 that your fragment just resolved → promote to an ADR (hand off to `adr-author`) or remove if the answer is already present in a doc.
 

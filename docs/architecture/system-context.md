@@ -11,43 +11,44 @@ flowchart LR
   CP[Control Plane]
 
   subgraph J[Jungle - builder environment]
-    APP[Frankenstein app]
+    APP[Understory]
     SR[Synthetic Runtime]
     AG[Agent Layer]
   end
 
-  DMZ[DMZ - runtime]
-  GAL[Gallery]
+  SUB[Substrate - AWS primitives]
+  DMZ[DMZ - exposure surface]
 
   CP -->|vends| J
+  CP -->|vends| DMZ
+  J -.->|sits on| SUB
   J -->|deploys to| DMZ
-  DMZ -->|registers with| GAL
-  GAL -->|launches into| DMZ
 ```
 
 All of the above lives inside a single customer's AWS account, installed from the Jungle3 AWS Marketplace listing. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md).
 
 ## Reading the diagram
 
-- **Control Plane** sits outside any Jungle. It is the orchestration brain; it *vends* Jungles (and their matching DMZs) on demand. It runs inside the customer's AWS account, not as a Jungle3-hosted service.
-- A **Jungle** is a composite: a [Frankenstein app](../glossary.md#frankenstein-app) that runs on top of a Synthetic Runtime, with an Agent Layer operating within it. These three are not separate deployables — they are layers of one environment.
-- The **DMZ** is a separate, externally accessible runtime. A prototype built in a Jungle *deploys to* its DMZ. The Jungle and DMZ have distinct isolation boundaries (the Jungle may be shared-ish; the DMZ is the public-facing surface and is tightly controlled). Both live inside the customer's AWS account.
-- The **Gallery** is the shared front door within a Jungle3 install. A DMZ *registers with* the Gallery once its prototype implements the [Integration Contract](../glossary.md#integration-contract). Users and judges then *launch into* a DMZ from the Gallery.
+- **Control Plane** sits outside any Jungle. It is the orchestration brain; it *vends* Jungles and their matching DMZs on demand. It runs inside the customer's AWS account, not as a Jungle3-hosted service.
+- **Substrate** is the AWS primitives layer the whole install sits on — networking, identity, storage, compute, observability. Vended implicitly by the CloudFormation install, not per-Jungle. Named here because procurement cares: Substrate is *what the customer's platform team operates*.
+- A **Jungle** is a composite: an [Understory](../glossary.md#understory) that runs on top of a Synthetic Runtime, with an Agent Layer operating within it. These three are not separate deployables — they are layers of one environment. The Jungle as a whole sits on the Substrate.
+- The **DMZ** is the single exposure surface. A prototype built in a Jungle *deploys to* its DMZ; once deployed, it is discoverable, launchable, and usable by outside visitors through the DMZ. The Jungle and DMZ have distinct isolation boundaries (the Jungle may be shared-ish; the DMZ is the public-facing surface and is tightly controlled). Both live inside the customer's AWS account. The DMZ also absorbs the listing/discovery role previously held by a separate *Gallery* concept — see [ADR 0004](../decisions/0004-canonical-platform-vocabulary.md).
 
 ## What the diagram deliberately omits
 
 - **Actors** (team builder, judge, beta user, operator). These enter at different points and deserve their own diagram when we document flows. Not here.
-- **AWS topology** (accounts, VPCs, ECS, ALB, WAF). Deployment topology is a separate concern and gets its own doc when we commit to it. See `CLAUDE.md` §9 for what's still undecided there.
+- **AWS topology** (accounts, VPCs, ECS, ALB, WAF). Deployment topology is a separate concern and gets its own doc when we commit to it. See `CLAUDE.md` §11 for what's still undecided there.
 - **Agent specialists** (Data, API, Event, Auth, etc.). The Agent Layer is shown as a single block. A dedicated agent-architecture diagram earns its place the first time we implement a sub-agent.
 - **Synthetic Runtime internals** (generators, emitters, stubs). Same reasoning — diagram when we build, not before.
-- **Frankenstein-app service decomposition.** The `Jungle` block in the diagram is a single layer; what the Frankenstein app running inside it is *made of* (services, modules, tables) is a separate concern. [`../research/research2-v1-service-build-plan.md`](../research/research2-v1-service-build-plan.md) proposes one such decomposition (ten services anchored on a Work Item / Case). Whether Jungle3 adopts that decomposition is open — see [`../../CLAUDE.md`](../../CLAUDE.md) §11.
+- **Understory service decomposition.** The `Understory` block in the diagram is a single layer; what the Understory is *made of* (services, modules, tables) is a separate concern. [`../research/research2-v1-service-build-plan.md`](../research/research2-v1-service-build-plan.md) proposes one such decomposition (ten services anchored on a Work Item / Case). Whether Jungle3 adopts that decomposition is open — see [`../../CLAUDE.md`](../../CLAUDE.md) §11.
+- **Substrate internals.** Substrate is shown as a single block; which AWS services it comprises (VPC shape, compute choice, storage, identity) is deliberately undecided here. See [`../../CLAUDE.md`](../../CLAUDE.md) §11.
 
 Splitting those concerns into their own focused diagrams is the point. One crowded diagram is worse than five small ones.
 
 ## What is deliberately implied, not stated
 
 - Jungles and DMZs are **ephemeral**. The diagram shows the steady-state relationship; the lifecycle (provision → live → expire → teardown) is a flow diagram for a different doc.
-- The Control Plane also handles Gallery registration plumbing, DNS within the install's scope, and lifecycle — not just initial vending. This will be expanded the first time we document the Control Plane in its own file.
+- The Control Plane also handles listing-registration plumbing inside a DMZ, DNS within the install's scope, and lifecycle — not just initial vending. This will be expanded the first time we document the Control Plane in its own file.
 
 ## Related
 

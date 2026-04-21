@@ -2,11 +2,13 @@
 
 The customer-facing prototype zone. For the term itself see [`../glossary.md#dmz`](../glossary.md#dmz); for where it fits in the platform see [`./system-context.md`](./system-context.md).
 
+The DMZ is the **single exposure surface** of a Jungle3 install. Everything else — Jungle, [Understory](../glossary.md#understory), [Substrate](../glossary.md#substrate), Agent Layer, Synthetic Runtime, Control Plane — stays hidden inside the customer's install. Prototypes become visible, discoverable, and usable by outside people only by being loaded into the DMZ.
+
 ## The split: build surface vs exposure surface
 
 A Jungle and a DMZ are easy to conflate and must not be.
 
-- A **Jungle** is the *build surface*. Teams and agents reshape a [Frankenstein app](../glossary.md#frankenstein-app) inside it. Isolation is looser: builders need broad access to the running system to modify it.
+- A **Jungle** is the *build surface*. Teams and agents reshape an [Understory](../glossary.md#understory) inside it. Isolation is looser: builders need broad access to the running system to modify it.
 - A **DMZ** is the *exposure surface*. Real users, beta customers, and judges interact with a deployed prototype through it. Isolation is tight: the DMZ is the only place outside traffic reaches, and it is deliberately narrow.
 
 The Jungle gives teams speed. The DMZ gives them exposure. They are distinct isolation boundaries with distinct users and distinct risk profiles.
@@ -15,7 +17,7 @@ The Jungle gives teams speed. The DMZ gives them exposure. They are distinct iso
 
 The path from "a team is building" to "a customer is clicking" has three layers. They are not separate deployables — they are stages of one pipeline — but naming them keeps responsibilities from blurring.
 
-1. **Builder layer.** The Jungle itself: Frankenstein app, Synthetic Runtime, Agent Layer. See [`./agent-layer.md`](./agent-layer.md) for the agent role split.
+1. **Builder layer.** The Jungle itself: Understory, Synthetic Runtime, Agent Layer, sitting on the Substrate. See [`./agent-layer.md`](./agent-layer.md) for the agent role split.
 2. **Deployment pipeline.** The bridge between building and exposure. Teams must be able to push a prototype from Jungle to DMZ with minimal friction — standardized hosting, auth, routing. The point is not to make teams solve deployment as part of the sprint.
 3. **Experience layer.** What a visitor actually encounters when they enter the DMZ. This is the part most prone to being left vague; the rest of this doc is about it.
 
@@ -27,6 +29,7 @@ A visitor entering the DMZ should not feel like they are entering raw infrastruc
 - **Lightweight authentication.** Enough to gate access; not an identity-architecture project. See open questions below.
 - **Isolation per prototype.** One team's prototype cannot accidentally read another's data, users, or events.
 - **Seeded personas and test accounts.** Users do not invent credentials; they pick a persona. One concrete proposal for the role mix inside a running prototype — Builder Operator, Supervisor, Ops Admin, Auditor Observer, Partner, optional Customer — lives in [`../research/research2-v1-service-build-plan.md`](../research/research2-v1-service-build-plan.md); not yet adopted.
+- **A listing surface.** External visitors — judges, beta users, stakeholders — find prototypes by entering the install's DMZ and browsing what's there. Each deployed prototype appears as a tile with metadata from the [Integration Contract](../glossary.md#integration-contract); the tile launches the visitor into that prototype through a controlled gateway. This role was previously a separate concept called *Gallery*; [ADR 0004](../decisions/0004-canonical-platform-vocabulary.md) folded it into the DMZ so there is one exposure surface, not two.
 - **Minimum-necessary data and service access.** The DMZ sees only what the prototype needs to demonstrate its behavior. Nothing more.
 - **Logging and analytics.** Session activity, feedback, interaction telemetry — captured for the team to learn from.
 - **A feedback mechanism.** Built in, not bolted on.
@@ -52,7 +55,7 @@ Concrete AWS topology for the DMZ (VPC layout, ALB/WAF pattern, account structur
 
 ## Domain Starters
 
-A team does not begin with a generic Frankenstein app. It begins with a [Domain Starter](../glossary.md#domain-starter): a pre-configured variant of the Frankenstein app with domain-native UI, data model, seeded entities, and workflows. Candidate starters include:
+A team does not begin with a generic Understory. It begins with a [Domain Starter](../glossary.md#domain-starter): a pre-configured variant of the Understory with domain-native UI, data model, seeded entities, and workflows. Candidate starters include:
 
 - Customer shopping flow
 - Support ticket intake

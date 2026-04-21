@@ -12,11 +12,19 @@ docs/
   glossary.md                  # canonical terminology — single source of truth
   architecture/                # how the system is shaped
     system-context.md          # layer model + context diagram
+    agent-layer.md             # agent roles + response contract
+    dmz.md                     # DMZ three-layer model + security posture
   product/                     # product framing (what it is, who it's for, why)
     positioning.md
+    judging.md
   decisions/                   # what we've actually decided, and why
     README.md
     0001-lovable-owns-repo-root.md
+    0002-sub-agent-response-contract.md
+    0003-installable-via-aws-marketplace.md
+    0004-canonical-platform-vocabulary.md
+  research/                    # frozen third-party captures
+    README.md
 ```
 
 The tree is intentionally thin. New files are created when there is real material to put in them — not preemptively. See `../CLAUDE.md` §7 "Information placement" for where a new piece of information should land.
@@ -29,7 +37,8 @@ The tree is intentionally thin. New files are created when there is real materia
 | How the system is structured (layers, boundaries, interactions) | `architecture/<topic>.md` |
 | How the product is framed (positioning, audience, principle) | `product/<topic>.md` |
 | A decision we have made and will not casually revisit | `decisions/NNNN-slug.md` |
-| An open question we haven't answered yet | `../CLAUDE.md` §9 |
+| An open question we haven't answered yet | `../CLAUDE.md` §11 |
+| A third-party research capture | `research/researchN-slug.md` with frontmatter |
 | A rough idea that isn't ready to commit to anywhere | Stay in `../doc.md`, `../doc2.md`, or a named scratch file — not in these docs |
 | A pattern that has repeated and needs codifying for future agents | `../.cursor/skills/<name>/SKILL.md` |
 | Guidance for any AI agent working in this repo | `../CLAUDE.md` (canonical) |

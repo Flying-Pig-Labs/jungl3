@@ -138,7 +138,7 @@ Never leave a §11 item that a new ADR has resolved — that is exactly the drif
 
 An ADR often requires edits elsewhere to stay consistent with the decision:
 
-- **Terminology renames** (ADR 0003: Marketplace → Gallery) → sweep `docs/`, `CLAUDE.md`, and cross-reference the Lovable-owned website paths separately under the §3 boundary.
+- **Terminology renames** (e.g. ADR 0003: Marketplace → Gallery; ADR 0004: Frankenstein app → Understory, Gallery → folded into DMZ, Substrate promoted) → sweep `docs/`, `CLAUDE.md`, and cross-reference the Lovable-owned website paths separately under the §3 boundary.
 - **New constraints on agents or skills** → update `CLAUDE.md` §10 watchlist or existing skills.
 - **New authoritative reference** → link from the glossary entry or architecture doc it pins. ADR 0002 is linked from `glossary.md#agent-layer` and from `architecture/agent-layer.md`.
 - **Follow-on open questions** → add to `CLAUDE.md` §11.

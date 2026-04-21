@@ -1,7 +1,9 @@
 # 0003 — Jungle3 is distributed as an installable AWS Marketplace listing
 
-**Status:** Accepted
+**Status:** Accepted (rider terminology partly superseded by [ADR 0004](./0004-canonical-platform-vocabulary.md))
 **Date:** 2026-04-21
+
+> **Supersession note.** The primary decision of this ADR — installable via AWS Marketplace — stands unchanged. The rider at the bottom of *Decision* renamed the concept previously called *Marketplace* to *Gallery*. [ADR 0004](./0004-canonical-platform-vocabulary.md) retires *Gallery* and folds its role into *DMZ*. The *Marketplace → (retired name) Gallery* history below stands as historical record; the *Gallery* term is no longer canonical.
 
 ## Context
 

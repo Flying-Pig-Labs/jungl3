@@ -10,23 +10,23 @@ Longer form: Jungle3 generates and deploys a working, integrated application so 
 
 ## The mental flip
 
-The traditional motion is **additive**:
+The traditional motion is **additive from zero**:
 
 > idea → design → scaffold → wire infra → connect services → deploy → test → iterate
 
-Jungle3's motion is **subtractive**:
+Jungle3's motion is **shape a living baseline**:
 
-> idea → vend a living system → trim → reshape → test → iterate
+> idea → vend a living system → trim, substitute, and extend → test → iterate
 
-Teams are not handed a blank page. They are handed a [Frankenstein app](../glossary.md#frankenstein-app): deployed, integrated, emitting, rendering — and deliberately over-complete. Their job is to **cut it down, reshape it, and make it real.**
+Teams are not handed a blank page. They are handed an [Understory](../glossary.md#understory): deployed, integrated, emitting, rendering — a baseline that is already complete enough to be real on day one. Their job is to **shape it into the prototype they intend.** That shaping includes cutting parts that do not belong, substituting in parts that do, and adding what the baseline does not cover. Subtraction is a primary motion, not the only one.
 
 This is how most production systems actually evolve. Jungle3 just compresses the front half of that curve.
 
-## Why subtraction
+## Why a living baseline
 
-Additive construction delays the first real interaction with a product. A team building up from nothing spends its early days on scaffolding, auth, data wiring, deploy plumbing — work that doesn't answer the one question that matters: *does this solve anything for anyone?*
+Starting from zero delays the first real interaction with a product. A team building up from nothing spends its early days on scaffolding, auth, data wiring, deploy plumbing — work that doesn't answer the one question that matters: *does this solve anything for anyone?*
 
-Subtractive work collapses that gap. Because the system is already alive, the first decision is a product decision, not an infrastructure one.
+Starting from a living baseline collapses that gap. Because the system is already alive, the first decision is a product decision, not an infrastructure one.
 
 Trade-off, stated plainly: teams inherit complexity they didn't choose. Shaping an over-complete system is harder than it sounds. That cost is accepted intentionally — it mirrors real-world product work, where nobody gets to start from zero either.
 
@@ -64,11 +64,12 @@ Each of these is elaborated elsewhere; listed here only to show how the product 
 
 | Pillar (product language) | Platform concept |
 | --- | --- |
-| Pre-generated Frankenstein app | [Jungle](../glossary.md#jungle) + [Frankenstein app](../glossary.md#frankenstein-app) |
+| Pre-built baseline app | [Jungle](../glossary.md#jungle) + [Understory](../glossary.md#understory) |
+| Runs in your AWS account | [Substrate](../glossary.md#substrate) + [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md) |
 | AI-driven architecture + deployment | [Control Plane](../glossary.md#control-plane) |
-| Trim-first development model | Repo-wide principle — see [`../../CLAUDE.md`](../../CLAUDE.md) §1 |
+| Shape-a-living-baseline development model | Repo-wide principle — see [`../../CLAUDE.md`](../../CLAUDE.md) §1 |
 | Built-in integrations | [Synthetic Runtime](../glossary.md#synthetic-runtime) |
-| Gallery-first | [Gallery](../glossary.md#gallery) + [Integration Contract](../glossary.md#integration-contract) |
+| One exposure surface | [DMZ](../glossary.md#dmz) + [Integration Contract](../glossary.md#integration-contract) |
 | Synthetic system + synthetic users | [Synthetic Runtime](../glossary.md#synthetic-runtime) + [Agent Layer](../glossary.md#agent-layer) (user-simulation) |
 | CLI-native control plane | [Control Plane](../glossary.md#control-plane) operator surface |
 
@@ -76,7 +77,7 @@ No new concepts introduced here. If a pillar can't be expressed in existing voca
 
 ## How it ships
 
-Jungle3 is distributed as an **AWS Marketplace listing**. A customer subscribes, launches the CloudFormation template into their own AWS account, and from that moment forward operates their own Jungle3 instance — Control Plane, Jungles, DMZs, Gallery, all of it — inside their account. Jungle3 the company does not run a hosted multi-tenant platform. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md).
+Jungle3 is distributed as an **AWS Marketplace listing**. A customer subscribes, launches the CloudFormation template into their own AWS account, and from that moment forward operates their own Jungle3 instance — Control Plane, Jungles, DMZs, all of it — inside their account. Jungle3 the company does not run a hosted multi-tenant platform. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md).
 
 ## Pitch form
 
