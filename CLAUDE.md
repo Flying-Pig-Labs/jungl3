@@ -209,15 +209,13 @@ Skills for this repo live in `.cursor/skills/`. See [`.cursor/skills/README.md`]
 
 ### Skill candidates (watchlist)
 
-Patterns to watch for. Each gets promoted to a real skill the second time we do one, or when the user confirms it's worth codifying.
+Patterns to watch for. Each gets promoted to a real skill the second time we do one, or when the user confirms it's worth codifying. Already-promoted skills live in [`.cursor/skills/`](./.cursor/skills/); entries below are candidates only.
 
 **Repo-process skills (meta, about how we work in this repo):**
 
 - **`diagram-author`** — authoring/updating a Mermaid diagram to the §8 style rules. Promote on the second diagram.
-- **`architecture-note-synthesis`** — turning a rough architecture idea or transcript fragment into the right doc(s) in `docs/architecture/`. Promote on the second synthesis pass.
 - **`concept-to-doc-placement`** — the routing logic in §7. Promote if we find ourselves re-deriving where something goes.
 - **`terminology-consistency`** — scanning edits for glossary drift and fixing it. Promote if/when drift actually happens.
-- **`adr-author`** — writing a new ADR from context + decision + consequences. Promote on ADR #2.
 
 **Platform-build skills (about Jungle3 itself):**
 
