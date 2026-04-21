@@ -44,6 +44,11 @@ Synthesis layer:
 - [`EXECUTIVE_SUMMARIES.md`](./EXECUTIVE_SUMMARIES.md) — one-paragraph distillation per report.
 - [`DECISIONS.md`](./DECISIONS.md) — flat backlog of ~60 decisions the cluster surfaces, all `status: open`.
 
+Print-friendly review copies (re-derivable from the synthesis above):
+
+- [`PRINT-executive-brief.md`](./PRINT-executive-brief.md) — 1-page synopsis. For carrying around or handing off.
+- [`PRINT-decision-packet.md`](./PRINT-decision-packet.md) — ~8-page working copy with space for markup. For sitting down to decide.
+
 **Status:** Raw reports and synthesis are **not adopted as repo policy**. The candidate ADRs in `SYNTHESIS.md` §4 are candidates — nothing has been accepted. Several decisions overlap with existing [`CLAUDE.md`](../../CLAUDE.md) §11 entries (notably #16–#19); cross-references are in `DECISIONS.md`.
 
 ## Related
