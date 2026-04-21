@@ -7,14 +7,11 @@ Read this **before** making changes. It encodes constraints that are not obvious
 
 ## 1. What jungl3 is
 
-jungl3 (pronounced "jungle three") is the working name for an **AI-native prototype platform** for time-boxed innovation sprints. The full concept lives in `doc.md` and `doc2.md`; the condensed version:
+jungl3 (pronounced "jungle three") is the working name for an **AI-native prototype platform** for time-boxed innovation sprints. The full concept lives in `doc.md` and `doc2.md`; the refined distillation lives in `docs/`.
 
-- **Jungle** — a pre-provisioned builder environment (app scaffold + DB + storage + seeded data + stubbed services) where a team and its AI agents modify a living system rather than build from scratch.
-- **DMZ** — an isolated, externally accessible runtime where a team's prototype is deployed for real users, beta customers, and judges to interact with.
-- **Marketplace** — the shared discovery and judging front door. Each team's prototype appears as a tile; judges launch into prototypes through a controlled gateway.
-- **Synthetic Runtime** — fake-but-believable data, event streams, queue traffic, and stubbed APIs that make every environment feel alive on day one.
-- **Agent Layer** — specialized sub-agents (Data, API, Event, Auth, Marketplace, Environment) that the primary operator agent routes questions to. Sub-agents return structured `{status, summary, evidence, recommended_action}`.
-- **Control Plane / CLI** — a Claude-Code-CLI-style operator surface for vending jungles, inspecting state, running agents, registering to the marketplace. Text-forward, not a dashboard.
+Canonical term definitions live in [`docs/glossary.md`](./docs/glossary.md). The current high-level shape, diagrammed: [`docs/architecture/system-context.md`](./docs/architecture/system-context.md).
+
+One-line summary: **Jungle3 vends isolated "Jungles" (builder environments that are alive on day one), prototypes deploy from a Jungle to a matching DMZ (the customer-facing runtime), and DMZs appear as tiles in a shared Marketplace for users and judges.** A Control Plane vends and manages all of it.
 
 Design principle carried throughout: **start with too much, trim down**. Teams do not build up from a blank scaffold; they shape a Frankenstein that already runs.
 
@@ -126,38 +123,108 @@ Do not sign commits with `Co-Authored-By: Claude`, `Co-Authored-By: Cursor`, or 
 
 ---
 
-## 7. Commits, pushes, PRs
+## 7. Information placement
+
+Jungle3 is in the concept-to-architecture phase. Ideas arrive in fragments. Your job is to land each one where future humans and agents will find it — not leave it stranded in a random file.
+
+When a new piece of information arrives, classify it and route it:
+
+| Kind of information | Destination |
+| --- | --- |
+| What a Jungle3 concept *means* (a term, a noun) | [`docs/glossary.md`](./docs/glossary.md) |
+| How the system is structured (layers, boundaries, interactions) | `docs/architecture/<topic>.md` |
+| A **decision** we are making (closes off options, costly to reverse) | `docs/decisions/NNNN-slug.md` (see [`docs/decisions/README.md`](./docs/decisions/README.md)) |
+| An **open question** we haven't answered yet | §11 of this file |
+| Product vision / raw strategic thinking | `doc.md`, `doc2.md` — unchanged source material |
+| A **flow** that would benefit from visualization | Mermaid diagram inside the relevant architecture doc (see §8) |
+| A pattern that has repeated and needs codifying for agents | `.cursor/skills/<name>/SKILL.md` (see §10) |
+| Repo-level guidance for AI agents | This file — `CLAUDE.md` is canonical |
+| Lovable-specific guidance | §3 of this file only — do not fragment into other files |
+
+**Do not:**
+- Duplicate a concept definition in two places. Define once in `glossary.md`, link everywhere else.
+- Create empty scaffolding (stub docs, stub directories) in anticipation of content. Create the file the first time there is real material for it.
+- Leave an architecture idea in a scratch comment, a commit message, or a chat log if it actually shapes the system. Move it to the right doc.
+- Let `doc.md` / `doc2.md` grow as catch-alls. Those are raw source; refined material goes to `docs/`.
+
+**Reduce entropy on every pass.** If you notice terminology drift, stale duplication, or an idea stranded in the wrong file while doing other work, fix it in the same commit or flag it.
+
+---
+
+## 8. Mermaid style
+
+Diagrams in this repo are **Mermaid**, embedded in the docs they support. The canonical diagram is [`docs/architecture/system-context.md`](./docs/architecture/system-context.md); match its style.
+
+### Rules
+
+- **One concept per diagram.** If it takes a paragraph to explain what the diagram shows, split it.
+- **Short labels.** `Control Plane` not `The Jungle3 Control Plane Orchestration Service`.
+- **Same names everywhere.** Pull labels from [`docs/glossary.md`](./docs/glossary.md). If a node is called `DMZ` in one diagram, it's `DMZ` in every diagram.
+- **Layout: left-to-right (`flowchart LR`) or top-to-bottom (`flowchart TB`).** Pick one and stick with it inside a doc.
+- **Separate concerns.** Conceptual architecture ≠ runtime flow ≠ deployment topology. Don't mix them into one diagram.
+- **Arrow labels name the relationship.** `-->|vends|`, `-->|deploys to|`, `-->|registers with|`. Not unlabelled arrows unless the relationship is obvious.
+- **No crossing lines if you can avoid them.** If you can't, the diagram is too dense — split it.
+- **Title + one sentence.** Each diagram has a heading above it and, if useful, a single short sentence of context. Not a paragraph.
+- **Must render.** Validate Mermaid before committing. Broken diagrams are worse than no diagrams.
+
+### When to add a diagram
+
+Add one when a concept is **being documented for a real reason** (an architecture doc, an ADR context section, a flow explanation) and a picture would teach it faster than prose.
+
+**Do not** add a diagram just because a topic "feels architectural." Decorative diagrams violate the clarity-over-completeness principle.
+
+### Split, don't crowd
+
+If a diagram grows past ~8 nodes or starts mixing concerns, split it into multiple small ones. Multiple 5-node diagrams beat one 15-node diagram every time.
+
+### When a diagram directory is justified
+
+Diagrams live next to the doc they support. A dedicated `docs/diagrams/` directory is created only when we have enough cross-referenced diagrams (say, four or more referenced from multiple docs) to justify centralizing them. Until then, no.
+
+---
+
+## 9. Commits, pushes, PRs
 
 - Never commit or push without the user asking. (See the global AGENT.md in `~/CLAUDE.md` for the truthfulness rules.)
 - Never use `gh` CLI. Use the GitHub MCP tools if GitHub work is needed. If GitHub MCP is unavailable, ask the user.
-- Never force-push to `main`. Lovable also pushes to `main`; a force-push would destroy its work.
+- Never force-push to `main` without explicit user instruction. Lovable also pushes to `main`; a force-push would destroy its work.
 - Prefer feature branches for non-trivial changes in our subdirs; the website (Lovable territory) stays on `main` per Lovable's convention.
 
 ---
 
-## 8. Skills
+## 10. Skills
 
-Skills for this repo live in `.cursor/skills/`. See `.cursor/skills/README.md` for the convention.
+Skills for this repo live in `.cursor/skills/`. See [`.cursor/skills/README.md`](./.cursor/skills/README.md) for the convention.
 
 **Growth policy**: add a skill only when a pattern has been repeated — or is clearly about to be — and the instructions are non-obvious enough that re-deriving them next time would waste effort. Do not seed speculative skills. The authoring tool is the existing workspace-level `create-skill` skill at `/Users/williamprior/.cursor/skills-cursor/create-skill/SKILL.md`.
 
 ### Skill candidates (watchlist)
 
-Patterns I'll watch for. Each gets promoted to a real skill once it actually repeats or the user confirms it's worth codifying.
+Patterns to watch for. Each gets promoted to a real skill the second time we do one, or when the user confirms it's worth codifying.
 
-- **`aws-deploy-jungl3`** — how we actually push a domain subdir to AWS (which tool: CDK vs Terraform vs SAM; which region; which account; how the OIDC role is assumed). Promote once the first domain deploys.
-- **`vend-a-jungle`** — the repeatable flow for provisioning a new per-team DMZ account + stack. Promote once the control-plane has its first working vend.
-- **`register-to-marketplace`** — the integration-contract implementation checklist (`/metadata`, `/health`, `/launch-config`, `/demo-reset`). Promote once the contract is finalized and the marketplace-api consumes it.
-- **`synthetic-data-seed`** — how to author + wire a new fake-data generator / event emitter for a domain starter. Promote once there are two of them.
-- **`sub-agent-author`** — the response contract (`{status, summary, evidence, recommended_action}`) and the tooling scaffold for writing a new specialist agent. Promote once the second sub-agent is written.
-- **`cli-command-author`** — how to add a new command to the operator CLI (conventions for output shape, exit codes, logging). Promote once the CLI has three commands.
-- **`lovable-safe-edit`** — the protocol for editing `src/` safely alongside Lovable without trampling each other. Promote if/when we find ourselves doing this repeatedly.
+**Repo-process skills (meta, about how we work in this repo):**
+
+- **`diagram-author`** — authoring/updating a Mermaid diagram to the §8 style rules. Promote on the second diagram.
+- **`architecture-note-synthesis`** — turning a rough architecture idea or transcript fragment into the right doc(s) in `docs/architecture/`. Promote on the second synthesis pass.
+- **`concept-to-doc-placement`** — the routing logic in §7. Promote if we find ourselves re-deriving where something goes.
+- **`terminology-consistency`** — scanning edits for glossary drift and fixing it. Promote if/when drift actually happens.
+- **`adr-author`** — writing a new ADR from context + decision + consequences. Promote on ADR #2.
+
+**Platform-build skills (about Jungle3 itself):**
+
+- **`aws-deployment-synthesis`** — turning an architecture decision into concrete AWS service selection (account, region, runtime, networking). Promote once the first domain deploys.
+- **`vend-a-jungle`** — the repeatable flow for provisioning a new per-team Jungle+DMZ. Promote once the control plane has its first working vend.
+- **`register-to-marketplace`** — the Integration Contract implementation checklist. Promote once the contract is finalized and the marketplace-api consumes it.
+- **`synthetic-data-seed`** — authoring + wiring a new fake-data generator / event emitter for a domain starter. Promote once there are two of them.
+- **`sub-agent-author`** — the `{status, summary, evidence, recommended_action}` response contract plus tooling scaffold for a new specialist agent. Promote on the second sub-agent.
+- **`cli-command-author`** — adding a new command to the operator CLI. Promote once the CLI has three commands.
+- **`lovable-safe-edit`** — editing `src/` safely alongside Lovable. Promote if we do it repeatedly.
 
 ---
 
-## 9. Open decisions (unresolved, do not invent answers)
+## 11. Open decisions (unresolved, do not invent answers)
 
-Flag these when they become relevant to a task. Do **not** guess an answer; ask the user.
+Flag these when they become relevant to a task. Do **not** guess an answer; ask the user. When a question here is resolved, promote it to `docs/decisions/NNNN-slug.md` and remove it from this list.
 
 1. **Website deploy target.** Today: Cloudflare Workers via Wrangler (Lovable default). Stated user intent: AWS. Likely resolution: website stays on Cloudflare for Lovable's publish loop; all other domains deploy to AWS. Not confirmed yet.
 2. **Domain(s) and DNS.** No domain chosen. `doc.md` hints at a scheme like `team-x.dmz.example.com`; the real apex is TBD.
@@ -168,23 +235,28 @@ Flag these when they become relevant to a task. Do **not** guess an answer; ask 
 7. **Data classification rules.** `doc.md` §8 says "synthetic, public, or scrubbed only." Who approves exceptions is TBD.
 8. **Kiro CLI vs custom CLI.** `doc2.md` floats wiring in Kiro CLI/IDE for architecture + deploy. Undecided.
 
+For **decided** things, see [`docs/decisions/`](./docs/decisions/).
+
 ---
 
-## 10. Style
+## 12. Style
 
 - TypeScript for all new code in the repo unless a domain has a principled reason otherwise (e.g., a Python-native agent, a Go-native CLI).
 - ES modules, named exports, `async/await`.
 - shadcn/ui + Tailwind v4 for any UI inside the Lovable-owned website; for our own UIs in subdirs, we may choose differently.
 - Comments explain **why**, not what. No narration comments. No "Import the module" / "Return the result" noise.
 - Prefer deletion over addition. Prefer clarity over cleverness. Each abstraction must earn its place.
+- Keep docs minimal. A good doc teaches one thing well.
 
 ---
 
-## 11. If in doubt
+## 13. If in doubt
 
 Ask. Especially before:
 - Touching anything in the Lovable-owned path list.
 - Deploying or modifying any AWS resource.
 - Creating a new top-level subdirectory.
+- Creating a new file in `docs/architecture/` or `docs/decisions/` — check §7 placement first.
 - Adding a root-level config, tool, or dependency.
 - Committing or pushing.
+- Writing a diagram or doc that invents architecture detail not present in `doc.md`, `doc2.md`, or existing `docs/`.
