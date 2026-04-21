@@ -117,7 +117,7 @@ The profile and read-only rules apply to **Jungle3's own AWS account** — the a
 
 The installed Jungle3 runs inside a single customer AWS account. Concrete topology — whether the Control Plane runs on Lambda or ECS/Fargate, single CFN stack vs nested components, IAM role minimums — is intentionally not fixed yet. Open in §11.
 
-Historical note: `doc.md` §§2–13 describe a **Jungle3-hosted** shape (Organizations, Control Tower, a Jungle3-owned sandbox account, a Jungle3-owned ALB). That framing is pre-[ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md). Read `doc.md` for the security-posture reasoning (synthetic-only data, private subnets, egress controls, TTL teardown, least-privilege IAM) — those principles translate to the customer-account install. Do not read `doc.md`'s account-structure recommendations as current architecture.
+Historical note: `doc.md` and `doc2.md` describe a pre-[ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md) **Jungle3-hosted** shape. Each file now carries its own frontmatter saying so; read them as design transcripts, not current architecture.
 
 ---
 

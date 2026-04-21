@@ -1,3 +1,12 @@
+> Historical. Captured before the delivery model was decided.
+> Read as design transcript, not as current architecture.
+> Current architecture: see docs/decisions/0003-installable-via-aws-marketplace.md.
+> AWS security-posture reasoning (synthetic-only data, private subnets,
+> egress controls, TTL teardown, least-privilege IAM) still translates
+> to the installable model. The account-structure and hosted-platform
+> recommendations do not.
+
+---
 
 
 

@@ -1,3 +1,13 @@
+> Historical. Captured before the delivery model was decided.
+> Read as design transcript, not as current architecture.
+> Current architecture: see docs/decisions/0003-installable-via-aws-marketplace.md.
+> AWS security-posture reasoning (synthetic-only data, private subnets,
+> egress controls, TTL teardown, least-privilege IAM) still translates
+> to the installable model. The account-structure and hosted-platform
+> recommendations do not.
+
+---
+
 This is for the **“Welcome to the Jungle” innovation sprint** and the goal is a **safe-but-fast AWS sandbox** where teams can build in a less restrictive environment, demo to real beta customers, and not contaminate production.
 
 ## AWS setup plan
