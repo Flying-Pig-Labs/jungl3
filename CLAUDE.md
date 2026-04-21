@@ -258,7 +258,6 @@ Flag these when they become relevant to a task. Do **not** guess an answer; ask 
 
 16. **Kiro CLI vs custom CLI.** `doc2.md` floats wiring in Kiro CLI/IDE for architecture + deploy. Undecided.
 17. **First-sponsor / first-customer context.** Docs are intentionally sponsor-agnostic. Specific first-customer context (who, sprint name, dates, domain-starter priorities) accumulates separately when relevant.
-18. **Website terminology sync.** The Lovable-maintained website (`src/`) still contains copy referring to the Jungle3 concept as "Marketplace." Renaming happens through Lovable on the next visual/content pass; cannot be done directly per §3.
 
 For **decided** things, see [`docs/decisions/`](./docs/decisions/).
 

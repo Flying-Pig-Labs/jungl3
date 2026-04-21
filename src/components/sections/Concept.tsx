@@ -1,7 +1,7 @@
 const ITEMS = [
   { k: "00", t: "Base Camp", d: "Your workspace, login, and kit. Adventure starts here." },
   { k: "01", t: "Outposts", d: "Cloud stacks, integrations, deployments — pre-wired." },
-  { k: "02", t: "DMZ Marketplace", d: "Export builds. Real beta customers walk in and use them." },
+  { k: "02", t: "DMZ Gallery", d: "Export builds. Real beta customers walk in and use them." },
   { k: "03", t: "Rope Swing", d: "Research and ideation signals. Where ideas emerge." },
   { k: "04", t: "Swarms", d: "Automated AI builders and agent clusters." },
   { k: "05", t: "Streams", d: "Fake data and full system replicas to feed the build." },

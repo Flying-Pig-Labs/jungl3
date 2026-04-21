@@ -15,7 +15,7 @@ const MODULES = [
   },
   {
     icon: ShieldCheck,
-    title: "DMZ Marketplace",
+    title: "DMZ Gallery",
     desc: "Push a build over the trail. Real beta customers walk in and stress-test it for you.",
     tag: "NODE-02",
   },
