@@ -8,7 +8,7 @@ import { IdeaEngine } from "@/components/sections/IdeaEngine";
 import { CTASection } from "@/components/sections/CTA";
 import { Architecture } from "@/components/sections/Architecture";
 import { Footer } from "@/components/sections/Footer";
-import { GrainOverlay, ScanlinesOverlay, Vignette } from "@/components/effects/Overlays";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -48,9 +48,6 @@ function Index() {
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">
-      <GrainOverlay />
-      <ScanlinesOverlay />
-      <Vignette />
       <main className="relative z-10">
         <Hero />
         <ConceptSection />
