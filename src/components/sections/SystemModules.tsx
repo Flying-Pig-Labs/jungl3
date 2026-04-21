@@ -1,41 +1,23 @@
-import { Tent, Server, ShieldCheck, Sparkles, Bot, Database } from "lucide-react";
-
-const MODULES = [
+const STEPS = [
   {
-    icon: Tent,
-    title: "Base Camp",
-    desc: "Your workspace. Login state, projects, kit. Every adventure starts here.",
-    tag: "NODE-00",
+    k: "01",
+    t: "A team logs in",
+    d: "Their Jungle is already vended. The Understory is already running. There is no scaffolding phase.",
   },
   {
-    icon: Server,
-    title: "Outposts",
-    desc: "Your cloud stacks. Infrastructure, integrations, deployments — pre-wired and humming.",
-    tag: "NODE-01",
+    k: "02",
+    t: "They shape the Understory",
+    d: "Remove what doesn't belong. Substitute what does. Extend where the baseline stops. The system stays alive the whole time.",
   },
   {
-    icon: ShieldCheck,
-    title: "DMZ",
-    desc: "Push a build over the trail. Real beta customers walk in and stress-test it for you.",
-    tag: "NODE-02",
+    k: "03",
+    t: "They push to the DMZ",
+    d: "One command moves a prototype from Jungle to DMZ. Standardized hosting, auth, routing — not a deploy project.",
   },
   {
-    icon: Sparkles,
-    title: "Rope Swing",
-    desc: "Research and ideation signals. Where ideas emerge before they have names.",
-    tag: "NODE-03",
-  },
-  {
-    icon: Bot,
-    title: "Swarms",
-    desc: "Automated AI builders. Agent clusters and pre-built systems for rapid prototyping.",
-    tag: "NODE-04",
-  },
-  {
-    icon: Database,
-    title: "Streams",
-    desc: "Fake data and full system replicas. Feed your build until it learns to swim.",
-    tag: "NODE-05",
+    k: "04",
+    t: "Outside people use it",
+    d: "Judges, beta customers, stakeholders enter the DMZ as personas. Feedback is captured in-place. Scores come from what they actually experienced.",
   },
 ];
 
@@ -45,40 +27,37 @@ export function SystemModules() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-14 text-center">
           <div className="mb-3 font-mono text-xs tracking-[0.4em] text-neon">
-            // 02 — THE MAP
+            // 02 — THE LOOP
           </div>
-          <h2 className="font-display text-4xl font-black text-gradient-headline glint sm:text-5xl">
-            Nodes of the Jungl3
+          <h2 className="font-display text-4xl font-black text-gradient-headline sm:text-5xl">
+            Day one to feedback, without the week of setup.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
-            Six locations on the map. Connected by trails. Compose your route.
+            Four steps. Weeks compressed into hours.
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {MODULES.map((m) => (
-            <article
-              key={m.tag}
-              className="module-card group relative overflow-hidden rounded-md border border-border bg-card/50 p-6 backdrop-blur-sm"
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {STEPS.map((s) => (
+            <li
+              key={s.k}
+              className="module-card relative overflow-hidden rounded-md border border-border bg-card/50 p-6 backdrop-blur-sm"
             >
               <div className="mb-5 flex items-center justify-between">
-                <span className="module-icon text-neon transition-all">
-                  <m.icon className="h-7 w-7" strokeWidth={1.4} />
-                </span>
-                <span className="font-mono text-[10px] tracking-[0.3em] text-gold/70">
-                  {m.tag}
+                <span className="font-mono text-xs tracking-[0.3em] text-neon">
+                  STEP {s.k}
                 </span>
               </div>
-              <h3 className="font-display text-xl font-bold text-foreground">
-                {m.title}
+              <h3 className="font-display text-lg font-bold text-foreground">
+                {s.t}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {m.desc}
+                {s.d}
               </p>
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-neon/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-            </article>
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-neon/60 to-transparent opacity-0 transition-opacity hover:opacity-100" />
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

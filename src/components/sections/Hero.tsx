@@ -1,19 +1,17 @@
 import bgUrl from "@/assets/jungle-bg.jpg";
 
-export function Hero() {
+export function Hero({ onRequestAccess }: { onRequestAccess: () => void }) {
   return (
     <section
       id="hero"
       className="relative flex min-h-screen items-center justify-center overflow-hidden px-6"
     >
-      {/* Static poster background */}
       <img
         src={bgUrl}
         alt=""
         aria-hidden
         className="absolute inset-0 h-full w-full object-cover object-center opacity-70"
       />
-      {/* Single dark overlay for legibility */}
       <div
         aria-hidden
         className="absolute inset-0"
@@ -23,23 +21,31 @@ export function Hero() {
         }}
       />
 
-      {/* Content */}
       <div className="relative z-10 mx-auto max-w-4xl px-2 py-16 text-center">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-neon/60 bg-black/40 px-4 py-1.5 font-mono text-[11px] tracking-[0.4em] text-neon">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-neon" />
-          SUMMER 2026
-        </div>
-        <h1 className="font-display text-5xl leading-[1.05] tracking-tight text-gradient-headline sm:text-6xl md:text-7xl" style={{ fontFamily: '"Monoton", serif', fontWeight: 400 }}>
-          Welcome to
-          <br />
-          the Jungl3
+        <h1
+          className="font-display text-5xl leading-[1.05] tracking-tight text-gradient-headline sm:text-6xl md:text-7xl"
+          style={{ fontFamily: '"Monoton", serif', fontWeight: 400 }}
+        >
+          Jungl3
         </h1>
-        <p className="mx-auto mt-8 max-w-xl font-mono text-base font-light text-foreground/90 sm:text-lg">
-          A DMZ sandbox where ideas enter raw and leave battle-tested.
+        <p className="mx-auto mt-8 max-w-2xl font-mono text-base font-light text-foreground/90 sm:text-lg">
+          A pre-built, operational application that installs into your AWS
+          account, so your teams start by shaping a running system instead of
+          scaffolding a new one.
         </p>
-        <p className="mx-auto mt-3 max-w-md font-mono text-xs tracking-[0.3em] text-muted-foreground uppercase">
-          Base Camp · Outposts · DMZ · Rope Swing · Swarms · Streams
+        <p className="mx-auto mt-4 max-w-xl font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
+          Delivered as an AWS Marketplace listing · Installs into your AWS account
         </p>
+
+        <div className="mt-10 flex justify-center">
+          <button
+            type="button"
+            onClick={onRequestAccess}
+            className="rounded-md border border-gold/60 bg-gradient-to-r from-neon via-moss to-neon px-8 py-3.5 font-mono text-xs font-semibold uppercase tracking-[0.3em] text-primary-foreground shadow-[0_0_24px_oklch(0.78_0.24_145_/_0.5)] transition-all hover:scale-[1.02] hover:shadow-[0_0_40px_oklch(0.78_0.24_145_/_0.8)]"
+          >
+            Request access →
+          </button>
+        </div>
       </div>
     </section>
   );

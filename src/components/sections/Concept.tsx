@@ -1,59 +1,61 @@
-const ITEMS = [
-  { k: "00", t: "Base Camp", d: "Your workspace, login, and kit. Adventure starts here." },
-  { k: "01", t: "Outposts", d: "Cloud stacks, integrations, deployments — pre-wired." },
-  { k: "02", t: "DMZ", d: "Export builds. Real beta customers walk in and use them." },
-  { k: "03", t: "Rope Swing", d: "Research and ideation signals. Where ideas emerge." },
-  { k: "04", t: "Swarms", d: "Automated AI builders and agent clusters." },
-  { k: "05", t: "Streams", d: "Fake data and full system replicas to feed the build." },
+const STRATA = [
+  {
+    k: "01",
+    t: "Substrate",
+    role: "What your platform team operates",
+    d: "The AWS primitives the install sits on — networking, identity, storage, compute, observability. Provisioned by the CloudFormation template at install time. Everything above is pre-operated.",
+  },
+  {
+    k: "02",
+    t: "Understory",
+    role: "What arrives pre-built and running",
+    d: "A baseline application already deployed, integrated, emitting, rendering. Real users, real data, real events, multiple integrations wired. Teams shape it by removing, substituting, and extending — not by scaffolding from zero.",
+  },
+  {
+    k: "03",
+    t: "DMZ",
+    role: "The one exposure surface",
+    d: "Where external visitors — judges, beta users, stakeholders — find prototypes, enter as personas, and actually use them. Everything else stays hidden inside the install. Public-ish in access, private in blast radius.",
+  },
 ];
 
 export function ConceptSection() {
   return (
     <section className="relative overflow-hidden px-6 py-32">
-      <div className="mx-auto grid max-w-6xl gap-16 md:grid-cols-2 md:gap-20">
-        <div>
-          <div className="mb-4 font-mono text-xs tracking-[0.4em] text-neon">
-            // 01 — THE TERRITORY
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-14 text-center">
+          <div className="mb-3 font-mono text-xs tracking-[0.4em] text-neon">
+            // 01 — WHAT YOU INSTALL
           </div>
           <h2 className="font-display text-4xl font-black leading-tight text-foreground sm:text-5xl">
-            A DMZ sandbox
-            <br />
-            <span className="text-gradient-headline">where ideas enter raw</span>
-            <br />
-            <span className="text-foreground/80">and leave battle-tested.</span>
+            Three layers. One install.
           </h2>
-          <div className="mt-8 space-y-4 text-base leading-relaxed text-foreground/80">
-            <p>
-              Most "innovation programs" are theater. Slide decks, cardboard
-              prototypes, demo days with no consequences.
-            </p>
-            <p>
-              <span className="text-gold">Jungl3 is a map.</span> Trails connect
-              your Base Camp to Outposts, the DMZ, the Rope Swing, Swarms, and
-              Streams. You move between them. You ship between them.
-            </p>
-            <p className="font-mono text-sm text-muted-foreground">
-              You don't pitch here. You build. The jungle decides what survives.
-            </p>
-          </div>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-foreground/80">
+            The install lands in your AWS account as a single CloudFormation
+            stack. Inside, three layers your team will care about for different
+            reasons.
+          </p>
         </div>
 
-        <div className="space-y-3">
-          {ITEMS.map((item) => (
-            <div
-              key={item.k}
-              className="hud-corners group relative border border-border bg-card/40 p-5 backdrop-blur-sm transition-colors hover:border-gold/60"
+        <div className="grid gap-4 md:grid-cols-3">
+          {STRATA.map((s) => (
+            <article
+              key={s.k}
+              className="hud-corners relative border border-border bg-card/40 p-6 backdrop-blur-sm"
             >
-              <div className="flex items-start gap-4">
-                <span className="font-mono text-xs text-gold/80">{item.k}</span>
-                <div>
-                  <h3 className="font-display text-base font-semibold text-foreground">
-                    {item.t}
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{item.d}</p>
-                </div>
+              <div className="mb-3 flex items-baseline justify-between">
+                <span className="font-mono text-xs text-gold/80">{s.k}</span>
+                <span className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase">
+                  {s.role}
+                </span>
               </div>
-            </div>
+              <h3 className="font-display text-2xl font-bold text-foreground">
+                {s.t}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {s.d}
+              </p>
+            </article>
           ))}
         </div>
       </div>

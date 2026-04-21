@@ -1,28 +1,33 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { PasswordGate, hasAccess } from "@/components/PasswordGate";
+import { useState } from "react";
 import { Hero } from "@/components/sections/Hero";
 import { ConceptSection } from "@/components/sections/Concept";
 import { SystemModules } from "@/components/sections/SystemModules";
-import { IdeaEngine } from "@/components/sections/IdeaEngine";
 import { CTASection } from "@/components/sections/CTA";
-import { Architecture } from "@/components/sections/Architecture";
 import { Footer } from "@/components/sections/Footer";
-
+import { RequestAccessModal } from "@/components/RequestAccessModal";
+// Temporarily unrendered while the page is reframed for CTO audience:
+// import { IdeaEngine } from "@/components/sections/IdeaEngine";
+// import { Architecture } from "@/components/sections/Architecture";
+// import { PasswordGate, hasAccess } from "@/components/PasswordGate";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Welcome to the Jungl3 — Hack in a DMZ with real beta customers" },
+      {
+        title:
+          "Jungl3 — A pre-built application that installs into your AWS account",
+      },
       {
         name: "description",
         content:
-          "A hidden sandbox innovation system. Pre-wired infrastructure, simulated traffic, and real beta customers. Summer 2026.",
+          "Jungl3 is a pre-built, operational application delivered as an AWS Marketplace listing. Teams start by shaping a running system instead of scaffolding a new one.",
       },
-      { property: "og:title", content: "Welcome to the Jungl3" },
+      { property: "og:title", content: "Jungl3" },
       {
         property: "og:description",
-        content: "Hack in a DMZ with real beta customers. Summer 2026.",
+        content:
+          "A pre-built, operational application that installs into your AWS account.",
       },
     ],
   }),
@@ -30,33 +35,19 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [unlocked, setUnlocked] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    if (hasAccess()) setUnlocked(true);
-  }, []);
-
-  if (!mounted) {
-    return <div className="min-h-screen bg-background" />;
-  }
-
-  if (!unlocked) {
-    return <PasswordGate onUnlock={() => setUnlocked(true)} />;
-  }
+  const [requestOpen, setRequestOpen] = useState(false);
+  const openRequest = () => setRequestOpen(true);
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">
       <main className="relative z-10">
-        <Hero />
+        <Hero onRequestAccess={openRequest} />
         <ConceptSection />
         <SystemModules />
-        <IdeaEngine />
-        <Architecture />
-        <CTASection />
-        <Footer onLockOut={() => setUnlocked(false)} />
+        <CTASection onRequestAccess={openRequest} />
+        <Footer onRequestAccess={openRequest} />
       </main>
+      <RequestAccessModal open={requestOpen} onOpenChange={setRequestOpen} />
     </div>
   );
 }
