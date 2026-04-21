@@ -1,5 +1,4 @@
 import bgUrl from "@/assets/jungle-bg.jpg";
-import mapUrl from "@/assets/jungle-poster.png";
 
 export function Hero() {
   return (
