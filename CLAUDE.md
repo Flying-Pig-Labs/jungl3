@@ -233,8 +233,12 @@ Flag these when they become relevant to a task. Do **not** guess an answer; ask 
 4. **Account strategy for v1.** `doc.md` recommends Control Tower + per-team accounts. Acceptable fallback: single sandbox account with namespace isolation. Which one for the first event is TBD.
 5. **GitHub Actions + OIDC role ARN.** Not yet set up.
 6. **Sprint / event name and dates.** The TTL tags in `doc.md` imply an event calendar — not yet provided.
-7. **Data classification rules.** `doc.md` §8 says "synthetic, public, or scrubbed only." Who approves exceptions is TBD.
+7. **Data classification rules.** `doc.md` §8 says "synthetic, public, or scrubbed only." Who approves exceptions, and how that approval is expressed inside a DMZ's data boundary, is TBD.
 8. **Kiro CLI vs custom CLI.** `doc2.md` floats wiring in Kiro CLI/IDE for architecture + deploy. Undecided.
+9. **DMZ authentication for external users.** Recommendation on record: magic link + password-guest access + seeded persona/test accounts + role-based access (judge, beta user, builder, admin). Not yet decided. See [`docs/architecture/dmz.md`](./docs/architecture/dmz.md).
+10. **DMZ AWS topology.** VPC shape, ALB/WAF pattern, per-team subdomain or path routing, DNS apex. `doc.md` §§2–5 sketch a shape; it is not committed to.
+11. **DMZ prototype lifespan past the sprint.** Ephemeral by default per glossary; retention criteria, extension path, and teardown enforcement mechanism are TBD.
+12. **Required DMZ telemetry and feedback capture.** What every DMZ-deployed prototype must emit (session activity, feedback, task completion) is TBD. Affects judging and cross-team comparison.
 
 For **decided** things, see [`docs/decisions/`](./docs/decisions/).
 

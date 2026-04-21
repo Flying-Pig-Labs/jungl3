@@ -22,9 +22,13 @@ The **initial application state** inside a freshly vended Jungle: deployed, inte
 
 ## DMZ
 
-The **customer-facing runtime** — an isolated, externally accessible environment where a prototype is deployed for real users, beta customers, and judges to interact with. The DMZ is the exposure surface; the Jungle is the build surface.
+The **customer-facing runtime** — an isolated, externally accessible environment where a prototype is deployed for real users, beta customers, and judges to interact with.
 
-"DMZ" is used in the networking-inspired sense: public-ish in access, private in blast radius.
+A DMZ is the **exposure surface**; a Jungle is the **build surface**. They are distinct isolation boundaries with distinct users and distinct risk profiles — conflating them is the most common mistake in reading the architecture. See [`architecture/dmz.md`](./architecture/dmz.md) for the three-layer model (builder, pipeline, experience), security posture, and what the experience layer must provide.
+
+"DMZ" is used in the networking-inspired sense:
+
+> Public-ish in access, private in blast radius.
 
 ## Marketplace
 
@@ -41,6 +45,12 @@ The operator surface for the Control Plane is a Claude-Code-CLI-style text-forwa
 The **live-system illusion** — the set of fake data generators, event emitters, queue producers, and stubbed service endpoints that run inside every Jungle from the moment it's provisioned. The Synthetic Runtime is what makes an environment feel alive on day one instead of feeling like empty scaffolding.
 
 Synthetic Runtime is a *layer*, not a single service. It spans data (fake records being continuously generated), events (queues receiving traffic), and services (stubs returning realistic responses).
+
+## Domain Starter
+
+A **pre-configured variant** of the Frankenstein app with domain-native UI, data model, seeded entities, and workflows. Teams do not start from a generic application and invent a domain; they pick a Domain Starter that already looks and behaves like a specific kind of system (customer shopping, support intake, operations dashboard, document workflow, case management, data exploration) and reshape it from there.
+
+Domain Starters share the same underlying platform primitives — Synthetic Runtime, Agent Layer, auth, storage — but diverge in the surface a team sees on day one. Their purpose is to get teams to "interesting" faster. See [`architecture/dmz.md`](./architecture/dmz.md).
 
 ## Agent Layer
 
