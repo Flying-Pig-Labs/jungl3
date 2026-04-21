@@ -63,3 +63,4 @@ Decisions evolve. When a new decision overrides an older one:
 | # | Status | Title |
 | --- | --- | --- |
 | [0001](./0001-lovable-owns-repo-root.md) | Accepted | Lovable owns repo root; platform domains live in subdirs |
+| [0002](./0002-sub-agent-response-contract.md) | Accepted | Sub-agent response contract |

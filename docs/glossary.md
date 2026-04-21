@@ -44,12 +44,17 @@ Synthetic Runtime is a *layer*, not a single service. It spans data (fake record
 
 ## Agent Layer
 
-The **AI-driven components** that operate inside and alongside a Jungle:
+The **AI-driven components** that operate inside and alongside a Jungle. Two roles, sharing a deployment surface but not a responsibility:
+
+**Operational agents** — they *modify* the system.
 
 - **Builder / modifier agents** — author and change the app under team direction.
 - **Clicker agent** (future) — a computer-use agent that navigates the UI and attempts workflows.
 - **User-simulation agent** — generates persona-based dialogue feedback on the prototype.
-- **Specialist sub-agents** — one per domain (Data, API, Event, Auth, Environment, Marketplace). Each owns inspection and validation for its slice of the system and returns structured `{status, summary, evidence, recommended_action}` to an orchestrator agent.
+
+**Inspection specialists** — they *explain and validate* the system, one per domain (Data, API, Event, Auth, Environment, Marketplace). Each owns inspection for its slice and is fronted by an orchestrator that handles routing, composition, and rendering. Specialists must be attached to a real inspection surface rather than prompt memory. See [`architecture/agent-layer.md`](./architecture/agent-layer.md).
+
+Every inspection specialist returns the same structured shape: `{status, summary, evidence, recommended_action}`. The contract is pinned in [ADR 0002](./decisions/0002-sub-agent-response-contract.md).
 
 The Agent Layer is not a single orchestrator pretending to know everything. It is a routed network of small specialists coordinated by a top-level agent.
 

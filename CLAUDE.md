@@ -217,7 +217,7 @@ Patterns to watch for. Each gets promoted to a real skill the second time we do 
 - **`vend-a-jungle`** — the repeatable flow for provisioning a new per-team Jungle+DMZ. Promote once the control plane has its first working vend.
 - **`register-to-marketplace`** — the Integration Contract implementation checklist. Promote once the contract is finalized and the marketplace-api consumes it.
 - **`synthetic-data-seed`** — authoring + wiring a new fake-data generator / event emitter for a domain starter. Promote once there are two of them.
-- **`sub-agent-author`** — the `{status, summary, evidence, recommended_action}` response contract plus tooling scaffold for a new specialist agent. Promote on the second sub-agent.
+- **`sub-agent-author`** — the `{status, summary, evidence, recommended_action}` response contract (pinned in [ADR 0002](./docs/decisions/0002-sub-agent-response-contract.md); architecture in [`docs/architecture/agent-layer.md`](./docs/architecture/agent-layer.md)) plus tooling scaffold for a new specialist agent. Promote on the second sub-agent.
 - **`cli-command-author`** — adding a new command to the operator CLI. Promote once the CLI has three commands.
 - **`lovable-safe-edit`** — editing `src/` safely alongside Lovable. Promote if we do it repeatedly.
 
