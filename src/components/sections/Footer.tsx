@@ -1,4 +1,4 @@
-import { Lock } from "lucide-react";
+import { Lock, Github } from "lucide-react";
 import { clearAccess } from "../PasswordGate";
 
 export function Footer({ onLockOut }: { onLockOut: () => void }) {
