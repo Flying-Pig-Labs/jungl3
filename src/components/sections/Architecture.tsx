@@ -1,3 +1,4 @@
+import diagramUrl from "@/assets/architecture-diagram.svg";
 import {
   Cloud,
   Network,
@@ -222,6 +223,26 @@ export function Architecture() {
           <p className="mx-auto mt-3 max-w-xl font-mono text-xs tracking-[0.25em] text-muted-foreground uppercase">
             Speed and realism — without exposing production
           </p>
+        </div>
+
+        {/* Flow diagram (uploaded reference) */}
+        <div className="hud-corners mb-10 rounded-md border border-border bg-card/40 p-6 backdrop-blur-sm sm:p-8">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="font-mono text-[11px] tracking-[0.3em] text-gold">
+              FLOW · END-TO-END
+            </span>
+            <span className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground">
+              IDEA → DMZ → BETA
+            </span>
+          </div>
+          <div className="rounded-sm bg-background/40 p-4">
+            <img
+              src={diagramUrl}
+              alt="Jungl3 architecture and flow diagram"
+              className="mx-auto h-auto w-full max-w-3xl"
+              loading="lazy"
+            />
+          </div>
         </div>
 
         {/* Architecture diagram (ASCII-ish HUD) */}
