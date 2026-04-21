@@ -13,7 +13,7 @@ Canonical term definitions live in [`docs/glossary.md`](./docs/glossary.md). The
 
 One-line summary: **Jungle3 vends isolated "Jungles" (builder environments that are alive on day one), prototypes deploy from a Jungle to a matching DMZ (the customer-facing runtime), and DMZs appear as tiles in a shared Marketplace for users and judges.** A Control Plane vends and manages all of it.
 
-Design principle carried throughout: **start with too much, trim down**. Teams do not build up from a blank scaffold; they shape a Frankenstein that already runs.
+Design principle carried throughout: **start with too much, trim down**. The primary development motion is **subtraction**, not addition: teams do not build up from a blank scaffold, they shape a [Frankenstein app](./docs/glossary.md#frankenstein-app) that already runs. See [`docs/product/positioning.md`](./docs/product/positioning.md) for the full framing.
 
 ---
 
@@ -133,6 +133,7 @@ When a new piece of information arrives, classify it and route it:
 | --- | --- |
 | What a Jungle3 concept *means* (a term, a noun) | [`docs/glossary.md`](./docs/glossary.md) |
 | How the system is structured (layers, boundaries, interactions) | `docs/architecture/<topic>.md` |
+| How the product is framed (positioning, audience, principle) | `docs/product/<topic>.md` |
 | A **decision** we are making (closes off options, costly to reverse) | `docs/decisions/NNNN-slug.md` (see [`docs/decisions/README.md`](./docs/decisions/README.md)) |
 | An **open question** we haven't answered yet | §11 of this file |
 | Product vision / raw strategic thinking | `doc.md`, `doc2.md` — unchanged source material |

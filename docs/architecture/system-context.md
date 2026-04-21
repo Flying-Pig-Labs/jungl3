@@ -11,7 +11,7 @@ flowchart LR
   CP[Control Plane]
 
   subgraph J[Jungle - builder environment]
-    APP[App scaffold]
+    APP[Frankenstein app]
     SR[Synthetic Runtime]
     AG[Agent Layer]
   end
@@ -28,7 +28,7 @@ flowchart LR
 ## Reading the diagram
 
 - **Control Plane** sits outside any Jungle. It is the orchestration brain; it *vends* Jungles (and their matching DMZs) on demand.
-- A **Jungle** is a composite: an app scaffold that runs on top of a Synthetic Runtime, with an Agent Layer operating within it. These three are not separate deployables — they are layers of one environment.
+- A **Jungle** is a composite: a [Frankenstein app](../glossary.md#frankenstein-app) that runs on top of a Synthetic Runtime, with an Agent Layer operating within it. These three are not separate deployables — they are layers of one environment.
 - The **DMZ** is a separate, externally accessible runtime. A prototype built in a Jungle *deploys to* its DMZ. The Jungle and DMZ have distinct isolation boundaries (the Jungle may be shared-ish; the DMZ is the public-facing surface and is tightly controlled).
 - The **Marketplace** is the shared front door. A DMZ *registers with* the Marketplace once its prototype implements the [Integration Contract](../glossary.md#integration-contract). Users and judges then *launch into* a DMZ from the Marketplace.
 

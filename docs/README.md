@@ -12,6 +12,8 @@ docs/
   glossary.md                  # canonical terminology — single source of truth
   architecture/                # how the system is shaped
     system-context.md          # layer model + context diagram
+  product/                     # product framing (what it is, who it's for, why)
+    positioning.md
   decisions/                   # what we've actually decided, and why
     README.md
     0001-lovable-owns-repo-root.md
@@ -25,6 +27,7 @@ The tree is intentionally thin. New files are created when there is real materia
 | --- | --- |
 | What a Jungle3 concept *means* (a term, a noun) | `glossary.md` |
 | How the system is structured (layers, boundaries, interactions) | `architecture/<topic>.md` |
+| How the product is framed (positioning, audience, principle) | `product/<topic>.md` |
 | A decision we have made and will not casually revisit | `decisions/NNNN-slug.md` |
 | An open question we haven't answered yet | `../CLAUDE.md` §9 |
 | A rough idea that isn't ready to commit to anywhere | Stay in `../doc.md`, `../doc2.md`, or a named scratch file — not in these docs |

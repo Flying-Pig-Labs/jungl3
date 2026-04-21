@@ -12,9 +12,13 @@ The platform itself. Also the name of this repo. Not the name of any one compone
 
 ## Jungle
 
-The **builder environment** — a pre-provisioned workspace where a team (and its AI agents) shape a prototype by modifying a living system rather than scaffolding from scratch. A Jungle includes the app scaffold, database, storage, auth, seeded users, synthetic runtime, and connected APIs, all already running. Plural: *jungles*.
+The **builder environment** — a pre-provisioned workspace where a team (and its AI agents) shape a prototype by modifying a living system rather than scaffolding from scratch. A Jungle includes a [Frankenstein app](#frankenstein-app), database, storage, auth, seeded users, synthetic runtime, and connected APIs, all already running. Plural: *jungles*.
 
 Jungles are vended by the Control Plane. Each team gets its own.
+
+## Frankenstein app
+
+The **initial application state** inside a freshly vended Jungle: deployed, integrated, emitting, rendering. Deliberately over-complete — multiple integrations already wired, UI screens already populated, data already flowing — and therefore deliberately a little chaotic. Teams shape it by **subtraction**: removing features, simplifying flows, swapping data sources, refining UI. "Frankenstein" names the intent; a scaffold is empty framing, a Frankenstein app is stitched-together and alive.
 
 ## DMZ
 
