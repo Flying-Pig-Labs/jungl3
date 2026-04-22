@@ -71,3 +71,4 @@ Decisions evolve. When a new decision overrides an older one:
 | [0007](./0007-v1-cost-profile-and-llm-metering.md) | Accepted | v1 cost profile and LLM metering |
 | [0008](./0008-workflows-are-state-machines.md) | Accepted | Workflows are state machines, not event chains |
 | [0009](./0009-audit-trail-is-append-only-hash-chained.md) | Accepted | Audit trail is a separate append-only hash-chained store |
+| [0010](./0010-seeder-and-reaper-patterns.md) | Accepted | Seeder and Reaper patterns for install and teardown |
