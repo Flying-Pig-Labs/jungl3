@@ -12,6 +12,7 @@ Captured third-party analysis, market research, and external memos that inform J
 - [Cluster 1: `deep-research-2026-04-21/`](#cluster-1-deep-research-2026-04-21) — 12 reports + synthesis + findings
 - [Cluster 2: `deep-research-2026-04-22/`](#cluster-2-deep-research-2026-04-22) — 10 reports + synthesis, ADR-targeted
 - [Cluster 3: `sideband-2026-04-22/`](#cluster-3-sideband-2026-04-22) — 7 adjacent-market reports + synthesis
+- [Cluster 4: `synthetic-user-testing/`](#cluster-4-synthetic-user-testing) — 5 reports + synthesis, implementation-relevant
 - [Synthesis layer at a glance](#synthesis-layer-at-a-glance)
 - [Filename conventions](#filename-conventions)
 - [Related](#related)
@@ -57,9 +58,16 @@ docs/research/
 │   ├── SYNTHESIS.md                           # 10-report synthesis, 7 candidate follow-on ADRs, 5 risks
 │   ├── prompts/ runs/ logs/ results/
 │   └── run.py .gitignore
-└── sideband-2026-04-22/                       # Cluster 3 — adjacent-market landscape
-    ├── SYNTHESIS.md                           # validates "novel category" positioning
-    └── 01..07-*.md                            # 7 reports (report 07 is unrelated; see filename)
+├── sideband-2026-04-22/                       # Cluster 3 — adjacent-market landscape
+│   ├── SYNTHESIS.md                           # validates "novel category" positioning
+│   └── 01..07-*.md                            # 7 reports (report 07 is unrelated; see filename)
+└── synthetic-user-testing/                    # Cluster 4 — user-dropped, implementation-relevant
+    ├── SYNTHESIS.md                           # 5-report synthesis; 7 candidate ADRs
+    ├── 01-existing-platforms.md               # WebArena/OSWorld/AgentBench; UserTesting/Maze/Hotjar
+    ├── 02-ai-computer-use-tech.md             # Claude Computer Use vs OpenAI Operator/CUA
+    ├── 03-persona-simulation-methodology.md   # fidelity gap, PII leakage, dual-loop personas
+    ├── 04-build-it-yourself-claude-sdk.md     # Planner/Executor split, Playwright MCP, PersonaGym
+    └── aws-marketplace-monetization-guide.md  # fees, Concurrent Agreements, CDK→CFN, CPPO
 ```
 
 ---
@@ -76,6 +84,8 @@ Search by subject. Each row lists the documents that discuss the topic meaningfu
 | **Agent: persistent Git-backed memory (OpenClaw pattern)** | [sideband 01](./sideband-2026-04-22/01-persistent-state-agents-and-openclaw.md), [sideband SYNTHESIS §4](./sideband-2026-04-22/SYNTHESIS.md) |
 | **Audit trail: append-only, hash-chained, tamper-evident** | [cluster 2 report 02](./deep-research-2026-04-22/results/02-dynamodb-hash-chained-audit.md), [cluster 1 report 11](./deep-research-2026-04-21/results/11-regulated-cues.md), [findings.md §5.4](./findings.md) → [ADR 0009](../decisions/0009-audit-trail-is-append-only-hash-chained.md) |
 | **AWS Marketplace: packaging, delivery, listing** | [research1-aws-installable-shape.md](./research1-aws-installable-shape.md), [cluster 1 report 07](./deep-research-2026-04-21/results/07-packaging.md) → [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md) |
+| **AWS Marketplace: pricing, metering, CPPO, Concurrent Agreements** | [synthetic-user-testing/aws-marketplace-monetization-guide.md](./synthetic-user-testing/aws-marketplace-monetization-guide.md), [synthetic-user-testing SYNTHESIS §2.5](./synthetic-user-testing/SYNTHESIS.md) |
+| **AI-agent browser automation (Claude Computer Use, Playwright MCP, Stagehand)** | [synthetic-user-testing 02](./synthetic-user-testing/02-ai-computer-use-tech.md), [synthetic-user-testing 04](./synthetic-user-testing/04-build-it-yourself-claude-sdk.md) |
 | **Chaos engineering, fault injection, k6, Gremlin, Chaos Mesh** | [sideband 05](./sideband-2026-04-22/05-synthetic-data-and-chaos-engineering.md) |
 | **CloudFormation seeder/reaper patterns** | [cluster 2 report 07](./deep-research-2026-04-22/results/07-cloudformation-seeder-reaper.md), [findings.md §8](./findings.md) → [ADR 0010](../decisions/0010-seeder-and-reaper-patterns.md) |
 | **Cost floor, infra cost, FinOps** | [cluster 1 report 08](./deep-research-2026-04-21/results/08-cost-floor.md), [findings.md §6.3](./findings.md) → [ADR 0007](../decisions/0007-v1-cost-profile-and-llm-metering.md) |
@@ -94,6 +104,9 @@ Search by subject. Each row lists the documents that discuss the topic meaningfu
 | **Novel category positioning, no-single-vendor-bundle** | [sideband 02](./sideband-2026-04-22/02-innovation-sandbox-platform-landscape.md), [sideband SYNTHESIS §3](./sideband-2026-04-22/SYNTHESIS.md) |
 | **Observability: CloudWatch, X-Ray, per-case inspection** | [cluster 1 report 09](./deep-research-2026-04-21/results/09-observability-ux.md), [findings.md §6.2](./findings.md) → [ADR 0007](../decisions/0007-v1-cost-profile-and-llm-metering.md) |
 | **Personas, role mix, writing style** | [cluster 1 report 10](./deep-research-2026-04-21/results/10-personas.md), [cluster 2 report 08](./deep-research-2026-04-22/results/08-persona-writing-style-generation.md), [research2](./research2-v1-service-build-plan.md) |
+| **Persona simulation methodology (fidelity, PII, dual-loop, SUS "OK" bias)** | [synthetic-user-testing 03](./synthetic-user-testing/03-persona-simulation-methodology.md), [synthetic-user-testing SYNTHESIS §2.3/§3.2](./synthetic-user-testing/SYNTHESIS.md) |
+| **Prompt injection via untrusted UI / webpage content** | [synthetic-user-testing 02](./synthetic-user-testing/02-ai-computer-use-tech.md), [synthetic-user-testing 04](./synthetic-user-testing/04-build-it-yourself-claude-sdk.md) |
+| **Synthetic user testing: agentic execution vs AI-assisted analytics** | [synthetic-user-testing 01](./synthetic-user-testing/01-existing-platforms.md), [synthetic-user-testing SYNTHESIS](./synthetic-user-testing/SYNTHESIS.md) |
 | **Regulated cues beyond maker-checker** | [cluster 1 report 11](./deep-research-2026-04-21/results/11-regulated-cues.md), [cluster 2 report 09](./deep-research-2026-04-22/results/09-pc-regulated-cues-beyond-maker-checker.md) |
 | **Service decomposition (10 vs 7 services)** | [research2-v1-service-build-plan.md](./research2-v1-service-build-plan.md), [findings.md §6.5](./findings.md) → [ADR 0006](../decisions/0006-v1-domain-anchor-insurance-claims.md) |
 | **Step Functions state machines for regulated workflows** | [cluster 2 report 01](./deep-research-2026-04-22/results/01-step-functions-regulated-workflows.md) → [ADR 0008](../decisions/0008-workflows-are-state-machines.md) |
@@ -168,22 +181,43 @@ Older convention, before the deep-research cluster format. Three files; all cite
 
 ---
 
+## Cluster 4: `synthetic-user-testing/`
+
+**Five reports** dropped into the repo on 2026-04-22 (separate from the sideband drop). Unlike clusters 1–2 these were not commissioned via a `run.py` here, and unlike cluster 3 they are closer to the Jungle3 product surface — they describe capabilities that could live inside an install (AI-agent synthetic-user testing) and monetization mechanics the Marketplace listing will need (fees, metering, CDK→CFN, CPPO).
+
+| # | Report | Topic |
+|---|---|---|
+| 01 | [`01-existing-platforms.md`](./synthetic-user-testing/01-existing-platforms.md) | WebArena, OSWorld, AgentBench; UserTesting AI vs Maze vs Hotjar; agentic execution vs AI-assisted analytics |
+| 02 | [`02-ai-computer-use-tech.md`](./synthetic-user-testing/02-ai-computer-use-tech.md) | Claude Computer Use vs OpenAI Operator/CUA; CDP bridge pattern; prompt-injection defenses |
+| 03 | [`03-persona-simulation-methodology.md`](./synthetic-user-testing/03-persona-simulation-methodology.md) | 6-point persona schema; PII leakage via Think-Aloud; determinism deception; SUS "OK" bias |
+| 04 | [`04-build-it-yourself-claude-sdk.md`](./synthetic-user-testing/04-build-it-yourself-claude-sdk.md) | Planner/Executor split; Playwright MCP; PersonaGym; Stagehand/Steel/BrowserBase |
+| — | [`aws-marketplace-monetization-guide.md`](./synthetic-user-testing/aws-marketplace-monetization-guide.md) | Fee tiers; Concurrent Agreements (2026-06-01); Private Offers; CDK→CFN synthesis; TaskCat; CPPO |
+
+**Synthesis:** [`synthetic-user-testing/SYNTHESIS.md`](./synthetic-user-testing/SYNTHESIS.md) — splits the drop into two groups (AI-agent testing, Marketplace monetization), identifies 7 candidate ADRs (5 synthetic-user-testing, 2 Marketplace), names 3 Jungle3-specific risks (prompt injection from untrusted prototype UI, Think-Aloud PII leakage, "OK" bias).
+
+**Status:** No ADR amendments, no new ADRs drafted, no `CLAUDE.md` §11 entries resolved or added. §11 items 1, 2, 7, 8, 9 are **informed** (not answered) by this material; items 1 and 2 have a near-ready answer key in the Marketplace guide when decisions land.
+
+**Convention note:** The directory name is `synthetic-user-testing/` (topic-named) rather than `sideband-YYYY-MM-DD/` or `deep-research-YYYY-MM-DD/` because it arrived as a user drop, not a commissioned cluster. See [Filename conventions](#filename-conventions) below.
+
+---
+
 ## Synthesis layer at a glance
 
-If you only read four files in this tree:
+If you only read five files in this tree:
 
 1. [`findings.md`](./findings.md) — the v1 story.
 2. [`deep-research-2026-04-21/SYNTHESIS.md`](./deep-research-2026-04-21/SYNTHESIS.md) — how that story was derived.
 3. [`deep-research-2026-04-22/SYNTHESIS.md`](./deep-research-2026-04-22/SYNTHESIS.md) — what the ADRs exposed as still-to-build.
 4. [`sideband-2026-04-22/SYNTHESIS.md`](./sideband-2026-04-22/SYNTHESIS.md) — the adjacent market, for positioning.
+5. [`synthetic-user-testing/SYNTHESIS.md`](./synthetic-user-testing/SYNTHESIS.md) — AI-personas-as-testers capability + Marketplace monetization answer-key.
 
 ---
 
 ## Filename conventions
 
 - **First-generation captures:** `researchN.md` or `researchN-short-slug.md`, monotonically increasing. No renumbering. If a file is obsolete, keep it and mark status in its preamble; don't delete. Slugs are kebab-case. These three files (`research1-*.md`, `research2-*.md`, `research3.md`) are **frozen** per ADR 0004.
-- **Cluster directories:** `deep-research-YYYY-MM-DD/` for Parallel.ai ADR-path clusters, `sideband-YYYY-MM-DD/` for off-path landscape sweeps. Each has its own synthesis layer at the cluster root.
-- **Inside a cluster:** numbered files `NN-short-slug.md` in `results/` (for Parallel.ai clusters) or at cluster root (for sideband). Numbers are 1-indexed and stable — `07-unrelated-…` communicates through its slug.
+- **Cluster directories:** `deep-research-YYYY-MM-DD/` for Parallel.ai ADR-path clusters, `sideband-YYYY-MM-DD/` for off-path landscape sweeps, `topic-slug/` (e.g., `synthetic-user-testing/`) for user-dropped reports organized by subject. Each has its own synthesis layer at the cluster root.
+- **Inside a cluster:** numbered files `NN-short-slug.md` in `results/` (for Parallel.ai clusters) or at cluster root (for sideband / topic clusters). Numbers are 1-indexed and stable — `07-unrelated-…` communicates through its slug. Topic clusters may also hold un-numbered files when there's only one report in a thread (e.g., `aws-marketplace-monetization-guide.md`).
 - **Synthesis files:** uppercase at the cluster root — `SYNTHESIS.md`, `EXECUTIVE_SUMMARIES.md`, `DECISIONS.md`. This distinguishes them visually from raw reports.
 
 ## Related
