@@ -1,6 +1,6 @@
 > **What this is:** A flat backlog of the decisions surfaced by the 12 ultra4x deep-research reports captured on 2026-04-21. Each entry is a question the cluster produced that the maintainers will eventually have to answer — not an answer.
 > **Captured:** 2026-04-21.
-> **Status:** **Nothing here is decided.** Every entry is `status: open`. When one is adopted it should be promoted to an ADR in [`../decisions/`](../decisions/) and removed from this list. Some entries overlap with existing CLAUDE.md §11 open decisions; that is called out per-entry.
+> **Status:** **Nothing here is decided.** Every entry is `status: open`. When one is adopted it should be promoted to an ADR in [`../../decisions/`](../../decisions/) and removed from this list. Some entries overlap with existing CLAUDE.md §11 open decisions; that is called out per-entry.
 > **How to read:** as a backlog. Cite the source report(s) and this file when opening an ADR; once an ADR exists, cite the ADR.
 
 See [`SYNTHESIS.md`](./SYNTHESIS.md) for the cross-report synthesis and grouping of these into candidate ADRs. See [`EXECUTIVE_SUMMARIES.md`](./EXECUTIVE_SUMMARIES.md) for per-report distillations.
@@ -9,7 +9,7 @@ See [`SYNTHESIS.md`](./SYNTHESIS.md) for the cross-report synthesis and grouping
 
 ## Legend
 
-- **Source** — the report(s) in [`deep-research-2026-04-21/results/`](./deep-research-2026-04-21/results/) that surfaced this decision.
+- **Source** — the report(s) in [`results/`](./results/) that surfaced this decision.
 - **CLAUDE.md §11** — the open-decision entry that this decision corresponds to, if any.
 - **Candidate ADR** — the candidate grouping in [`SYNTHESIS.md`](./SYNTHESIS.md) §4 that this rolls into, if any.
 - **Status** — always `open` in this file. When resolved, promote to ADR and remove.
@@ -33,7 +33,7 @@ Ratify concrete floor numbers (microservices, personas, background jobs, stubs) 
 - **Status:** open.
 
 ### A3. v1 service set and decomposition
-Whether v1 ships with the ten-service decomposition from [`research2-v1-service-build-plan.md`](./research2-v1-service-build-plan.md), a smaller set, or a domain-shaped set. Interacts with A1 and A2.
+Whether v1 ships with the ten-service decomposition from [`research2-v1-service-build-plan.md`](../research2-v1-service-build-plan.md), a smaller set, or a domain-shaped set. Interacts with A1 and A2.
 - **Source:** 01, 02 (research2), 03.
 - **CLAUDE.md §11:** #16.
 - **Status:** open.
@@ -148,7 +148,7 @@ Which views ship in v1. Report 09 proposes: per-entity (case) timeline, queue he
 - **Status:** open.
 
 ### O2. Admin surface vs. Agent Layer relationship
-Same surface, complementary layers, or one-replaces-the-other. Currently described in two places ([`docs/architecture/agent-layer.md`](../architecture/agent-layer.md) and research2).
+Same surface, complementary layers, or one-replaces-the-other. Currently described in two places ([`docs/architecture/agent-layer.md`](../../architecture/agent-layer.md) and research2).
 - **Source:** 09, research2.
 - **CLAUDE.md §11:** #18.
 - **Candidate ADR:** D (sub-decision).

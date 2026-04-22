@@ -1,4 +1,4 @@
-> **What this is:** One-paragraph executive summaries of the 12 ultra4x deep-research reports captured on 2026-04-21 under [`deep-research-2026-04-21/results/`](./deep-research-2026-04-21/results/). Each summary distills the report's central thesis and top recommendation — not this repo's position on it.
+> **What this is:** One-paragraph executive summaries of the 12 ultra4x deep-research reports captured on 2026-04-21 under [`results/`](./results/). Each summary distills the report's central thesis and top recommendation — not this repo's position on it.
 > **Captured:** 2026-04-21.
 > **Status:** **Not adopted as repo policy.** These summaries are a reading aid. For the cross-report synthesis, see [`SYNTHESIS.md`](./SYNTHESIS.md). For the decisions this cluster surfaces, see [`DECISIONS.md`](./DECISIONS.md). Specific recommendations do not become policy until they go through an ADR.
 > **How to read:** as input, not as canon. Each summary links back to the full report; cite the report, not this file.
@@ -7,7 +7,7 @@
 
 ## 01 — Feel Real
 
-[`01-feel-real.md`](./deep-research-2026-04-21/results/01-feel-real.md)
+[`01-feel-real.md`](./results/01-feel-real.md)
 
 **Question:** What actually makes a synthetic enterprise environment feel real to builders?
 
@@ -19,7 +19,7 @@
 
 ## 02 — Domain Anchor
 
-[`02-domain-anchor.md`](./deep-research-2026-04-21/results/02-domain-anchor.md)
+[`02-domain-anchor.md`](./results/02-domain-anchor.md)
 
 **Question:** What is the best v1 domain anchor?
 
@@ -31,7 +31,7 @@
 
 ## 03 — MVR Threshold
 
-[`03-mvr-threshold.md`](./deep-research-2026-04-21/results/03-mvr-threshold.md)
+[`03-mvr-threshold.md`](./results/03-mvr-threshold.md)
 
 **Question:** What is the *minimum viable realism* threshold — the floor below which the environment will not feel real?
 
@@ -52,7 +52,7 @@ Everything else (more services, more personas, more realism levers) is polish be
 
 ## 04 — Synthetic Data
 
-[`04-synthetic-data.md`](./deep-research-2026-04-21/results/04-synthetic-data.md)
+[`04-synthetic-data.md`](./results/04-synthetic-data.md)
 
 **Question:** How should synthetic data be generated so it is plausible without being fake?
 
@@ -64,7 +64,7 @@ Everything else (more services, more personas, more realism levers) is polish be
 
 ## 05 — Event / Workflow
 
-[`05-event-workflow.md`](./deep-research-2026-04-21/results/05-event-workflow.md)
+[`05-event-workflow.md`](./results/05-event-workflow.md)
 
 **Question:** What event and workflow patterns are essential to create operational life?
 
@@ -76,7 +76,7 @@ Everything else (more services, more personas, more realism levers) is polish be
 
 ## 06 — Stubs
 
-[`06-stubs.md`](./deep-research-2026-04-21/results/06-stubs.md)
+[`06-stubs.md`](./results/06-stubs.md)
 
 **Question:** How should stubs and simulators for external integrations be designed?
 
@@ -88,7 +88,7 @@ Everything else (more services, more personas, more realism levers) is polish be
 
 ## 07 — Packaging
 
-[`07-packaging.md`](./deep-research-2026-04-21/results/07-packaging.md)
+[`07-packaging.md`](./results/07-packaging.md)
 
 **Question:** What is the right AWS Marketplace packaging and deployment strategy?
 
@@ -100,7 +100,7 @@ Everything else (more services, more personas, more realism levers) is polish be
 
 ## 08 — Cost Floor
 
-[`08-cost-floor.md`](./deep-research-2026-04-21/results/08-cost-floor.md)
+[`08-cost-floor.md`](./results/08-cost-floor.md)
 
 **Question:** What does a Jungle3 install cost at idle and under load?
 
@@ -112,7 +112,7 @@ Everything else (more services, more personas, more realism levers) is polish be
 
 ## 09 — Observability UX
 
-[`09-observability-ux.md`](./deep-research-2026-04-21/results/09-observability-ux.md)
+[`09-observability-ux.md`](./results/09-observability-ux.md)
 
 **Question:** What should the observability UX for builders look like?
 
@@ -124,7 +124,7 @@ Everything else (more services, more personas, more realism levers) is polish be
 
 ## 10 — Personas
 
-[`10-personas.md`](./deep-research-2026-04-21/results/10-personas.md)
+[`10-personas.md`](./results/10-personas.md)
 
 **Question:** How do we achieve persona and workload realism without falling into plausibility collapse?
 
@@ -136,7 +136,7 @@ Everything else (more services, more personas, more realism levers) is polish be
 
 ## 11 — Regulated Cues
 
-[`11-regulated-cues.md`](./deep-research-2026-04-21/results/11-regulated-cues.md)
+[`11-regulated-cues.md`](./results/11-regulated-cues.md)
 
 **Question:** Which regulated-environment cues are real signal vs. ceremony, given v1 cost?
 
@@ -148,7 +148,7 @@ Everything else (more services, more personas, more realism levers) is polish be
 
 ## 12 — Extension Model
 
-[`12-extension-model.md`](./deep-research-2026-04-21/results/12-extension-model.md)
+[`12-extension-model.md`](./results/12-extension-model.md)
 
 **Question:** How should the architecture support multiple domain variants over time?
 
