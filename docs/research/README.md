@@ -40,7 +40,7 @@ Twelve ultra4x Parallel AI reports commissioned by [`research3.md`](./research3.
 
 Synthesis layer:
 
-- [`findings.md`](./findings.md) — plain-English narrative read of the cluster: what the reports converged on, what they fought about, what v1 should look like, what actually blocks forward motion. Written as a single argument rather than twelve parallel ones. **Start here.**
+- [`findings.md`](./findings.md) — narrative read of the cluster plus the v1 direction decided during review: what the reports converged on, the five fights and how they were resolved, the v1 shape (insurance-claims-only domain, LLM-agent-over-deterministic-tools admin, CloudWatch/X-Ray observability, $100 infra + $50 LLM metered ceiling, ephemeral-capable lifecycle), and the three ADRs to draft next. **Start here.**
 - [`SYNTHESIS.md`](./SYNTHESIS.md) — structured cross-report synthesis: convergences, divergences, decision surface, and 6 candidate ADRs.
 - [`EXECUTIVE_SUMMARIES.md`](./EXECUTIVE_SUMMARIES.md) — one-paragraph distillation per report.
 - [`DECISIONS.md`](./DECISIONS.md) — flat backlog of ~60 decisions the cluster surfaces, all `status: open`.
