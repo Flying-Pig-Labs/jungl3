@@ -1,23 +1,23 @@
 const STEPS = [
   {
     k: "01",
-    t: "A team logs in",
+    t: "Enter Jungle",
     d: "Their Jungle is already vended. The Understory is already running. There is no scaffolding phase.",
   },
   {
     k: "02",
-    t: "They shape the Understory",
+    t: "Shape Understory",
     d: "Remove what doesn't belong. Substitute what does. Extend where the baseline stops. The system stays alive the whole time.",
   },
   {
     k: "03",
-    t: "They push to the DMZ",
-    d: "One command moves a prototype from Jungle to DMZ. Standardized hosting, auth, routing — not a deploy project.",
+    t: "Refine in DMZ",
+    d: "One command moves a prototype from Jungle to DMZ — a private, AI-first evaluation environment. Agents probe it as seeded personas before any human does. Standardized hosting, auth, routing — not a deploy project.",
   },
   {
     k: "04",
-    t: "Outside people use it",
-    d: "Judges, beta customers, stakeholders enter the DMZ as personas. Feedback is captured in-place. Scores come from what they actually experienced.",
+    t: "Reach Canopy",
+    d: "Once the DMZ gates pass, the prototype reaches the Canopy. Judges, beta customers, and stakeholders find it in the Gallery and use it. Feedback is captured in-place. Scores come from what they actually experienced.",
   },
 ];
 
@@ -30,7 +30,7 @@ export function SystemModules() {
             // 02 — THE LOOP
           </div>
           <h2 className="font-display text-4xl font-black text-gradient-headline sm:text-5xl">
-            Day one to feedback, without the week of setup.
+            A hackathon environment that's already alive.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
             Four steps. Weeks compressed into hours.

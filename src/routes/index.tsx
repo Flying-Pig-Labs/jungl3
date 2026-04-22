@@ -5,6 +5,7 @@ import { ConceptSection } from "@/components/sections/Concept";
 import { SystemModules } from "@/components/sections/SystemModules";
 import { CTASection } from "@/components/sections/CTA";
 import { Footer } from "@/components/sections/Footer";
+import { Nav } from "@/components/Nav";
 import { RequestAccessModal } from "@/components/RequestAccessModal";
 // Temporarily unrendered while the page is reframed for CTO audience:
 // import { IdeaEngine } from "@/components/sections/IdeaEngine";
@@ -40,6 +41,7 @@ function Index() {
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">
+      <Nav onRequestAccess={openRequest} />
       <main className="relative z-10">
         <Hero onRequestAccess={openRequest} />
         <ConceptSection />

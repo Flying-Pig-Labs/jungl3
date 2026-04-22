@@ -13,9 +13,9 @@ const STRATA = [
   },
   {
     k: "03",
-    t: "DMZ",
-    role: "The one exposure surface",
-    d: "Where external visitors — judges, beta users, stakeholders — find prototypes, enter as personas, and actually use them. Everything else stays hidden inside the install. Public-ish in access, private in blast radius.",
+    t: "Canopy",
+    role: "The human exposure surface",
+    d: "Where judges, beta users, and stakeholders find prototypes via the Gallery and actually use them. A prototype reaches the Canopy only after passing through the DMZ — a private, AI-first evaluation environment that agents probe first. Two surfaces, sequenced: DMZ for AI, Canopy for humans.",
   },
 ];
 
