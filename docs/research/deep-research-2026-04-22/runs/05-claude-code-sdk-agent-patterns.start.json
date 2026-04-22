@@ -1,0 +1,16 @@
+{
+  "run_id": "trun_3cad0ebea15c480e87c75d669065e706",
+  "interaction_id": "trun_3cad0ebea15c480e87c75d669065e706",
+  "status": "queued",
+  "is_active": true,
+  "warnings": [
+    {
+      "type": "warning",
+      "message": "enable_events unset for ultra4x. Setting to true by default. Consider setting to false explicitly if you do not want to track events for streaming."
+    }
+  ],
+  "processor": "ultra4x",
+  "metadata": {},
+  "created_at": "2026-04-22T07:11:11.991022Z",
+  "modified_at": "2026-04-22T07:11:12.001926Z"
+}
