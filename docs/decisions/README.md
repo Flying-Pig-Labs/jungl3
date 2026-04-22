@@ -72,3 +72,14 @@ Decisions evolve. When a new decision overrides an older one:
 | [0008](./0008-workflows-are-state-machines.md) | Accepted | Workflows are state machines, not event chains |
 | [0009](./0009-audit-trail-is-append-only-hash-chained.md) | Accepted | Audit trail is a separate append-only hash-chained store |
 | [0010](./0010-seeder-and-reaper-patterns.md) | Accepted | Seeder and Reaper patterns for install and teardown |
+
+## Candidate ADRs and status
+
+- **[`BACKLOG.md`](./BACKLOG.md)** — single cross-cluster view of every candidate ADR (accepted, pending, resolved), drafting order, and the candidate-to-risk map.
+- **[`STATUS.md`](./STATUS.md)** — one-page investor/reviewer view: what's accepted, what's next, what's open.
+
+Per-cluster candidate and risk detail:
+
+- Cluster 1 (2026-04-21): [`CANDIDATES.md`](../research/deep-research-2026-04-21/CANDIDATES.md), [`RISKS.md`](../research/deep-research-2026-04-21/RISKS.md)
+- Cluster 2 (2026-04-22): [`CANDIDATES.md`](../research/deep-research-2026-04-22/CANDIDATES.md), [`RISKS.md`](../research/deep-research-2026-04-22/RISKS.md)
+- Cluster 4 (synthetic-user-testing): [`CANDIDATES.md`](../research/synthetic-user-testing/CANDIDATES.md), [`RISKS.md`](../research/synthetic-user-testing/RISKS.md)

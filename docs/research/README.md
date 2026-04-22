@@ -52,17 +52,23 @@ docs/research/
 │   ├── SYNTHESIS.md                           # cross-report synthesis + 6 candidate ADRs
 │   ├── EXECUTIVE_SUMMARIES.md                 # one-paragraph distillations per report
 │   ├── DECISIONS.md                           # flat backlog of ~60 open decisions surfaced by cluster 1
+│   ├── CANDIDATES.md                          # decision-ready: 6 candidate ADRs (A–F), 3 of them resolved
+│   ├── RISKS.md                               # decision-ready: 7 named risks
 │   ├── prompts/ runs/ logs/ results/          # Parallel.ai submission + response artifacts
 ├── deep-research-2026-04-22/                  # Cluster 2 — ADR-targeted
 │   ├── README.md
 │   ├── SYNTHESIS.md                           # 10-report synthesis, 7 candidate follow-on ADRs, 5 risks
+│   ├── CANDIDATES.md                          # decision-ready: 7 candidate ADRs (A–G), 1 resolved
+│   ├── RISKS.md                               # decision-ready: 8 named risks
 │   ├── prompts/ runs/ logs/ results/
 │   └── run.py .gitignore
 ├── sideband-2026-04-22/                       # Cluster 3 — adjacent-market landscape
 │   ├── SYNTHESIS.md                           # validates "novel category" positioning
 │   └── 01..07-*.md                            # 7 reports (report 07 is unrelated; see filename)
 └── synthetic-user-testing/                    # Cluster 4 — user-dropped, implementation-relevant
-    ├── SYNTHESIS.md                           # 5-report synthesis; 7 candidate ADRs
+    ├── SYNTHESIS.md                           # 5-report synthesis; 7 candidate ADRs; 3 risks
+    ├── CANDIDATES.md                          # decision-ready: 7 candidate ADRs (C1–C7) individually pickable
+    ├── RISKS.md                               # decision-ready: 5 named risks (R1–R5), triggers, mitigations
     ├── 01-existing-platforms.md               # WebArena/OSWorld/AgentBench; UserTesting/Maze/Hotjar
     ├── 02-ai-computer-use-tech.md             # Claude Computer Use vs OpenAI Operator/CUA
     ├── 03-persona-simulation-methodology.md   # fidelity gap, PII leakage, dual-loop personas
@@ -141,9 +147,14 @@ Older convention, before the deep-research cluster format. Three files; all cite
 3. [`deep-research-2026-04-21/EXECUTIVE_SUMMARIES.md`](./deep-research-2026-04-21/EXECUTIVE_SUMMARIES.md) — one-paragraph distillation per report.
 4. [`deep-research-2026-04-21/DECISIONS.md`](./deep-research-2026-04-21/DECISIONS.md) — flat backlog of ~60 open decisions.
 
+**Decision-ready artifacts (lifted from the synthesis for use):**
+
+- [`deep-research-2026-04-21/CANDIDATES.md`](./deep-research-2026-04-21/CANDIDATES.md) — 6 candidate ADRs (A–F). Three resolved (A → [ADR 0006](../decisions/0006-v1-domain-anchor-insurance-claims.md), C → [ADR 0005](../decisions/0005-event-envelope-and-correlation-identifiers.md), F → [ADR 0007](../decisions/0007-v1-cost-profile-and-llm-metering.md)). Three open (B: minimum viable realism; D: admin surface scope; E: extension architecture).
+- [`deep-research-2026-04-21/RISKS.md`](./deep-research-2026-04-21/RISKS.md) — 7 named risks (R-C1-1 through R-C1-7). Four resolved or meaningfully constrained by accepted ADRs; three remain as ongoing warnings or candidate-ADR requirements.
+
 **Raw reports:** [`deep-research-2026-04-21/results/`](./deep-research-2026-04-21/results/) — `01-feel-real.md` through `12-extension-model.md`, each with matching `.json`.
 
-**Status:** Raw reports and synthesis are **not adopted as repo policy**. ADRs 0005–0010 are the policy output of this cluster. Remaining candidates are tracked in SYNTHESIS.md §4 and DECISIONS.md.
+**Status:** Raw reports and synthesis are **not adopted as repo policy**. ADRs 0005–0010 are the policy output of this cluster. Remaining candidates are tracked in [`CANDIDATES.md`](./deep-research-2026-04-21/CANDIDATES.md) and the cross-cluster [`BACKLOG.md`](../decisions/BACKLOG.md).
 
 ---
 
@@ -153,11 +164,16 @@ Older convention, before the deep-research cluster format. Three files; all cite
 
 **Synthesis:** [`deep-research-2026-04-22/SYNTHESIS.md`](./deep-research-2026-04-22/SYNTHESIS.md) — validates each ADR, surfaces 7 candidate follow-on ADRs, names 7 new open questions and 5 "will hit this wall" risks.
 
+**Decision-ready artifacts (lifted from the synthesis for use):**
+
+- [`deep-research-2026-04-22/CANDIDATES.md`](./deep-research-2026-04-22/CANDIDATES.md) — 7 candidate ADRs (A–G). One resolved (A → [ADR 0010](../decisions/0010-seeder-and-reaper-patterns.md)); six open (B: pre-generated seed artifact; C: retention tiering; D: document integrity; E: regulatory surface; F: canonical maker-checker workflow; G: ADR 0009 amendments).
+- [`deep-research-2026-04-22/RISKS.md`](./deep-research-2026-04-22/RISKS.md) — 8 named risks (R-C2-1 through R-C2-8). One resolved by ADR 0010; four with clear mitigations tied to candidates B/C/E; three remaining as warnings or architecture-doc-shaped.
+
 **Raw reports:** [`deep-research-2026-04-22/results/`](./deep-research-2026-04-22/results/) — `01-step-functions-regulated-workflows.md` through `10-synthetic-timestamp-distributions.md`, each with matching `.json`.
 
 **Cluster README:** [`deep-research-2026-04-22/README.md`](./deep-research-2026-04-22/README.md) — includes submit/poll instructions for re-runs.
 
-**Status:** This cluster produced [ADR 0010](../decisions/0010-seeder-and-reaper-patterns.md). Six other candidate ADRs (retention tiering, document integrity, regulatory surface, canonical workflow, ADR 0009 amendments, seed-data generation) are still queued.
+**Status:** This cluster produced [ADR 0010](../decisions/0010-seeder-and-reaper-patterns.md). Six other candidate ADRs are still queued — see [`CANDIDATES.md`](./deep-research-2026-04-22/CANDIDATES.md) or the cross-cluster [`BACKLOG.md`](../decisions/BACKLOG.md).
 
 ---
 
@@ -195,7 +211,12 @@ Older convention, before the deep-research cluster format. Three files; all cite
 
 **Synthesis:** [`synthetic-user-testing/SYNTHESIS.md`](./synthetic-user-testing/SYNTHESIS.md) — splits the drop into two groups (AI-agent testing, Marketplace monetization), identifies 7 candidate ADRs (5 synthetic-user-testing, 2 Marketplace), names 3 Jungle3-specific risks (prompt injection from untrusted prototype UI, Think-Aloud PII leakage, "OK" bias).
 
-**Status:** No ADR amendments, no new ADRs drafted, no `CLAUDE.md` §11 entries resolved or added. §11 items 1, 2, 7, 8, 9 are **informed** (not answered) by this material; items 1 and 2 have a near-ready answer key in the Marketplace guide when decisions land.
+**Decision-ready artifacts (lifted from the synthesis for use):**
+
+- [`synthetic-user-testing/CANDIDATES.md`](./synthetic-user-testing/CANDIDATES.md) — 7 candidate ADRs (C1–C7) as individually-pickable entries. Each names the forces, the decision-to-be-made, dependencies on other candidates, related accepted ADRs, readiness rating, and a suggested drafting order.
+- [`synthetic-user-testing/RISKS.md`](./synthetic-user-testing/RISKS.md) — 5 named risks (R1–R5) with triggers, mitigation shape, and expected disposition (ADR constraint vs. documented warning).
+
+**Status:** No ADR amendments, no new ADRs drafted, no `CLAUDE.md` §11 entries resolved or added. §11 items 1, 2, 7, 8, 9 are **informed** (not answered) by this material; C6 and C7 close §11 #1 and #2 outright if drafted.
 
 **Convention note:** The directory name is `synthetic-user-testing/` (topic-named) rather than `sideband-YYYY-MM-DD/` or `deep-research-YYYY-MM-DD/` because it arrived as a user drop, not a commissioned cluster. See [Filename conventions](#filename-conventions) below.
 
@@ -223,5 +244,7 @@ If you only read five files in this tree:
 ## Related
 
 - [`../decisions/`](../decisions/) — where research conclusions become decisions
+- [`../decisions/BACKLOG.md`](../decisions/BACKLOG.md) — single cross-cluster view of every candidate ADR, drafting order, candidate-to-risk map
+- [`../decisions/STATUS.md`](../decisions/STATUS.md) — one-page accepted + next-up + open view (investor/reviewer-friendly)
 - [`../../CLAUDE.md`](../../CLAUDE.md) §7 — information placement rules
 - [`../../CLAUDE.md`](../../CLAUDE.md) §11 — open decisions (many informed by files here)
