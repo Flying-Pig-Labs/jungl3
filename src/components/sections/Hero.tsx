@@ -29,9 +29,9 @@ export function Hero({ onRequestAccess }: { onRequestAccess: () => void }) {
           Jungl3
         </h1>
         <p className="mx-auto mt-8 max-w-2xl font-mono text-base font-light text-foreground/90 sm:text-lg">
-          A pre-built, operational application that installs into your AWS
-          account, so your teams start by shaping a running system instead of
-          scaffolding a new one.
+          A hackathon platform for companies. Teams land inside a working
+          system — real data, real integrations, real users — and spend
+          the sprint shaping it, not building the setup.
         </p>
         <p className="mx-auto mt-4 max-w-xl font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
           Delivered as an AWS Marketplace listing · Installs into your AWS account

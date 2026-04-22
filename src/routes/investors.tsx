@@ -87,7 +87,7 @@ function InvestorsPage() {
               className="font-display text-4xl leading-[1.1] tracking-tight text-gradient-headline sm:text-5xl md:text-6xl"
               style={{ fontFamily: '"Monoton", serif', fontWeight: 400 }}
             >
-              Hackathons, alive on day one.
+              Welcome to the Jungl3
             </h1>
             <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-foreground/90 sm:text-lg">
               Teams enter an environment that is already running — seeded
