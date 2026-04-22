@@ -69,3 +69,4 @@ Decisions evolve. When a new decision overrides an older one:
 | [0005](./0005-event-envelope-and-correlation-identifiers.md) | Accepted | Event envelope and correlation identifiers |
 | [0006](./0006-v1-domain-anchor-insurance-claims.md) | Accepted | v1 domain anchor: insurance claims processing |
 | [0007](./0007-v1-cost-profile-and-llm-metering.md) | Accepted | v1 cost profile and LLM metering |
+| [0008](./0008-workflows-are-state-machines.md) | Accepted | Workflows are state machines, not event chains |
