@@ -19,7 +19,7 @@ export function CTASection({
         </div>
         <h2 className="font-display text-4xl font-black leading-tight sm:text-6xl">
           <span className="text-gradient-headline glint">
-            See it in your account.
+            See it running.
           </span>
         </h2>
         <p className="mx-auto mt-6 max-w-md text-sm text-muted-foreground">
