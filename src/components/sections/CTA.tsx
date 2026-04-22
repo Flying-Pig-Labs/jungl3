@@ -18,10 +18,8 @@ export function CTASection({
           // 03 — NEXT STEP
         </div>
         <h2 className="font-display text-4xl font-black leading-tight sm:text-6xl">
-          <span className="text-foreground">Want to see it</span>
-          <br />
           <span className="text-gradient-headline glint">
-            in your own account?
+            See it in your account.
           </span>
         </h2>
         <p className="mx-auto mt-6 max-w-md text-sm text-muted-foreground">

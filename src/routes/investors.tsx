@@ -87,19 +87,18 @@ function InvestorsPage() {
               className="font-display text-4xl leading-[1.1] tracking-tight text-gradient-headline sm:text-5xl md:text-6xl"
               style={{ fontFamily: '"Monoton", serif', fontWeight: 400 }}
             >
-              A hackathon platform where teams start alive.
+              Hackathons, alive on day one.
             </h1>
             <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-foreground/90 sm:text-lg">
-              Jungl3 is a hackathon platform. Teams enter an environment that
-              is already running — seeded data, real integrations, working
-              auth, a reachable front door — and spend the sprint shaping it
-              toward their idea. Judges and beta users try the result in the
-              same week.
+              Teams enter an environment that is already running — seeded
+              data, real integrations, working auth, a reachable front door
+              — and spend the sprint shaping it. Judges and beta users try
+              the result in the same week.
             </p>
             <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              The platform installs into the customer's own AWS account
-              through AWS Marketplace, which makes it usable by regulated
-              enterprises that can't adopt a hosted SaaS hackathon tool.
+              Installs into the customer's own AWS account through AWS
+              Marketplace, so regulated enterprises can host hackathons on
+              software they'd never let near their data as a hosted SaaS.
             </p>
 
             <div className="mt-10 flex justify-center">
@@ -125,20 +124,19 @@ function InvestorsPage() {
               // 01 — THE PROBLEM
             </div>
             <h2 className="font-display text-3xl font-black leading-tight text-foreground sm:text-4xl">
-              Hackathons spend day one on setup and day three on demo theater.
+              Day zero is setup.
             </h2>
             <p className="mt-6 text-base leading-relaxed text-foreground/85">
-              The first day is cloud accounts, repo scaffolds, auth, fake
-              data, and someone's laptop. The last day is a rehearsed demo
-              nobody will ever use. Real users — customers, judges, internal
-              stakeholders — don't get near the work. The output doesn't
-              survive the sprint.
+              Before a hackathon team writes a line of code that matters,
+              they spend a day — often more — on cloud accounts, repo
+              scaffolds, auth, fake data, and someone's laptop. The sprint
+              is already half over by the time the idea meets anything
+              real.
             </p>
             <p className="mt-4 text-base leading-relaxed text-foreground/85">
-              That gap is the product. A hackathon platform that starts teams
-              inside a running system, and exposes what they build to real
-              users in the same sprint, turns a week of theater into a week
-              of actual feedback.
+              That lost day is the product. A hackathon platform that
+              starts teams inside a running system gives the sprint back to
+              the work.
             </p>
           </div>
         </section>
@@ -188,7 +186,7 @@ function InvestorsPage() {
                 // 03 — WHY NOW
               </div>
               <h2 className="font-display text-3xl font-black leading-tight text-foreground sm:text-4xl">
-                Three things became true at the same time.
+                Three shifts at once.
               </h2>
             </div>
 
@@ -256,13 +254,9 @@ function InvestorsPage() {
               // 05 — LET'S TALK
             </div>
             <h2 className="font-display text-4xl font-black leading-tight sm:text-5xl">
-              <span className="text-foreground">If this is the kind of</span>
-              <br />
               <span className="text-gradient-headline glint">
-                thing you back,
+                Get in touch.
               </span>
-              <br />
-              <span className="text-foreground">get in touch.</span>
             </h2>
             <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">
               No deck, no data room. A conversation is the right shape for

@@ -30,7 +30,7 @@ export function SystemModules() {
             // 02 — THE LOOP
           </div>
           <h2 className="font-display text-4xl font-black text-gradient-headline sm:text-5xl">
-            A hackathon environment that's already alive.
+            Alive on day one.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
             Four steps. Weeks compressed into hours.
