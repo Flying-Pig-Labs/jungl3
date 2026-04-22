@@ -69,7 +69,7 @@ Each of these is elaborated elsewhere; listed here only to show how the product 
 | AI-driven architecture + deployment | [Control Plane](../glossary.md#control-plane) |
 | Shape-a-living-baseline development model | Repo-wide principle — see [`../../CLAUDE.md`](../../CLAUDE.md) §1 |
 | Built-in integrations | [Synthetic Runtime](../glossary.md#synthetic-runtime) |
-| One exposure surface | [DMZ](../glossary.md#dmz) + [Integration Contract](../glossary.md#integration-contract) |
+| AI-first evaluation, then human exposure | [DMZ](../glossary.md#dmz) (AI) → [Canopy](../glossary.md#canopy) (humans) + [Integration Contract](../glossary.md#integration-contract) |
 | Synthetic system + synthetic users | [Synthetic Runtime](../glossary.md#synthetic-runtime) + [Agent Layer](../glossary.md#agent-layer) (user-simulation) |
 | CLI-native control plane | [Control Plane](../glossary.md#control-plane) operator surface |
 
@@ -77,7 +77,7 @@ No new concepts introduced here. If a pillar can't be expressed in existing voca
 
 ## How it ships
 
-Jungle3 is distributed as an **AWS Marketplace listing**. A customer subscribes, launches the CloudFormation template into their own AWS account, and from that moment forward operates their own Jungle3 instance — Control Plane, Jungles, DMZs, all of it — inside their account. Jungle3 the company does not run a hosted multi-tenant platform. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md).
+Jungle3 is distributed as an **AWS Marketplace listing**. A customer subscribes, launches the CloudFormation template into their own AWS account, and from that moment forward operates their own Jungle3 instance — Control Plane, Jungles, DMZs, Canopies, all of it — inside their account. Jungle3 the company does not run a hosted multi-tenant platform. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md) and [ADR 0011](../decisions/0011-canopy-and-ai-first-dmz.md).
 
 ## Pitch form
 

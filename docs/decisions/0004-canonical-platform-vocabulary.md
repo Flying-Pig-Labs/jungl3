@@ -1,7 +1,9 @@
 # 0004 — Canonical platform vocabulary: Understory, Substrate, DMZ-absorbs-Gallery
 
-**Status:** Accepted (supersedes part of [ADR 0003](./0003-installable-via-aws-marketplace.md))
+**Status:** Accepted, with the *DMZ-absorbs-Gallery* rider superseded by [ADR 0011](./0011-canopy-and-ai-first-dmz.md). Supersedes part of [ADR 0003](./0003-installable-via-aws-marketplace.md).
 **Date:** 2026-04-21
+
+> **Partial supersession note.** This ADR landed three vocabulary changes together: (1) Frankenstein App → Understory, (2) promote *Substrate*, (3) retire *Gallery* and fold it into *DMZ*. Changes (1) and (2) stand unchanged. Change (3) is superseded by [ADR 0011](./0011-canopy-and-ai-first-dmz.md), which re-splits the single-exposure-surface model into a DMZ (AI evaluation, narrowed from the meaning below) and a Canopy (human exposure, inheriting the outward posture this ADR assigned to DMZ), and reintroduces Gallery as the listing UI *inside* the Canopy. Read the *DMZ* and *Gallery* discussions below as historical; current vocabulary is pinned in ADR 0011.
 
 ## Context
 

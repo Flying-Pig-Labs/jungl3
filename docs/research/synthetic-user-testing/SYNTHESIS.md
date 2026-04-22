@@ -1,5 +1,12 @@
 # Synthetic user testing drop, 2026-04-22: synthesis
 
+> **2026-04-22 postscript — read this first.** This synthesis was written before [ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md), which re-split the single-exposure-surface model into a **DMZ** (private, AI-first evaluation environment) and a **Canopy** (human exposure surface). Two consequences for reading below:
+>
+> 1. Where this doc says "DMZ" in the context of AI-agent probing (§§1–3, the framing sections), it is already correct under the new vocabulary — that is the DMZ's new job.
+> 2. Where this doc says "DMZ" in the context of human judging ("judging as interaction," "seeded personas and test accounts" for humans), substitute **Canopy**.
+>
+> Practically: Group A (reports 01–04) describes capability that now clearly belongs in the DMZ, by definition. The UST-C1 placement question in `CANDIDATES.md` has been narrowed — the hosting environment is settled; the implementing subsystem (Agent Layer specialist vs new top-level domain) remains open.
+
 ## Preface
 
 Five reports landed in this directory on 2026-04-22. Unlike clusters 1 and 2, they were not commissioned by a `run.py` run against a prompt set in this repo — they showed up as a user drop. Unlike the `sideband-2026-04-22/` reports (adjacent-market landscape), these are closer to the Jungle3 product surface and genuinely relevant to design.

@@ -14,7 +14,7 @@ Readiness legend:
 
 | ID | Title | Theme | Readiness | Closes/informs CLAUDE.md §11 |
 |---|---|---|---|---|
-| [C1](#c1--synthetic-user-tester-placement) | Synthetic-user-tester placement | Agent Layer shape | Needs decision | informs #18 |
+| [C1](#c1--synthetic-user-tester-placement) | Synthetic-user-tester placement (implementing layer only — host surface resolved) | Agent Layer shape | Needs decision | informs #18, narrowed by #28 |
 | [C2](#c2--pre-human-pass-framing) | Pre-human pass vs. replacement framing | Product posture | Ready | — |
 | [C3](#c3--planner-executor-split-for-browser-capable-agents) | Planner-Executor split for browser-capable agents | Browser-agent architecture | Ready (if C1 lands) | — |
 | [C4](#c4--persona-schema-pinned) | Persona schema pinned (6-point) | Persona authoring | Ready (if C1 lands) | — |
@@ -28,7 +28,9 @@ Two of the 7 (C6, C7) close existing §11 items outright if drafted. One (C1) in
 
 ## C1 — Synthetic-user-tester placement
 
-**One-line.** Decide where a persona-as-AI-agent capability lives: a new top-level `synthetic-user-testing/` domain, a specialist inside the existing Agent Layer, or a DMZ-side capability.
+**One-line.** Decide where the persona-as-AI-agent *implementation* lives: a new top-level `synthetic-user-testing/` domain, or a specialist inside the existing [Agent Layer](../../architecture/agent-layer.md).
+
+> **Narrowed by [ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md).** ADR 0011 establishes that AI-agent probing happens *in the DMZ, by definition* — the DMZ is the hosting environment. What remains open is the implementation question: which Jungle3 subsystem owns the agent code, tool definitions, persona runtime, and trace capture. The "DMZ-side primitive" framing below predates ADR 0011 and is obsolete as stated — "DMZ-side" is now the environment, not an alternative to the Agent Layer.
 
 **Source.** [`SYNTHESIS.md` §4 item 1](./SYNTHESIS.md), derived from [`04-build-it-yourself-claude-sdk.md` §2](./04-build-it-yourself-claude-sdk.md) and [`03-persona-simulation-methodology.md` §3.1](./03-persona-simulation-methodology.md).
 
@@ -36,14 +38,15 @@ Two of the 7 (C6, C7) close existing §11 items outright if drafted. One (C1) in
 - The Planner-Executor-Critic-Evaluator role split in report 04 §2 is already the `{status, summary, evidence, recommended_action}` shape from [ADR 0002](../../decisions/0002-sub-agent-response-contract.md).
 - [`docs/architecture/agent-layer.md`](../../architecture/agent-layer.md) already describes a routed network of specialists. Adding one more is cheap; adding a new top-level domain is expensive.
 - Per [`CLAUDE.md` §4](../../../CLAUDE.md) "create on first use, not speculatively" — a new top-level subdir needs real work in it to justify creation.
+- ADR 0011 pins the *where it runs* (DMZ). The remaining question is *what subsystem owns the code that runs there*.
 
-**The decision you'd be making.** Pick one of {new top-level domain, Agent-Layer specialist, DMZ-side primitive}. The synthesis leans toward Agent-Layer specialist.
+**The decision you'd be making.** Pick one of {new top-level domain, Agent-Layer specialist}. The synthesis leans toward Agent-Layer specialist.
 
 **Dependencies.** None. This unlocks C3 and C4 (which only make sense if C1 chose "we're doing this at all"). If C1 decides "not now," C3–C5 drop off the backlog.
 
-**Related accepted ADRs.** [ADR 0002](../../decisions/0002-sub-agent-response-contract.md), [ADR 0004](../../decisions/0004-canonical-platform-vocabulary.md). Architecture: [`agent-layer.md`](../../architecture/agent-layer.md), [`dmz.md`](../../architecture/dmz.md).
+**Related accepted ADRs.** [ADR 0002](../../decisions/0002-sub-agent-response-contract.md), [ADR 0004](../../decisions/0004-canonical-platform-vocabulary.md), [ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md). Architecture: [`agent-layer.md`](../../architecture/agent-layer.md), [`dmz.md`](../../architecture/dmz.md).
 
-**Why I rate it Needs decision, not Ready.** The evidence is fully assembled but the choice is a scope call only you can make: is Jungle3 in the business of synthetic-persona testing, or not? A draft ADR can't pick that for you.
+**Why I rate it Needs decision, not Ready.** The evidence is fully assembled but the choice is a scope call only you can make: is Jungle3 in the business of synthetic-persona testing, or not? A draft ADR can't pick that for you. (ADR 0011 answered *where it would run* if yes; it did not answer *should it exist in v1*.)
 
 ---
 
@@ -55,14 +58,14 @@ Two of the 7 (C6, C7) close existing §11 items outright if drafted. One (C1) in
 
 **Forces.**
 - Report 03's fidelity gap and "OK" bias together are load-bearing: synthetic personas are systematically bad at emotional resonance and usability judgment.
-- [`docs/architecture/dmz.md`](../../architecture/dmz.md) already commits to "judging as interaction" with human judges and seeded personas. A persona-as-agent pre-pass *complements* that without replacing anything.
+- [`docs/architecture/canopy.md`](../../architecture/canopy.md) and [`docs/product/judging.md`](../../product/judging.md) already commit to "judging as interaction" with human judges and seeded personas in the Canopy. Per [ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md), a persona-as-agent pre-pass runs in the DMZ *before* humans reach the Canopy — complementary, not a replacement.
 - Reframing synthetic testing as replacement (not pre-pass) would contradict the human-in-the-loop calibration loop in report 03 §4.2.
 
 **The decision you'd be making.** Just accepting the framing. This is the shortest, cleanest candidate in the drop.
 
 **Dependencies.** Downstream of C1. If C1 is "no," C2 is moot.
 
-**Related accepted ADRs.** None yet. Architecture: [`dmz.md`](../../architecture/dmz.md), [`../product/judging.md`](../../product/judging.md).
+**Related accepted ADRs.** [ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md) (pins the DMZ/Canopy sequencing this candidate formalizes). Architecture: [`dmz.md`](../../architecture/dmz.md), [`canopy.md`](../../architecture/canopy.md), [`../product/judging.md`](../../product/judging.md).
 
 **Why Ready.** No choice to make — the evidence lands the position. It's the cheapest ADR in this group to write.
 
@@ -96,7 +99,7 @@ Two of the 7 (C6, C7) close existing §11 items outright if drafted. One (C1) in
 **Source.** [`SYNTHESIS.md` §4 item 4](./SYNTHESIS.md), derived from [`03-persona-simulation-methodology.md` §2.1](./03-persona-simulation-methodology.md).
 
 **Forces.**
-- `docs/architecture/dmz.md` already commits to "seeded personas and test accounts" without specifying their schema.
+- `docs/architecture/canopy.md` commits to "seeded personas and test accounts" for humans without specifying their schema; `docs/architecture/dmz.md` references AI-agent personas for the evaluation surface. Per [ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md) and open question #30, a pinned schema could be shared or intentionally divergent.
 - A pinned schema makes personas versionable, diff-able, and testable. An un-pinned schema means every persona is bespoke prose.
 - The 6-point schema is compact enough to live in an install's seed JSON without bloat.
 

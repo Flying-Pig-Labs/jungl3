@@ -41,7 +41,7 @@ This is the guardrail that keeps the pattern from degenerating into eloquent lyi
 
 A Data Agent that "remembers" which datasets are connected is worse than no Data Agent. It will answer confidently, cite nothing checkable, and be wrong whenever state has changed since its prompt was composed. The same is true for every other specialist.
 
-Concretely, an inspection surface means the specialist has programmatic access to the live truth of its domain: current connection config, a queryable schema registry, actual queue depth, real health-check endpoints, the current deployment manifest, the live listing record inside the DMZ. If a claim appears in a specialist's `summary`, its `evidence` must point at something another human could independently check.
+Concretely, an inspection surface means the specialist has programmatic access to the live truth of its domain: current connection config, a queryable schema registry, actual queue depth, real health-check endpoints, the current deployment manifest, the live Gallery listing record inside the Canopy. If a claim appears in a specialist's `summary`, its `evidence` must point at something another human could independently check.
 
 A specialist with no inspection surface is not a specialist. It is a liability with a hard hat on.
 
@@ -55,8 +55,8 @@ Each row lists the domain owned, the kind of question the specialist answers, an
 | API Agent | Service connectivity, endpoint validity, request/response shape, whether a dependency is stubbed vs live vs broken | Endpoint catalog, contract definitions, probe results, stub-vs-live registry |
 | Event Agent | Queue health, event emission, event schemas, background-activity flow | Queue depth and throughput, emitter status, event-schema registry, recent-event samples |
 | Auth Agent | Login state, user roles, permissions, access failures | Current session, role/permission store, recent auth decisions, access logs |
-| Environment Agent | Overall Jungle/DMZ health, deployment status, provisioned services, feature flags | Deployment manifest, service inventory, platform health, enablement flags |
-| Listing Agent | Prototype registration in the DMZ, listing metadata, contract compliance, judge-visible surface | Current listing record, [Integration Contract](../glossary.md#integration-contract) probe results, rendered preview |
+| Environment Agent | Overall Jungle / DMZ / Canopy health, deployment status, provisioned services, feature flags | Deployment manifest, service inventory, platform health, enablement flags |
+| Listing Agent | Prototype registration in the Canopy's [Gallery](../glossary.md#gallery), listing metadata, contract compliance, judge-visible surface | Current Gallery listing record, [Integration Contract](../glossary.md#integration-contract) probe results, rendered preview |
 
 ## The response contract
 

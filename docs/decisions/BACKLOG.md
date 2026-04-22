@@ -45,7 +45,7 @@ Each has a real scope decision to make before the ADR can be written. Scope is t
 | 7 | [C2-D](../research/deep-research-2026-04-22/CANDIDATES.md#d--document-integrity-application-layer-sha-256-hashing-of-supporting-documents) | Document integrity (application-layer SHA-256) | What counts as a "supporting document" in v1 | Cluster 2, report 03 | — |
 | 8 | [C2-E](../research/deep-research-2026-04-22/CANDIDATES.md#e--regulatory-surface-for-v1-insurance-claims) | Regulatory surface for v1 insurance claims | How many of the 5 cues are minimum-viable | Cluster 2, report 09 | #22 |
 | 9 | [C2-F](../research/deep-research-2026-04-22/CANDIDATES.md#f--canonical-v1-maker-checker-workflow) | Canonical v1 maker-checker workflow ($47,500 settlement) | Authority-level thresholds; best drafted with a design partner | Cluster 2, report 03 | #16 |
-| 10 | [UST-C1](../research/synthetic-user-testing/CANDIDATES.md#c1--synthetic-user-tester-placement) | Synthetic-user-tester placement | Agent-Layer specialist vs top-level domain vs DMZ primitive; also: do we do this at all in v1 | Cluster 4, reports 03 + 04 | informs #18 |
+| 10 | [UST-C1](../research/synthetic-user-testing/CANDIDATES.md#c1--synthetic-user-tester-placement) | Synthetic-user-tester placement | Agent-Layer specialist vs top-level domain (hosting surface = DMZ, per [ADR 0011](./0011-canopy-and-ai-first-dmz.md)); also: do we do this at all in v1 | Cluster 4, reports 03 + 04 | informs #18; narrowed by #28 |
 | 11 | [UST-C5](../research/synthetic-user-testing/CANDIDATES.md#c5--persona-reasoning-traces-as-audit-events) | Persona reasoning traces as audit events | Do reasoning traces chain through the audit; PII-leakage-via-CoT posture | Cluster 4, report 03 | — |
 
 ### Low-readiness (scoping, amendment, or deferral)
@@ -138,7 +138,7 @@ Which candidate resolves which open decision. Items without a candidate are trac
 | 22 | State-aware SLA timers vs. generic | C2-E |
 | 24 | SME exemplar commission timing | C2-B |
 
-§11 items not addressed by any current candidate: #4, #5, #6, #7, #8, #9, #10, #11, #12, #13, #14, #15, #20, #21, #23. These are either future work (infrastructure, DMZ topology) or business/context (first customer, tool choice) — not research-gated.
+§11 items not addressed by any current candidate: #4, #5, #6, #7, #8, #9, #10, #11, #12, #13, #14, #15, #20, #21, #23, plus the six opened by [ADR 0011](./0011-canopy-and-ai-first-dmz.md) (#25–#30). These are either future work (infrastructure, DMZ/Canopy topology, promotion gate mechanics) or business/context (first customer, tool choice) — not research-gated.
 
 ---
 

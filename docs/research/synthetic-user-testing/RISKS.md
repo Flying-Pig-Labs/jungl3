@@ -11,8 +11,8 @@ Lifted out of [`SYNTHESIS.md`](./SYNTHESIS.md) for use. Each entry names a risk 
 | [R1](#r1--prompt-injection-from-untrusted-prototype-ui) | Prompt injection from untrusted prototype UI | Security | High | ADR constraint on C3 |
 | [R2](#r2--think-aloud--pii-leakage-863) | Think-Aloud + PII leakage (86.3%) | Privacy/Compliance | High | ADR constraint on C5 |
 | [R3](#r3--ok-bias-masks-functional-failure) | "OK" bias masks functional failure | Methodology | Medium | ADR constraint on C2 |
-| [R4](#r4--determinism-deception) | Determinism deception (system-fingerprint drift) | Reproducibility | Medium | Documented warning + C4 addendum |
-| [R5](#r5--fidelity-gap-subjective-tasks) | Fidelity gap on subjective tasks | Methodology | Low-Medium | Documented warning (reinforces C2) |
+| [R4](#r4--determinism-deception-system-fingerprint-drift) | Determinism deception (system-fingerprint drift) | Reproducibility | Medium | Documented warning + C4 addendum |
+| [R5](#r5--fidelity-gap-on-subjective-tasks) | Fidelity gap on subjective tasks | Methodology | Low-Medium | Documented warning (reinforces C2) |
 
 Two of the five (R1, R2) are load-bearing enough that, *if* the candidates they attach to are drafted, those ADRs must include explicit mitigations. The other three shape the tone and caveats around synthetic-persona testing but don't by themselves force an ADR.
 
@@ -24,7 +24,7 @@ Two of the five (R1, R2) are load-bearing enough that, *if* the candidates they 
 
 **Source.** [`02-ai-computer-use-tech.md` §4](./02-ai-computer-use-tech.md) (prompt-injection defenses) and [`04-build-it-yourself-claude-sdk.md` §5](./04-build-it-yourself-claude-sdk.md) (content boundaries, agent-browser `--content-boundaries`).
 
-**Why this is Jungle3-specific, not generic.** The usual prompt-injection discussion assumes the agent operates on a trustworthy website. Jungle3 inverts this: **every prototype is untrusted by construction**. The DMZ's security posture already says this ([`docs/architecture/dmz.md`](../../architecture/dmz.md): "public-ish in access, private in blast radius") but the existing framing is about HTTP-level isolation. An AI-persona pre-pass opens a new injection vector *inside* the prototype's own rendered UI.
+**Why this is Jungle3-specific, not generic.** The usual prompt-injection discussion assumes the agent operates on a trustworthy website. Jungle3 inverts this: **every prototype is untrusted by construction**. The Canopy's security posture calls out HTTP-level isolation ([`docs/architecture/canopy.md`](../../architecture/canopy.md): "public-ish in access, private in blast radius"); this risk is narrower and specific to the DMZ — prompt injection *inside the prototype's rendered UI* while an AI agent is driving it. [ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md) and the new [`docs/architecture/dmz.md`](../../architecture/dmz.md) commit to this threat model as the DMZ's defining concern.
 
 **Triggers.**
 - A persona agent probes a prototype whose UI text — intentional or not — contains LLM-directing patterns.
@@ -71,7 +71,7 @@ Two of the five (R1, R2) are load-bearing enough that, *if* the candidates they 
 
 **Source.** [`03-persona-simulation-methodology.md` §4.1](./03-persona-simulation-methodology.md) and [`01-existing-platforms.md` §6](./01-existing-platforms.md).
 
-**Why it matters.** Jungle3's judging model ([`../../architecture/dmz.md`](../../architecture/dmz.md)) is interaction-based, not score-based — so far. If synthetic-persona testing is adopted and produces a PersonaScore (report 04 §3), there's a live pressure to treat that score as judging input. The "OK" bias makes that substitution specifically unsafe.
+**Why it matters.** Jungle3's judging model ([`../../architecture/canopy.md`](../../architecture/canopy.md), [`../../product/judging.md`](../../product/judging.md)) is interaction-based, not score-based — and now lives in the Canopy, not the DMZ ([ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md)). If synthetic-persona testing in the DMZ is adopted and produces a PersonaScore (report 04 §3), there's a live pressure to treat that DMZ-side score as Canopy judging input. The "OK" bias makes that substitution specifically unsafe.
 
 **Triggers.**
 - Synthetic-persona scores fed into judging panels as a replacement for human scoring.
@@ -115,7 +115,7 @@ Two of the five (R1, R2) are load-bearing enough that, *if* the candidates they 
 
 **Source.** [`03-persona-simulation-methodology.md` §1.1](./03-persona-simulation-methodology.md).
 
-**Why it matters.** The DMZ's judging model asks humans to score "what they experienced" — an inherently subjective assessment. A synthetic-persona pre-pass is useful for functional coverage but cannot substitute for subjective judgment. This is the methodological foundation under R3.
+**Why it matters.** The Canopy's judging model asks humans to score "what they experienced" — an inherently subjective assessment. A DMZ-side synthetic-persona pre-pass is useful for functional coverage but cannot substitute for subjective judgment. This is the methodological foundation under R3.
 
 **Triggers.**
 - Teams asking personas subjective questions ("does this feel good to use?") and treating the answers as data.

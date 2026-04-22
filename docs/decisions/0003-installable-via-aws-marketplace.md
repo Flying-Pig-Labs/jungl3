@@ -1,9 +1,9 @@
 # 0003 — Jungle3 is distributed as an installable AWS Marketplace listing
 
-**Status:** Accepted (rider terminology partly superseded by [ADR 0004](./0004-canonical-platform-vocabulary.md))
+**Status:** Accepted (rider terminology partly superseded by [ADR 0004](./0004-canonical-platform-vocabulary.md) and further revised by [ADR 0011](./0011-canopy-and-ai-first-dmz.md))
 **Date:** 2026-04-21
 
-> **Supersession note.** The primary decision of this ADR — installable via AWS Marketplace — stands unchanged. The rider at the bottom of *Decision* renamed the concept previously called *Marketplace* to *Gallery*. [ADR 0004](./0004-canonical-platform-vocabulary.md) retires *Gallery* and folds its role into *DMZ*. The *Marketplace → (retired name) Gallery* history below stands as historical record; the *Gallery* term is no longer canonical.
+> **Supersession note.** The primary decision of this ADR — installable via AWS Marketplace — stands unchanged. The rider at the bottom of *Decision* renamed the concept previously called *Marketplace* to *Gallery*. [ADR 0004](./0004-canonical-platform-vocabulary.md) retired *Gallery* and folded its role into *DMZ*. [ADR 0011](./0011-canopy-and-ai-first-dmz.md) re-split that surface: the human exposure role is now called **Canopy**, the AI evaluation role keeps the name **DMZ** (narrowed), and **Gallery** is reintroduced as the listing UI *inside* the Canopy. When this ADR's body says "DMZs, Gallery" it means, in current vocabulary: "DMZs and Canopies; Gallery lives inside each Canopy." The original text stands as historical record.
 
 ## Context
 

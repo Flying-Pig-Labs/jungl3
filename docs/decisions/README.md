@@ -64,14 +64,15 @@ Decisions evolve. When a new decision overrides an older one:
 | --- | --- | --- |
 | [0001](./0001-lovable-owns-repo-root.md) | Accepted | Lovable owns repo root; platform domains live in subdirs |
 | [0002](./0002-sub-agent-response-contract.md) | Accepted | Sub-agent response contract |
-| [0003](./0003-installable-via-aws-marketplace.md) | Accepted (rider partly superseded by 0004) | Jungle3 is distributed as an installable AWS Marketplace listing |
-| [0004](./0004-canonical-platform-vocabulary.md) | Accepted | Canonical platform vocabulary: Understory, Substrate, DMZ-absorbs-Gallery |
+| [0003](./0003-installable-via-aws-marketplace.md) | Accepted (rider partly superseded by 0004 and 0011) | Jungle3 is distributed as an installable AWS Marketplace listing |
+| [0004](./0004-canonical-platform-vocabulary.md) | Accepted (DMZ-absorbs-Gallery rider superseded by 0011) | Canonical platform vocabulary: Understory, Substrate, DMZ-absorbs-Gallery |
 | [0005](./0005-event-envelope-and-correlation-identifiers.md) | Accepted | Event envelope and correlation identifiers |
 | [0006](./0006-v1-domain-anchor-insurance-claims.md) | Accepted | v1 domain anchor: insurance claims processing |
 | [0007](./0007-v1-cost-profile-and-llm-metering.md) | Accepted | v1 cost profile and LLM metering |
 | [0008](./0008-workflows-are-state-machines.md) | Accepted | Workflows are state machines, not event chains |
 | [0009](./0009-audit-trail-is-append-only-hash-chained.md) | Accepted | Audit trail is a separate append-only hash-chained store |
 | [0010](./0010-seeder-and-reaper-patterns.md) | Accepted | Seeder and Reaper patterns for install and teardown |
+| [0011](./0011-canopy-and-ai-first-dmz.md) | Accepted | Canopy is the human exposure surface; DMZ is the AI evaluation surface |
 
 ## Candidate ADRs and status
 

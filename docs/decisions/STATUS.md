@@ -19,17 +19,18 @@ Decisions we have made and will not casually revisit.
 | [0001](./0001-lovable-owns-repo-root.md) | Lovable owns repo root | Website stays at repo root; platform domains live in subdirs. |
 | [0002](./0002-sub-agent-response-contract.md) | Sub-agent response contract | Every Agent-Layer specialist returns `{status, summary, evidence, recommended_action}`. |
 | [0003](./0003-installable-via-aws-marketplace.md) | Installable via AWS Marketplace | Jungle3 ships as a Marketplace listing; no hosted control plane. |
-| [0004](./0004-canonical-platform-vocabulary.md) | Canonical vocabulary | Understory, Substrate, DMZ-absorbs-Gallery. |
+| [0004](./0004-canonical-platform-vocabulary.md) | Canonical vocabulary | Understory, Substrate, DMZ-absorbs-Gallery *(Gallery rider superseded by 0011)*. |
 | [0005](./0005-event-envelope-and-correlation-identifiers.md) | Event envelope + correlation IDs | CloudEvents v1.0, reverse-DNS typing, `{trace_id, case_id}` dual correlation. |
 | [0006](./0006-v1-domain-anchor-insurance-claims.md) | v1 domain = insurance claims | P&C claims processing; 7 services; 2 stubs. |
 | [0007](./0007-v1-cost-profile-and-llm-metering.md) | v1 cost profile + LLM metering | $100/month infra ceiling, $50/month metered LLM, CloudWatch/X-Ray, LLM-agent-over-tools for admin. |
 | [0008](./0008-workflows-are-state-machines.md) | Workflows are state machines | Step Functions for multi-step business processes; no implicit event chains. |
 | [0009](./0009-audit-trail-is-append-only-hash-chained.md) | Audit trail is hash-chained | Append-only DynamoDB with per-event hash chaining; separate from operational data. |
 | [0010](./0010-seeder-and-reaper-patterns.md) | Seeder + Reaper patterns | Async Step Functions seeder, HMAC-SHA256 per-entity seeding, dedicated Reaper Lambda; no ALBs, no VPC Lambdas in v1. |
+| [0011](./0011-canopy-and-ai-first-dmz.md) | Canopy + AI-first DMZ | Two surfaces, sequenced: DMZ (private, AI-agent evaluation) → Canopy (public-ish, human exposure; Gallery lives inside). Supersedes the 0004 Gallery rider. |
 
-**Status distribution:** 10 accepted, 0 superseded, 0 deprecated.
+**Status distribution:** 11 accepted, 0 superseded, 0 deprecated.
 
-**Coverage.** The 10 accepted ADRs cover: packaging model, vocabulary, event shape, v1 domain choice, cost posture, workflow orchestration, audit architecture, install/teardown patterns, and agent response shape. They do *not* yet cover: extension architecture, admin-UI view set, regulatory-cue surface, seed-data generation mechanics, retention tiering, document integrity, or any synthetic-user-testing decisions.
+**Coverage.** The 11 accepted ADRs cover: packaging model, vocabulary (including the DMZ/Canopy split), event shape, v1 domain choice, cost posture, workflow orchestration, audit architecture, install/teardown patterns, and agent response shape. They do *not* yet cover: extension architecture, admin-UI view set, regulatory-cue surface, seed-data generation mechanics, retention tiering, document integrity, DMZ/Canopy AWS topology, or the synthetic-user-testing implementation placement.
 
 ---
 
@@ -51,7 +52,7 @@ Ordered by the recommendation in [`BACKLOG.md`](./BACKLOG.md). Each has a named 
 
 ## Open questions — not yet candidate-shaped
 
-Tracked in [`../../CLAUDE.md`](../../CLAUDE.md) §11. These are either business/context (not research-gated), future infrastructure (wait for the relevant ADR), or narrow implementation details (become design docs, not ADRs). Total: 15 open, of 22 total in §11.
+Tracked in [`../../CLAUDE.md`](../../CLAUDE.md) §11. These are either business/context (not research-gated), future infrastructure (wait for the relevant ADR), or narrow implementation details (become design docs, not ADRs). Total: 20 open, of 28 total in §11 (6 new opened by ADR 0011).
 
 | § | Title | Shape |
 |---|---|---|
@@ -60,11 +61,16 @@ Tracked in [`../../CLAUDE.md`](../../CLAUDE.md) §11. These are either business/
 | 6 | Supported customer account scenarios | Single-account vs Control Tower; interacts with C1-E. |
 | 7 | IaC authoring tool | CFN / CDK / SAM / Pulumi — decide when Marketplace listing build starts. |
 | 8 | CI/CD for the listing | GitHub Actions + OIDC; deferred until listing pipeline starts. |
-| 9 | DMZ authentication | Magic link + guest + role-based. Design call; needs a first DMZ build. |
-| 10 | DMZ AWS topology | VPC shape, routing. Needs a first DMZ build. |
+| 9 | Canopy authentication | Magic link + guest + role-based. Design call; needs a first Canopy build. |
+| 10 | Canopy AWS topology | VPC shape, routing. Needs a first Canopy build. |
 | 11 | Control Plane runtime | Lambda vs Fargate — not yet needed. |
-| 12 | DMZ prototype lifespan | Retention/extension/teardown. Becomes concrete with first sprint use. |
-| 13 | DMZ telemetry requirements | Becomes concrete when judging surface is built. |
+| 12 | Canopy prototype lifespan | Retention/extension/teardown. Becomes concrete with first sprint use. |
+| 13 | Canopy telemetry requirements | Becomes concrete when judging surface is built. |
+| 25 | DMZ → Canopy promotion gate | Shape undecided. Needs first concrete evaluation run. |
+| 26 | DMZ agent runtime choice | Claude Computer Use / Playwright MCP / custom. Opened by [ADR 0011](./0011-canopy-and-ai-first-dmz.md). |
+| 27 | DMZ AWS topology | Separate from Canopy topology; different threat model. Opened by [ADR 0011](./0011-canopy-and-ai-first-dmz.md). |
+| 29 | Promotion criteria | What "passed" means. Needs a first concrete run. |
+| 30 | Persona schema alignment | Shared DMZ/Canopy schema vs divergent. Opened by [ADR 0011](./0011-canopy-and-ai-first-dmz.md). |
 | 14 | Data classification rules | Advisory doc; becomes concrete with first customer. |
 | 15 | Cross-install discoverability | Default: no. Future federation is a separate design. |
 | 18 | LLM budget enforcement details | Design doc when `llm-gateway` is implemented. |

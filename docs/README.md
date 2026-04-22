@@ -13,17 +13,17 @@ docs/
   architecture/                # how the system is shaped
     system-context.md          # layer model + context diagram
     agent-layer.md             # agent roles + response contract
-    dmz.md                     # DMZ three-layer model + security posture
+    dmz.md                     # AI-first evaluation environment
+    canopy.md                  # human exposure surface (incl. Gallery)
   product/                     # product framing (what it is, who it's for, why)
     positioning.md
     judging.md
   decisions/                   # what we've actually decided, and why
     README.md
     0001-lovable-owns-repo-root.md
-    0002-sub-agent-response-contract.md
-    0003-installable-via-aws-marketplace.md
-    0004-canonical-platform-vocabulary.md
-  research/                    # frozen third-party captures
+    ... 0002 through 0010 ...
+    0011-canopy-and-ai-first-dmz.md
+  research/                    # research captures + synthesized findings
     README.md
 ```
 
