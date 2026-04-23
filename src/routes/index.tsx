@@ -47,7 +47,6 @@ function Index() {
         <Hero onRequestAccess={openRequest} />
         <ConceptSection />
         <SystemModules />
-        <DemoVideo />
         <CTASection onRequestAccess={openRequest} />
         <Footer onRequestAccess={openRequest} />
       </main>
