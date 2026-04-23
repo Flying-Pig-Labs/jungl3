@@ -26,7 +26,7 @@ export function Hero({ onRequestAccess }: { onRequestAccess: () => void }) {
           className="font-display text-5xl leading-[1.05] tracking-tight text-gradient-headline sm:text-6xl md:text-7xl"
           style={{ fontFamily: '"Monoton", serif', fontWeight: 400 }}
         >
-          Jungl3
+          Welcome to the Jungl3
         </h1>
         <p className="mx-auto mt-8 max-w-2xl font-mono text-base font-light text-foreground/90 sm:text-lg">
           A zero-touch on-demand hackathon platform for forward-deployed
