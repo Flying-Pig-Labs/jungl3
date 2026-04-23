@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Hero } from "@/components/sections/Hero";
+import { DemoVideo } from "@/components/sections/DemoVideo";
 import { ConceptSection } from "@/components/sections/Concept";
 import { SystemModules } from "@/components/sections/SystemModules";
 import { CTASection } from "@/components/sections/CTA";
@@ -44,6 +45,7 @@ function Index() {
       <Nav onRequestAccess={openRequest} />
       <main className="relative z-10">
         <Hero onRequestAccess={openRequest} />
+        <DemoVideo />
         <ConceptSection />
         <SystemModules />
         <CTASection onRequestAccess={openRequest} />
