@@ -5,7 +5,7 @@
 
 ## Context
 
-The Agent Layer in Jungle3 is not a single orchestrator with universal knowledge. It is a routed network: a primary operator agent delegates to domain-specific sub-agents (Data, API, Event, Auth, Environment, Marketplace) that own inspection and validation for their slice of the system. See [`../architecture/agent-layer.md`](../architecture/agent-layer.md).
+The Agent Layer in Jungl3 is not a single orchestrator with universal knowledge. It is a routed network: a primary operator agent delegates to domain-specific sub-agents (Data, API, Event, Auth, Environment, Marketplace) that own inspection and validation for their slice of the system. See [`../architecture/agent-layer.md`](../architecture/agent-layer.md).
 
 For the orchestrator to compose sub-agent output into coherent answers — and for the system to remain trustworthy rather than "an eloquent liar in a hard hat" — every sub-agent must return the same structured shape.
 

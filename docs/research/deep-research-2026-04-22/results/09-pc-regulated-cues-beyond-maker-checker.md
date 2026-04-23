@@ -1,13 +1,13 @@
-# Jungle3 P&C Claims Compliance: Architecting the Regulatory Surface for In-Account AWS Deployments
+# Jungl3 P&C Claims Compliance: Architecting the Regulatory Surface for In-Account AWS Deployments
 
 ## Executive Summary: The Regulatory Surface of P&C Claims
 
-For Jungle3, plausibility collapse is the ultimate failure mode. If a domain-expert reviewer—such as an insurance VP or a former state Department of Insurance (DOI) examiner—tests the system and finds generic, unregulated workflows, the illusion of a "real" enterprise system shatters. To survive a 15-minute plausibility gauntlet, Jungle3 must natively exhibit the regulatory cues mandated by state DOIs, the NAIC Market Regulation Handbook, and privacy frameworks like GLBA and NYDFS Part 500. 
+For Jungl3, plausibility collapse is the ultimate failure mode. If a domain-expert reviewer—such as an insurance VP or a former state Department of Insurance (DOI) examiner—tests the system and finds generic, unregulated workflows, the illusion of a "real" enterprise system shatters. To survive a 15-minute plausibility gauntlet, Jungl3 must natively exhibit the regulatory cues mandated by state DOIs, the NAIC Market Regulation Handbook, and privacy frameworks like GLBA and NYDFS Part 500. 
 
-This report translates these complex regulatory requirements into buildable, cost-aware AWS architectures aligned with ADRs 0005–0009. By implementing state-specific SLA timers via AWS Step Functions, cryptographically immutable reserve ledgers in DynamoDB, and segregated Special Investigations Unit (SIU) data models, Jungle3 will project deep domain authenticity out of the box.
+This report translates these complex regulatory requirements into buildable, cost-aware AWS architectures aligned with ADRs 0005–0009. By implementing state-specific SLA timers via AWS Step Functions, cryptographically immutable reserve ledgers in DynamoDB, and segregated Special Investigations Unit (SIU) data models, Jungl3 will project deep domain authenticity out of the box.
 
 ### The 15-Minute Plausibility Gauntlet
-If an insurance executive tests Jungle3, they will look for specific artifacts to validate the system. Jungle3 must successfully demonstrate:
+If an insurance executive tests Jungl3, they will look for specific artifacts to validate the system. Jungl3 must successfully demonstrate:
 1. **Jurisdictional Awareness:** Timers and notices that adapt to specific state laws (e.g., California vs. Florida).
 2. **Financial Immutability:** A reserve history that never overwrites past values, showing exact authority levels and timestamps.
 3. **Fraud Segregation:** An SIU referral mechanism that restricts access and logs chain-of-custody.
@@ -16,11 +16,11 @@ If an insurance executive tests Jungle3, they will look for specific artifacts t
 
 ## State-Specific Timing and Notice Requirements
 
-State insurance codes dictate strict timelines for acknowledging, investigating, and paying claims. Failing to meet these SLAs constitutes an Unfair Claims Settlement Practice [1]. Jungle3 must use AWS Step Functions (ADR 0008) to orchestrate these timers, utilizing the `Wait` state and callback patterns to manage long-running executions [2] [3].
+State insurance codes dictate strict timelines for acknowledging, investigating, and paying claims. Failing to meet these SLAs constitutes an Unfair Claims Settlement Practice [1]. Jungl3 must use AWS Step Functions (ADR 0008) to orchestrate these timers, utilizing the `Wait` state and callback patterns to manage long-running executions [2] [3].
 
 ### SLA Timer Configurations by Jurisdiction
 
-The following table outlines the baseline configurations Jungle3 must seed for its v1 deployment across four major jurisdictions:
+The following table outlines the baseline configurations Jungl3 must seed for its v1 deployment across four major jurisdictions:
 
 | Jurisdiction | Acknowledgment SLA | Accept/Deny Decision SLA | Payment SLA | Statutory Citation |
 | :--- | :--- | :--- | :--- | :--- |
@@ -29,10 +29,10 @@ The following table outlines the baseline configurations Jungle3 must seed for i
 | **Florida (FL)** | 7 calendar days | 60 calendar days | Included in 60-day decision window | Fla. Stat. § 627.70131 [9] [10] |
 | **New York (NY)** | 15 business days | 30 working days (after proof of loss) | N/A (Promptly) | 11 NYCRR 216.4, ISC § 2601 [11] [12] |
 
-*Takeaway: Jungle3 cannot use a hardcoded global timer. The Step Functions state machine must dynamically read the `jurisdiction` field from the claim object to set the appropriate `SecondsPath` or `TimestampPath` for its `Wait` states.*
+*Takeaway: Jungl3 cannot use a hardcoded global timer. The Step Functions state machine must dynamically read the `jurisdiction` field from the claim object to set the appropriate `SecondsPath` or `TimestampPath` for its `Wait` states.*
 
 ### Catastrophe Tolling and Step Functions Implementation
-During major disasters, DOIs frequently issue emergency orders extending these deadlines. For example, Florida's OIR extended grace periods following Hurricane Helene [13], and Texas allows a 15-day extension for weather-related catastrophes [14]. Jungle3 should implement a global "Catastrophe Mode" toggle in the admin UI. When active, the Step Functions execution should catch a specific event or check a configuration flag to dynamically add 15–30 days to the `decision_timer`.
+During major disasters, DOIs frequently issue emergency orders extending these deadlines. For example, Florida's OIR extended grace periods following Hurricane Helene [13], and Texas allows a 15-day extension for weather-related catastrophes [14]. Jungl3 should implement a global "Catastrophe Mode" toggle in the admin UI. When active, the Step Functions execution should catch a specific event or check a configuration flag to dynamically add 15–30 days to the `decision_timer`.
 
 ## Reserve Ledgers and Financial Auditability
 
@@ -42,7 +42,7 @@ Reserves represent the money set aside for a claim's eventual payout. Market con
 Examiners expect to see a chronological ledger of all reserve entries. Overwriting a `current_reserve` field is a massive red flag. The NAIC Market Regulation Handbook explicitly directs examiners to review data for changes in reserves and verify that claim files are reserved in accordance with established procedures [15].
 
 ### Implementing ADR 0009: Hash-Chained DynamoDB Ledger
-Jungle3 must implement an append-only reserve ledger using the `jungle3-audit` DynamoDB table (ADR 0009). Every reserve adjustment must be a distinct item containing:
+Jungl3 must implement an append-only reserve ledger using the `jungle3-audit` DynamoDB table (ADR 0009). Every reserve adjustment must be a distinct item containing:
 * `case_id` and `trace_id`
 * `old_value` and `new_value`
 * `reason_code` (e.g., `INITIAL`, `DEVELOPMENT`, `LITIGATION`)
@@ -53,12 +53,12 @@ Jungle3 must implement an append-only reserve ledger using the `jungle3-audit` D
 
 ## Special Investigations Unit (SIU) and Fraud Reporting
 
-SIU workflows handle suspected fraud. To pass the plausibility gauntlet, Jungle3 does not need a full investigative case management system, but it *must* demonstrate proper data segregation and referral capabilities.
+SIU workflows handle suspected fraud. To pass the plausibility gauntlet, Jungl3 does not need a full investigative case management system, but it *must* demonstrate proper data segregation and referral capabilities.
 
 ### Regulatory Mandates and Data Segregation
 State laws mandate the reporting of suspected fraud. California requires insurers to report suspected fraud to the Fraud Division within 60 days of an SIU determination [18]. New York requires reporting within 30 days [19]. 
 
-Because SIU investigations often involve sensitive surveillance or legal work product, SIU data must be strictly segregated from the main claim file. Jungle3 should implement a separate `siu_case` object. When an adjuster clicks "Refer to SIU," the system should take a snapshot of the claim data and pass it to the `siu_case`, applying strict Role-Based Access Control (RBAC) so standard adjusters cannot view the ongoing investigation notes.
+Because SIU investigations often involve sensitive surveillance or legal work product, SIU data must be strictly segregated from the main claim file. Jungl3 should implement a separate `siu_case` object. When an adjuster clicks "Refer to SIU," the system should take a snapshot of the claim data and pass it to the `siu_case`, applying strict Role-Based Access Control (RBAC) so standard adjusters cannot view the ongoing investigation notes.
 
 ### Minimal SIU Referral Payload
 The referral payload must capture specific "red flags" (e.g., `staged_accident`, `inflated_medicals`) [20] [21]. The system should generate a mock export payload formatted similarly to the National Insurance Crime Bureau (NICB) or state eFD-1 forms [22] [23].
@@ -66,17 +66,17 @@ The referral payload must capture specific "red flags" (e.g., `staged_accident`,
 ## Reinsurance and Subrogation Cues
 
 ### Large-Loss Reinsurance Notifications
-Excess of Loss (XoL) reinsurance treaties require ceding insurers to notify reinsurers when a claim exceeds a specific financial threshold, typically within 24 to 72 hours [24]. Jungle3 should include an EventBridge rule that listens to reserve updates. If `total_incurred` breaches a seeded threshold (e.g., $250,000), it triggers a `reinsurance_notify_event`. This event should generate a mock PDF/CSV notice containing the date of loss, insured name, current gross reserve, and a brief summary [25].
+Excess of Loss (XoL) reinsurance treaties require ceding insurers to notify reinsurers when a claim exceeds a specific financial threshold, typically within 24 to 72 hours [24]. Jungl3 should include an EventBridge rule that listens to reserve updates. If `total_incurred` breaches a seeded threshold (e.g., $250,000), it triggers a `reinsurance_notify_event`. This event should generate a mock PDF/CSV notice containing the date of loss, insured name, current gross reserve, and a brief summary [25].
 
 ### Subrogation Seed Data
-To simulate subrogation (recovery from an at-fault third party), Jungle3 should seed specific claims (e.g., rear-end collisions) with minimal fields: `at_fault_indicator: false`, `third_party_contact`, and `police_report_ref`. The UI should display a "Subrogation Potential: High" badge and include a mock Arbitration Forums demand letter in the document repository [26] [27].
+To simulate subrogation (recovery from an at-fault third party), Jungl3 should seed specific claims (e.g., rear-end collisions) with minimal fields: `at_fault_indicator: false`, `third_party_contact`, and `police_report_ref`. The UI should display a "Subrogation Potential: High" badge and include a mock Arbitration Forums demand letter in the document repository [26] [27].
 
 ## Compliance Reporting and Examiner Exports
 
-During a market conduct exam, regulators request specific data files. Jungle3 must be capable of generating these on demand to prove its enterprise readiness.
+During a market conduct exam, regulators request specific data files. Jungl3 must be capable of generating these on demand to prove its enterprise readiness.
 
 ### Core Reports and The 'Examiner Export' Package
-Jungle3 should provide an admin-agent prompt to generate an "Examiner Export" ZIP file. This package must include:
+Jungl3 should provide an admin-agent prompt to generate an "Examiner Export" ZIP file. This package must include:
 1. **Closed Claim Counts:** CSV matching Market Conduct Annual Statement (MCAS) data elements [28].
 2. **Reserve Movement Logs:** Extracted from the hash-chained DynamoDB table.
 3. **SIU Referral Counts:** Dispositions of all fraud referrals.
@@ -87,9 +87,9 @@ Jungle3 should provide an admin-agent prompt to generate an "Examiner Export" ZI
 Operating within a customer's AWS account requires strict adherence to privacy regulations like the GLBA Safeguards Rule and NYDFS 23 NYCRR 500, while staying within the $100/month ADR 0007 budget.
 
 ### Encryption, Access Control, and Log Masking
-* **Encryption:** All customer information must be encrypted at rest and in transit [30]. Jungle3 should use AWS KMS with Customer Managed Keys (CMKs) for DynamoDB and S3 [31].
+* **Encryption:** All customer information must be encrypted at rest and in transit [30]. Jungl3 should use AWS KMS with Customer Managed Keys (CMKs) for DynamoDB and S3 [31].
 * **Access Control:** Implement Multi-Factor Authentication (MFA) and strict RBAC [32] [30].
-* **Log Masking:** To prevent PII/PHI leakage into CloudWatch Logs, Jungle3 must utilize CloudWatch Logs data protection policies to automatically mask sensitive data (e.g., SSNs, credit cards) at ingestion [33].
+* **Log Masking:** To prevent PII/PHI leakage into CloudWatch Logs, Jungl3 must utilize CloudWatch Logs data protection policies to automatically mask sensitive data (e.g., SSNs, credit cards) at ingestion [33].
 
 ### Data Retention Constraints
 
@@ -100,9 +100,9 @@ Operating within a customer's AWS account requires strict adherence to privacy r
 | **GLBA Safeguards Rule** | Secure disposal no later than 2 years after last use (unless legally required to retain) | 16 CFR § 314.4 [30] |
 | **CPRA** | Retain no longer than reasonably necessary for disclosed purpose | Cal. Civ. Code § 1798.100 [36] |
 
-*Takeaway: Jungle3 must balance CPRA deletion requests with statutory insurance retention laws. S3 Object Lock in Governance mode can be used to enforce WORM (Write-Once-Read-Many) storage for the required 5-6 year statutory periods, preventing premature deletion [37].*
+*Takeaway: Jungl3 must balance CPRA deletion requests with statutory insurance retention laws. S3 Object Lock in Governance mode can be used to enforce WORM (Write-Once-Read-Many) storage for the required 5-6 year statutory periods, preventing premature deletion [37].*
 
-## Decision-Ready Recommendations for Jungle3
+## Decision-Ready Recommendations for Jungl3
 
 * **Implement State-Aware Step Functions:** Build `acknowledge_timer` and `decision_timer` in Step Functions that dynamically read the claim's jurisdiction to set the correct SLA (e.g., 15 days for CA, 7 days for FL).
 * **Deploy Hash-Chained Reserves:** Use the `jungle3-audit` DynamoDB table to store append-only reserve transactions with a `prev_hash` field to guarantee cryptographic immutability for examiners.

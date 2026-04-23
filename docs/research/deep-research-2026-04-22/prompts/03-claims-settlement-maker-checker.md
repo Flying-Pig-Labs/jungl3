@@ -10,7 +10,7 @@ See `00-context.md` for product framing. [ADR 0006](../../decisions/0006-v1-doma
 
 3. **Regulatory anchoring.** Which workflows have explicit regulatory text behind them (state DOI regulations, NAIC Model Acts, UCC, ERISA for disability)? A maker-checker example tied to a specific regulation is harder to dismiss than one that could be internal policy. Cite specific regulations where applicable.
 
-4. **Failure modes a real auditor would spot.** A state DOI market-conduct examiner walks the system through claim `CLM-2026-04-002137`, which has a settlement approval at $47,500 by Adjuster Sarah and Supervisor Marcus. What would they actually check? Timestamps, separation of duties, reason codes, supporting documentation attached, downstream payment authorization linkage? For each check, is the Jungle3 audit-trail shape (from [ADR 0009](../../decisions/0009-audit-trail-is-append-only-hash-chained.md)) sufficient? What is missing?
+4. **Failure modes a real auditor would spot.** A state DOI market-conduct examiner walks the system through claim `CLM-2026-04-002137`, which has a settlement approval at $47,500 by Adjuster Sarah and Supervisor Marcus. What would they actually check? Timestamps, separation of duties, reason codes, supporting documentation attached, downstream payment authorization linkage? For each check, is the Jungl3 audit-trail shape (from [ADR 0009](../../decisions/0009-audit-trail-is-append-only-hash-chained.md)) sufficient? What is missing?
 
 5. **Timing realism.** How long does a real settlement approval take end to end — from adjuster submission to supervisor decision? What's the distribution (mean, median, p95, p99)? This matters because the seeded state in v1 has to place 60 in-flight claims at realistic workflow stages.
 
@@ -20,6 +20,6 @@ See `00-context.md` for product framing. [ADR 0006](../../decisions/0006-v1-doma
 
 8. **Narrative credibility.** For a demo audience (prospective design partners, AWS Marketplace reviewers), which single workflow tells the cleanest 90-second story? "Adjuster Sarah proposes $47,500, Supervisor Marcus catches pre-existing damage and rejects, Sarah revises to $32,000, Marcus approves" — does that land, or is there a cleaner narrative?
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

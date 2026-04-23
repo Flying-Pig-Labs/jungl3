@@ -11,7 +11,7 @@ jungl3 (pronounced "jungle three") is the working name for an **AI-native protot
 
 Canonical term definitions live in [`docs/glossary.md`](./docs/glossary.md). The current high-level shape, diagrammed: [`docs/architecture/system-context.md`](./docs/architecture/system-context.md).
 
-One-line summary: **Jungle3 is distributed as an AWS Marketplace listing; once installed in a customer's AWS account, an in-account Control Plane vends isolated "Jungles" (builder environments that are alive on day one, built on an [Understory](./docs/glossary.md#understory) of pre-wired application baseline). A prototype deploys from its Jungle to its [DMZ](./docs/glossary.md#dmz) — a private, AI-first evaluation environment where agents probe it — and is then promoted to its [Canopy](./docs/glossary.md#canopy), the human exposure surface where judges, beta users, and other outsiders find, try, and judge it through the [Gallery](./docs/glossary.md#gallery).** Everything else stays hidden inside the install. See [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md), [ADR 0004](./docs/decisions/0004-canonical-platform-vocabulary.md), and [ADR 0011](./docs/decisions/0011-canopy-and-ai-first-dmz.md).
+One-line summary: **Jungl3 is distributed as an AWS Marketplace listing; once installed in a customer's AWS account, an in-account Control Plane vends isolated "Jungles" (builder environments that are alive on day one, built on an [Understory](./docs/glossary.md#understory) of pre-wired application baseline). A prototype deploys from its Jungle to its [DMZ](./docs/glossary.md#dmz) — a private, AI-first evaluation environment where agents probe it — and is then promoted to its [Canopy](./docs/glossary.md#canopy), the human exposure surface where judges, beta users, and other outsiders find, try, and judge it through the [Gallery](./docs/glossary.md#gallery).** Everything else stays hidden inside the install. See [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md), [ADR 0004](./docs/decisions/0004-canonical-platform-vocabulary.md), and [ADR 0011](./docs/decisions/0011-canopy-and-ai-first-dmz.md).
 
 Design principle carried throughout: **start with a living baseline, shape it.** Teams do not build up from a blank scaffold; they shape an [Understory](./docs/glossary.md#understory) that already runs. Shaping includes subtraction (the primary motion — cutting what doesn't belong), substitution (swapping parts), and addition (extending where the baseline stops). See [`docs/product/positioning.md`](./docs/product/positioning.md) for the full framing.
 
@@ -19,9 +19,9 @@ Design principle carried throughout: **start with a living baseline, shape it.**
 
 ## 2. What this repo currently contains
 
-The repo root is a **TanStack Start + React 19 + Tailwind v4 + shadcn/ui** app scaffolded by [Lovable.dev](https://lovable.dev), with Cloudflare Workers as the deploy target (`wrangler.jsonc`, `@cloudflare/vite-plugin`). It is the **AWS Marketplace listing landing page** — the public-facing sales and documentation surface for the Jungle3 AWS Marketplace listing. Currently a password-gated hero + "System Modules / Idea Engine" sections, styled around a "Welcome to the Jungl3" poster.
+The repo root is a **TanStack Start + React 19 + Tailwind v4 + shadcn/ui** app scaffolded by [Lovable.dev](https://lovable.dev), with Cloudflare Workers as the deploy target (`wrangler.jsonc`, `@cloudflare/vite-plugin`). It is the **AWS Marketplace listing landing page** — the public-facing sales and documentation surface for the Jungl3 AWS Marketplace listing. Currently a password-gated hero + "System Modules / Idea Engine" sections, styled around a "Welcome to the Jungl3" poster.
 
-This is one domain of the larger platform. It is **not** the whole platform, and it is **not** a Jungle3 instance — a Jungle3 instance runs in a customer's AWS account after they subscribe via AWS Marketplace. See [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md).
+This is one domain of the larger platform. It is **not** the whole platform, and it is **not** a Jungl3 instance — a Jungl3 instance runs in a customer's AWS account after they subscribe via AWS Marketplace. See [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md).
 
 ---
 
@@ -71,7 +71,7 @@ components.json
 
 Policy: **each platform domain lives in its own top-level subdirectory of the repo.** The sole exception is the website, which must stay at repo root because of the Lovable boundary (§3).
 
-Expected domain subdirs (create on first use, not speculatively). Framing is **per-install**: these components ship inside the AWS Marketplace listing and run in the customer's AWS account. They are *not* Jungle3-hosted services.
+Expected domain subdirs (create on first use, not speculatively). Framing is **per-install**: these components ship inside the AWS Marketplace listing and run in the customer's AWS account. They are *not* Jungl3-hosted services.
 
 | Subdir | What lives there |
 | --- | --- |
@@ -86,7 +86,7 @@ Expected domain subdirs (create on first use, not speculatively). Framing is **p
 
 None of these exist yet. Create them only when starting real work in them. Each should carry its own `README.md` and its own dependency manifest (`package.json`, `pyproject.toml`, `go.mod`, CDK app, etc.) so it can be built, tested, and deployed independently. **Do not create a root-level monorepo manager (workspaces, Turborepo, Nx) until there is a second subdir that proves the need.** Favor deletion over addition.
 
-There is no `infra/` subdir. Under the installable model there is no "shared AWS foundation" — Jungle3 does not run its own AWS Org or host anything other than the Marketplace listing build/test. See [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md).
+There is no `infra/` subdir. Under the installable model there is no "shared AWS foundation" — Jungl3 does not run its own AWS Org or host anything other than the Marketplace listing build/test. See [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md).
 
 ---
 
@@ -111,13 +111,13 @@ AWS infrastructure actions are **read-only by default**. You may run `describe`,
 
 ### Scope of these rules
 
-The profile and read-only rules apply to **Jungle3's own AWS account** — the account used to build, test, and publish the AWS Marketplace listing. That is the only AWS account Jungle3 operates directly. Customer accounts are the customer's responsibility; Jungle3 does not have credentials into them.
+The profile and read-only rules apply to **Jungl3's own AWS account** — the account used to build, test, and publish the AWS Marketplace listing. That is the only AWS account Jungl3 operates directly. Customer accounts are the customer's responsibility; Jungl3 does not have credentials into them.
 
 ### Target architecture (within a customer's account)
 
-The installed Jungle3 runs inside a single customer AWS account. Concrete topology — whether the Control Plane runs on Lambda or ECS/Fargate, single CFN stack vs nested components, IAM role minimums — is intentionally not fixed yet. Open in §11.
+The installed Jungl3 runs inside a single customer AWS account. Concrete topology — whether the Control Plane runs on Lambda or ECS/Fargate, single CFN stack vs nested components, IAM role minimums — is intentionally not fixed yet. Open in §11.
 
-Historical note: `doc.md` and `doc2.md` describe a pre-[ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md) **Jungle3-hosted** shape. Each file now carries its own frontmatter saying so; read them as design transcripts, not current architecture.
+Historical note: `doc.md` and `doc2.md` describe a pre-[ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md) **Jungl3-hosted** shape. Each file now carries its own frontmatter saying so; read them as design transcripts, not current architecture.
 
 ---
 
@@ -133,13 +133,13 @@ Do not sign commits with `Co-Authored-By: Claude`, `Co-Authored-By: Cursor`, or 
 
 ## 7. Information placement
 
-Jungle3 is in the concept-to-architecture phase. Ideas arrive in fragments. Your job is to land each one where future humans and agents will find it — not leave it stranded in a random file.
+Jungl3 is in the concept-to-architecture phase. Ideas arrive in fragments. Your job is to land each one where future humans and agents will find it — not leave it stranded in a random file.
 
 When a new piece of information arrives, classify it and route it:
 
 | Kind of information | Destination |
 | --- | --- |
-| What a Jungle3 concept *means* (a term, a noun) | [`docs/glossary.md`](./docs/glossary.md) |
+| What a Jungl3 concept *means* (a term, a noun) | [`docs/glossary.md`](./docs/glossary.md) |
 | How the system is structured (layers, boundaries, interactions) | `docs/architecture/<topic>.md` |
 | How the product is framed (positioning, audience, principle) | `docs/product/<topic>.md` |
 | A **decision** we are making (closes off options, costly to reverse) | `docs/decisions/NNNN-slug.md` (see [`docs/decisions/README.md`](./docs/decisions/README.md)) |
@@ -167,7 +167,7 @@ Diagrams in this repo are **Mermaid**, embedded in the docs they support. The ca
 ### Rules
 
 - **One concept per diagram.** If it takes a paragraph to explain what the diagram shows, split it.
-- **Short labels.** `Control Plane` not `The Jungle3 Control Plane Orchestration Service`.
+- **Short labels.** `Control Plane` not `The Jungl3 Control Plane Orchestration Service`.
 - **Same names everywhere.** Pull labels from [`docs/glossary.md`](./docs/glossary.md). If a node is called `DMZ` in one diagram, it's `DMZ` in every diagram.
 - **Layout: left-to-right (`flowchart LR`) or top-to-bottom (`flowchart TB`).** Pick one and stick with it inside a doc.
 - **Separate concerns.** Conceptual architecture ≠ runtime flow ≠ deployment topology. Don't mix them into one diagram.
@@ -217,7 +217,7 @@ Patterns to watch for. Each gets promoted to a real skill the second time we do 
 - **`concept-to-doc-placement`** — the routing logic in §7. Promote if we find ourselves re-deriving where something goes.
 - **`terminology-consistency`** — scanning edits for glossary drift and fixing it. Promote if/when drift actually happens.
 
-**Platform-build skills (about Jungle3 itself):**
+**Platform-build skills (about Jungl3 itself):**
 
 - **`aws-deployment-synthesis`** — turning an architecture decision into concrete AWS service selection (account, region, runtime, networking). Promote once the first domain deploys.
 - **`vend-a-jungle`** — the repeatable flow for provisioning a new per-team Jungle + DMZ + Canopy. Promote once the control plane has its first working vend.
@@ -242,16 +242,16 @@ Flag these when they become relevant to a task. Do **not** guess an answer; ask 
 5. **Supported AWS regions at launch.** No region list decided.
 6. **Supported customer account scenarios.** Single-account customer? Mandatory Control Tower / multi-account? Both? Each scenario adds install-time branching.
 7. **IaC authoring tool.** The listing is CloudFormation at publish time; authoring can be CFN directly, CDK compiled to CFN, SAM, or Pulumi compiled. Not decided. (Both [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) and [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) implicitly assume CloudFormation via Marketplace without committing to an authoring tool.)
-8. **CI/CD for the listing itself.** GitHub Actions + OIDC into Jungle3's own build account to publish listing versions. Not yet set up.
+8. **CI/CD for the listing itself.** GitHub Actions + OIDC into Jungl3's own build account to publish listing versions. Not yet set up.
 
 ### In-install operation (customer's AWS account)
 
 9. **Canopy authentication for external users.** Recommendation on record: magic link + password-guest access + seeded persona/test accounts + role-based access (judge, beta user, builder, admin). Not yet decided. See [`docs/architecture/canopy.md`](./docs/architecture/canopy.md). (Previously framed as "DMZ authentication"; re-homed by [ADR 0011](./docs/decisions/0011-canopy-and-ai-first-dmz.md).)
 10. **Canopy AWS topology within a customer account.** VPC shape, ALB/WAF pattern, per-team subdomain or path routing, DNS apex strategy (customer-provided vs install-generated). (Previously "DMZ AWS topology"; re-homed by [ADR 0011](./docs/decisions/0011-canopy-and-ai-first-dmz.md).)
-11. **Control Plane runtime.** Lambda vs ECS/Fargate vs other. `doc.md`'s ECS-Fargate recommendation was for a Jungle3-hosted shape; the installable's cost and idle-footprint profile is different. [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) argues ECS/Fargate for **packaging**; [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) implicitly proposes Lambda for **application compute**. These are easily conflated but not in conflict — a decision here must name both.
+11. **Control Plane runtime.** Lambda vs ECS/Fargate vs other. `doc.md`'s ECS-Fargate recommendation was for a Jungl3-hosted shape; the installable's cost and idle-footprint profile is different. [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) argues ECS/Fargate for **packaging**; [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) implicitly proposes Lambda for **application compute**. These are easily conflated but not in conflict — a decision here must name both.
 12. **Canopy prototype lifespan.** Ephemeral by default per glossary; retention criteria, extension path, and teardown enforcement mechanism within a customer-installed deployment are TBD.
 13. **Required Canopy telemetry and feedback capture.** What every Canopy-deployed prototype must emit (session activity, feedback, task completion). Affects judging and cross-team comparison.
-14. **Data classification rules.** `doc.md` §8 says "synthetic, public, or scrubbed only." Under the installable model, Jungle3 advises; the customer enforces. Recommendation shape, exception-approval flow, and how they're expressed inside DMZ and Canopy data boundaries are TBD.
+14. **Data classification rules.** `doc.md` §8 says "synthetic, public, or scrubbed only." Under the installable model, Jungl3 advises; the customer enforces. Recommendation shape, exception-approval flow, and how they're expressed inside DMZ and Canopy data boundaries are TBD.
 15. **Cross-install discoverability.** Can a Canopy Gallery in Customer A's install surface prototypes from Customer B's install (for multi-company events)? Default under [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md) is no. A federated model would require a new design.
 16. **Canonical maker-checker workflow for v1.** Opened by [ADR 0006](./docs/decisions/0006-v1-domain-anchor-insurance-claims.md). The v1 domain (insurance claims) has multiple candidates for the maker-checker canonical example — settlement approval above a threshold, policy exception approval, high-value payment issuance, SIU investigation outcome. Default absent other input: settlement approval above a threshold. Final choice depends on the first design-partner conversation.
 17. **Realism threshold for a first Jungle.** [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) names a "minimum viable realism" floor (5–8 entities, 3–5 roles, 4–6 async event types, 2–4 stubs, scheduled background activity, observable queues/failures, basic authz/audit, flags, dashboards). [findings.md §5.5](./docs/research/findings.md#5.5-the-numbers-for-minimum-viable-realism-are-tighter-than-youd-guess) adopts tighter numbers implicitly. Whether to pin the floor in an ADR is undecided.

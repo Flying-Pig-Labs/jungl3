@@ -20,6 +20,6 @@ See `00-context.md` for product framing. [ADR 0009](../../decisions/0009-audit-t
 
 8. **Data model for maker-checker audit entries.** A maker-checker transition produces two audit records. What fields make the two-identity pair inspectable and diff-able? How does the admin agent render this to an operator asking "show me the approval trail for claim X"?
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

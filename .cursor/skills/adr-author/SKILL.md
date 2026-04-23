@@ -1,6 +1,6 @@
 ---
 name: adr-author
-description: Write a new Architecture Decision Record for Jungle3 under docs/decisions/, matching the Nygard-trimmed format established by ADRs 0001–0003. Use when a decision has been made that closes off options, resolves an open question from CLAUDE.md §11, or makes a choice costly to reverse — and the decision is ready to be pinned rather than left ambient in chat.
+description: Write a new Architecture Decision Record for Jungl3 under docs/decisions/, matching the Nygard-trimmed format established by ADRs 0001–0003. Use when a decision has been made that closes off options, resolves an open question from CLAUDE.md §11, or makes a choice costly to reverse — and the decision is ready to be pinned rather than left ambient in chat.
 ---
 
 # adr-author

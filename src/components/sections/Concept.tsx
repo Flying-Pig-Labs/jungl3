@@ -1,3 +1,6 @@
+import shapingUrl from "@/assets/visuals/02-shaping-not-scaffolding.png";
+import understoryUrl from "@/assets/visuals/03-understory.png";
+
 const STRATA = [
   {
     k: "01",
@@ -37,6 +40,29 @@ export function ConceptSection() {
           </p>
         </div>
 
+        <figure className="hud-corners mb-16 rounded-md border border-border bg-card/40 p-6 backdrop-blur-sm sm:p-8">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="font-mono text-[11px] tracking-[0.3em] text-gold">
+              THE DIFFERENCE
+            </span>
+            <span className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground">
+              ZERO vs ALIVE ON DAY ONE
+            </span>
+          </div>
+          <div className="rounded-sm bg-background/40 p-4">
+            <img
+              src={shapingUrl}
+              alt="Two panels compared: starting from zero versus shaping a living thing"
+              className="mx-auto h-auto w-full max-w-4xl"
+              loading="lazy"
+            />
+          </div>
+          <figcaption className="mx-auto mt-5 max-w-2xl text-center text-sm italic leading-relaxed text-muted-foreground">
+            The difference is not speed of typing. It&apos;s what you start next
+            to.
+          </figcaption>
+        </figure>
+
         <div className="grid gap-4 md:grid-cols-3">
           {STRATA.map((s) => (
             <article
@@ -58,6 +84,28 @@ export function ConceptSection() {
             </article>
           ))}
         </div>
+
+        <figure className="hud-corners mt-16 rounded-md border border-border bg-card/40 p-6 backdrop-blur-sm sm:p-8">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="font-mono text-[11px] tracking-[0.3em] text-gold">
+              UNDERSTORY · CROSS-SECTION
+            </span>
+            <span className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground">
+              SERVICES · EVENTS · DATA · PERSONAS · INTEGRATIONS
+            </span>
+          </div>
+          <div className="rounded-sm bg-background/40 p-4">
+            <img
+              src={understoryUrl}
+              alt="Cross-section of the Understory: five strata already running on day one"
+              className="mx-auto h-auto w-full max-w-4xl"
+              loading="lazy"
+            />
+          </div>
+          <figcaption className="mx-auto mt-5 max-w-2xl text-center text-sm italic leading-relaxed text-muted-foreground">
+            Already running on day one. The team shapes from the top.
+          </figcaption>
+        </figure>
       </div>
     </section>
   );

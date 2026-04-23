@@ -28,7 +28,7 @@ Four of seven either resolved or meaningfully constrained by accepted ADRs. Thre
 
 **Source.** [SYNTHESIS.md §1.1](./SYNTHESIS.md) — ten of twelve reports named this as the dominant failure mode. Reports 01, 04, 09, 10, 11 named it explicitly as the biggest risk.
 
-**Why this is load-bearing for Jungle3.** Plausibility is won or lost in the operational depth, not the UI skin. Engineers inspect AWS resources; buyers ask about compliance controls; product people click through case timelines. Any one of those populations can collapse the illusion independently.
+**Why this is load-bearing for Jungl3.** Plausibility is won or lost in the operational depth, not the UI skin. Engineers inspect AWS resources; buyers ask about compliance controls; product people click through case timelines. Any one of those populations can collapse the illusion independently.
 
 **Triggers.**
 
@@ -73,16 +73,16 @@ Four of seven either resolved or meaningfully constrained by accepted ADRs. Thre
 
 ## R-C1-3 — Marketing language implies compliance certification
 
-**What happens.** Product copy, UI text, or marketing uses terms like "compliant," "certified," "audited," "SOC 2," "HIPAA" to describe Jungle3's regulated-cue surface. A regulator, a customer's legal team, or a judge in a lawsuit reads those terms as attestation. Legal exposure.
+**What happens.** Product copy, UI text, or marketing uses terms like "compliant," "certified," "audited," "SOC 2," "HIPAA" to describe Jungl3's regulated-cue surface. A regulator, a customer's legal team, or a judge in a lawsuit reads those terms as attestation. Legal exposure.
 
 **Source.** [SYNTHESIS.md §5](./SYNTHESIS.md) ("Marketing language discipline: no 'compliant,' 'certified,' 'audited'") and report 11.
 
-**Why this is Jungle3-specific.** Jungle3's value prop is *plausibility* — an install feels like a regulated system. That plausibility is the thing that invites the wrong marketing claim. Every cluster-1 regulated-cue feature (maker-checker, hash-chained audit, state-aware SLAs) is simultaneously an asset (credible demo) and a trap (reads like certification).
+**Why this is Jungl3-specific.** Jungl3's value prop is *plausibility* — an install feels like a regulated system. That plausibility is the thing that invites the wrong marketing claim. Every cluster-1 regulated-cue feature (maker-checker, hash-chained audit, state-aware SLAs) is simultaneously an asset (credible demo) and a trap (reads like certification).
 
 **Triggers.**
 
 - Marketing copy drafted by someone not steeped in the posture.
-- A sales deck claiming "Jungle3 is SOC 2 ready."
+- A sales deck claiming "Jungl3 is SOC 2 ready."
 - Admin UI labels like "Compliance report" instead of "Audit inspection view."
 - A feature called "Automated compliance check."
 

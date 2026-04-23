@@ -1,19 +1,19 @@
 # Glossary
 
-Canonical terminology for Jungle3. **Single source of truth.** Other docs should link here, not redefine terms.
+Canonical terminology for Jungl3. **Single source of truth.** Other docs should link here, not redefine terms.
 
 If you introduce a new term, add it here in the same pass. If a term drifts in usage, fix the drift here first, then propagate.
 
 **Terminology rules.**
 
-- The word "Marketplace" in Jungle3 documentation always means **AWS Marketplace** (where Jungle3 is distributed per [ADR 0003](./decisions/0003-installable-via-aws-marketplace.md)).
+- The word "Marketplace" in Jungl3 documentation always means **AWS Marketplace** (where Jungl3 is distributed per [ADR 0003](./decisions/0003-installable-via-aws-marketplace.md)).
 - **DMZ has been redefined** per [ADR 0011](./decisions/0011-canopy-and-ai-first-dmz.md). Until 2026-04-22 the DMZ was the single public-facing exposure surface. It is now the **AI-first evaluation environment** (private, no human traffic). The human-facing role moved to a new term, [**Canopy**](#canopy). When you encounter "DMZ" in captures dated before 2026-04-22 (frozen research files, `doc.md`, `doc2.md`, ADRs 0001–0010), it means what *Canopy* means now.
 - **Gallery** is back, scoped differently. ADR 0004 retired it; [ADR 0011](./decisions/0011-canopy-and-ai-first-dmz.md) reintroduces it as the listing/discovery UI *inside the [Canopy](#canopy)*, not as a peer surface.
 - Earlier docs called the pre-built application inside a Jungle the "Frankenstein app." It is now the **[Understory](#understory)** per [ADR 0004](./decisions/0004-canonical-platform-vocabulary.md). When you encounter "Frankenstein app" in frozen captures (research files, `doc.md`, `doc2.md`), read it as Understory.
 
 ---
 
-## Jungle3
+## Jungl3
 
 The platform itself. Also the name of this repo. Not the name of any one component. Pronounced "jungle three."
 
@@ -47,7 +47,7 @@ A prototype deploys to its DMZ *first*, and is promoted from the DMZ to its [Can
 
 The DMZ is tightly isolated: no outside human traffic, no path to production, no shared data with the customer's enterprise, only synthetic or explicitly-scrubbed data. "DMZ" is used in the networking-inspired sense — a hardened isolated zone — but the threat model is specific to AI tool-use: prompt-injection containment, tool-use scoping, credential isolation. See [`architecture/dmz.md`](./architecture/dmz.md).
 
-A DMZ lives inside the customer's AWS account. Jungle3 provides the provisioning templates and operational patterns; the customer owns the network boundary.
+A DMZ lives inside the customer's AWS account. Jungl3 provides the provisioning templates and operational patterns; the customer owns the network boundary.
 
 > **What changed.** Until 2026-04-22 the DMZ was the *single* exposure surface, shared between AI probing and human judging. [ADR 0011](./decisions/0011-canopy-and-ai-first-dmz.md) split these into DMZ (AI) and [Canopy](#canopy) (humans). In captures written before that date — frozen research files, `doc.md`, `doc2.md`, and ADRs 0001–0010 — "DMZ" refers to what the [Canopy](#canopy) now names.
 
@@ -73,7 +73,7 @@ Gallery is a sub-concept of the Canopy, not a peer surface. A prototype's listin
 
 ## Control Plane
 
-The **orchestration layer** — the system that vends Jungles and DMZs on demand, manages templates, handles DNS and routing within the install's scope, bootstraps auth, and enforces lifecycle (creation, expiration, teardown). The Control Plane runs **inside the customer's AWS account**, provisioned by the Jungle3 CloudFormation stack; it is not a Jungle3-hosted service. See [ADR 0003](./decisions/0003-installable-via-aws-marketplace.md).
+The **orchestration layer** — the system that vends Jungles and DMZs on demand, manages templates, handles DNS and routing within the install's scope, bootstraps auth, and enforces lifecycle (creation, expiration, teardown). The Control Plane runs **inside the customer's AWS account**, provisioned by the Jungl3 CloudFormation stack; it is not a Jungl3-hosted service. See [ADR 0003](./decisions/0003-installable-via-aws-marketplace.md).
 
 The operator surface for the Control Plane is a Claude-Code-CLI-style text-forward console, not a dashboard.
 

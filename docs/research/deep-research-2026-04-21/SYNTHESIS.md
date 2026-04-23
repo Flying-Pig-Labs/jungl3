@@ -64,7 +64,7 @@ Reports 04 (data), 06 (stubs), 10 (personas), and 12 (extension packs) all conve
 
 ### 1.7 Customer-in-account is the dominant constraint
 
-Reports 07, 08, 09, and 11 all treat "Jungle3 runs in the customer's AWS account" as a constraint that shapes every other decision: no phone-home telemetry by default, IAM-role-based support access with `ExternalId`, S3 Object Lock instead of hosted WORM, default AWS Budgets, data sovereignty as a first-class requirement. This is consistent with [ADR 0003](../../decisions/0003-installable-via-aws-marketplace.md) and should be read as the reports validating that decision.
+Reports 07, 08, 09, and 11 all treat "Jungl3 runs in the customer's AWS account" as a constraint that shapes every other decision: no phone-home telemetry by default, IAM-role-based support access with `ExternalId`, S3 Object Lock instead of hosted WORM, default AWS Budgets, data sovereignty as a first-class requirement. This is consistent with [ADR 0003](../../decisions/0003-installable-via-aws-marketplace.md) and should be read as the reports validating that decision.
 
 ### 1.8 Hybrid simulation: deterministic + stochastic
 
@@ -302,7 +302,7 @@ Decisions in this cluster that feel ready enough to have an explicit ADR convers
 Things multiple reports explicitly warn against building in v1. Captured here so they don't drift back into scope quietly.
 
 - **Cryptographic WORM storage / enterprise PKI / full RBAC engines** (report 11) — high cost, low plausibility ROI for v1.
-- **Automated compliance attestation reports** (report 11) — legally perilous. Jungle3 is a tool, not an audit platform.
+- **Automated compliance attestation reports** (report 11) — legally perilous. Jungl3 is a tool, not an audit platform.
 - **AI-driven root cause analysis, automated remediation playbooks** (report 09) — defer past v1.
 - **Full multi-tenant hosted control plane, SaaS admin dashboard** (report 12) — contradicts the in-account deployment model.
 - **Runtime plugin loader for customer-authored code** (report 12) — security and upgrade cost too high for v1.

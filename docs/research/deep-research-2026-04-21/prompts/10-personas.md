@@ -20,10 +20,10 @@ Investigate:
 
 6. **External actors.** Customers, partners, vendors, auditors — which external personas should have observable behavior in the synthetic environment (submitting cases, responding late, triggering exceptions)? How is their behavior simulated — scripted schedules, agent-based simulation, LLM-driven?
 
-7. **Simulated vs scripted behavior.** Trade-offs between a scripted scenario (reproducible, demo-friendly) and continuous agent-based simulation (organic, unpredictable). Can Jungle3 use both?
+7. **Simulated vs scripted behavior.** Trade-offs between a scripted scenario (reproducible, demo-friendly) and continuous agent-based simulation (organic, unpredictable). Can Jungl3 use both?
 
 8. **Cross-reference.** How does this tie to Topic 2 (domain anchor choice affects persona set), Topic 4 (synthetic data feeds personas), Topic 5 (events drive persona activity), and Topic 11 (role separation affects regulated-feel)?
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

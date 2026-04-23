@@ -1,6 +1,6 @@
 # Decision status — one-page view
 
-**Purpose.** A single page that answers: *What has Jungle3 decided? What's next? What's open?*
+**Purpose.** A single page that answers: *What has Jungl3 decided? What's next? What's open?*
 
 **Audience.** Investor appendix, new contributor onboarding, reviewer context-setting.
 
@@ -18,7 +18,7 @@ Decisions we have made and will not casually revisit.
 |---|---|---|
 | [0001](./0001-lovable-owns-repo-root.md) | Lovable owns repo root | Website stays at repo root; platform domains live in subdirs. |
 | [0002](./0002-sub-agent-response-contract.md) | Sub-agent response contract | Every Agent-Layer specialist returns `{status, summary, evidence, recommended_action}`. |
-| [0003](./0003-installable-via-aws-marketplace.md) | Installable via AWS Marketplace | Jungle3 ships as a Marketplace listing; no hosted control plane. |
+| [0003](./0003-installable-via-aws-marketplace.md) | Installable via AWS Marketplace | Jungl3 ships as a Marketplace listing; no hosted control plane. |
 | [0004](./0004-canonical-platform-vocabulary.md) | Canonical vocabulary | Understory, Substrate, DMZ-absorbs-Gallery *(Gallery rider superseded by 0011)*. |
 | [0005](./0005-event-envelope-and-correlation-identifiers.md) | Event envelope + correlation IDs | CloudEvents v1.0, reverse-DNS typing, `{trace_id, case_id}` dual correlation. |
 | [0006](./0006-v1-domain-anchor-insurance-claims.md) | v1 domain = insurance claims | P&C claims processing; 7 services; 2 stubs. |

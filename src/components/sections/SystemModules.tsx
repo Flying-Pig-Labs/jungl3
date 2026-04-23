@@ -1,3 +1,6 @@
+import shapeUrl from "@/assets/visuals/01-shape.png";
+import dmzCanopyUrl from "@/assets/visuals/04-dmz-vs-canopy.png";
+
 const STEPS = [
   {
     k: "01",
@@ -37,6 +40,28 @@ export function SystemModules() {
           </p>
         </div>
 
+        <figure className="hud-corners mb-16 rounded-md border border-border bg-card/40 p-6 backdrop-blur-sm sm:p-8">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="font-mono text-[11px] tracking-[0.3em] text-gold">
+              THE LOOP · ONE PICTURE
+            </span>
+            <span className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground">
+              JUNGLE → DMZ → CANOPY → GALLERY
+            </span>
+          </div>
+          <div className="rounded-sm bg-background/40 p-4">
+            <img
+              src={shapeUrl}
+              alt="The shape: a prototype moves left to right from Jungle through the DMZ to the Canopy and into the Gallery"
+              className="mx-auto h-auto w-full max-w-4xl"
+              loading="lazy"
+            />
+          </div>
+          <figcaption className="mx-auto mt-5 max-w-2xl text-center text-sm italic leading-relaxed text-muted-foreground">
+            A prototype moves left to right. AI agents test before humans see.
+          </figcaption>
+        </figure>
+
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((s) => (
             <li
@@ -58,6 +83,28 @@ export function SystemModules() {
             </li>
           ))}
         </ol>
+
+        <figure className="hud-corners mt-16 rounded-md border border-border bg-card/40 p-6 backdrop-blur-sm sm:p-8">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="font-mono text-[11px] tracking-[0.3em] text-gold">
+              DMZ vs CANOPY
+            </span>
+            <span className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground">
+              SAME PROTOTYPE · TWO SURFACES
+            </span>
+          </div>
+          <div className="rounded-sm bg-background/40 p-4">
+            <img
+              src={dmzCanopyUrl}
+              alt="DMZ versus Canopy: same prototype, two surfaces — AI evaluation first, human exposure second"
+              className="mx-auto h-auto w-full max-w-4xl"
+              loading="lazy"
+            />
+          </div>
+          <figcaption className="mx-auto mt-5 max-w-2xl text-center text-sm italic leading-relaxed text-muted-foreground">
+            Same prototype. Two surfaces. The AI agents go first.
+          </figcaption>
+        </figure>
       </div>
     </section>
   );

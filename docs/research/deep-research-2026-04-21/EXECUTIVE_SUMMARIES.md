@@ -11,7 +11,7 @@
 
 **Question:** What actually makes a synthetic enterprise environment feel real to builders?
 
-**Thesis:** Verifiable *operational depth* beats UI polish. Because Jungle3 installs into the customer's AWS account, engineers will inspect the underlying infrastructure, so the highest-signal realism cues are the ones that can be verified with AWS-native tools. The top three cues, ranked: (1) immutable, queryable **audit trails** (e.g., CloudTrail → S3 with Object Lock); (2) **roles and permissions** enforced at the backend (a forbidden action must yield a real 403, not a UI message); (3) **queues, backlogs, retries, and DLQs** that produce a rich ecosystem of CloudWatch metrics and logs. "Theatrical" cues to avoid: decorative service maps, untraceable dashboards, and placeholder data like "John Doe" or "lorem ipsum."
+**Thesis:** Verifiable *operational depth* beats UI polish. Because Jungl3 installs into the customer's AWS account, engineers will inspect the underlying infrastructure, so the highest-signal realism cues are the ones that can be verified with AWS-native tools. The top three cues, ranked: (1) immutable, queryable **audit trails** (e.g., CloudTrail → S3 with Object Lock); (2) **roles and permissions** enforced at the backend (a forbidden action must yield a real 403, not a UI message); (3) **queues, backlogs, retries, and DLQs** that produce a rich ecosystem of CloudWatch metrics and logs. "Theatrical" cues to avoid: decorative service maps, untraceable dashboards, and placeholder data like "John Doe" or "lorem ipsum."
 
 **Recommended v1 threshold:** 8–12 microservices, 4–5 distinct user personas, human-scale bursty event rates, and a **generative engine** behind every visible state.
 
@@ -102,7 +102,7 @@ Everything else (more services, more personas, more realism levers) is polish be
 
 [`08-cost-floor.md`](./results/08-cost-floor.md)
 
-**Question:** What does a Jungle3 install cost at idle and under load?
+**Question:** What does a Jungl3 install cost at idle and under load?
 
 **Thesis:** A naïvely-architected install will cost **$400–$800/month at idle**, which is fatal for a prototype environment. A disciplined install can hit **$110–$150/month** at idle in the recommended "Default-Realism" profile. The cost drivers, in order of magnitude: (1) **NAT Gateway** (~$32/month per AZ, often overprovisioned); (2) **OpenSearch** (cluster minimum ~$70/month even empty); (3) **CloudWatch Logs ingestion** (verbose logging compounds fast); (4) **RDS/Aurora minimums**; (5) idle Fargate services. Mitigations: single-AZ NAT in dev, defer OpenSearch (use CloudWatch Logs Insights until customer opts in), aggressive log-class tiering (Standard vs Infrequent Access), Aurora Serverless v2 with scale-to-zero, AWS Budgets shipped by default.
 

@@ -1,4 +1,4 @@
-# Jungle3 Seeder & Reaper Architecture: Achieving <10m Install and <5m Teardown SLAs
+# Jungl3 Seeder & Reaper Architecture: Achieving <10m Install and <5m Teardown SLAs
 
 ## Executive Summary
 
@@ -21,7 +21,7 @@ IAM role creation and policy attachment suffer from eventual consistency. Any ch
 Fargate tasks require Elastic Network Interfaces (ENIs) to be attached within the VPC. This process, combined with image pulling from ECR, introduces significant latency. A 2GB image over a congested network can take up to 60 seconds to pull [3]. Using `zstd` compression for container images can reduce Fargate startup times by up to 27% [4]. 
 
 ### Eliminating the ALB/NLB Provisioning Bottleneck
-Application Load Balancers (ALBs) take several minutes to provision and register targets. To hit the <10-minute SLA, Jungle3 must avoid ALBs entirely. Instead, the Fargate chat UI should utilize AWS Cloud Map or be fronted by API Gateway/Lambda Function URLs to eliminate the load balancer provisioning and draining delays.
+Application Load Balancers (ALBs) take several minutes to provision and register targets. To hit the <10-minute SLA, Jungl3 must avoid ALBs entirely. Instead, the Fargate chat UI should utilize AWS Cloud Map or be fronted by API Gateway/Lambda Function URLs to eliminate the load balancer provisioning and draining delays.
 
 ## 2. Seeder Custom Resource Architecture
 
@@ -32,7 +32,7 @@ AWS Lambda has a hard maximum execution timeout of 15 minutes [5]. However, Clou
 
 ### Pattern Comparison: Provider Framework vs. Async Step Functions
 
-| Pattern | Execution Semantics | Timeout Handling | Recommendation for Jungle3 |
+| Pattern | Execution Semantics | Timeout Handling | Recommendation for Jungl3 |
 | :--- | :--- | :--- | :--- |
 | **Standard Lambda** | Synchronous | Fails hard at 15m; causes 1h CFN hang if unhandled. | **Avoid**. Too risky for bulk data generation. |
 | **CDK Provider Framework** | Asynchronous (Waiter) | Uses `isCompleteHandler` to poll for completion, bypassing 15m limit. | **Acceptable**, but introduces CDK framework overhead [7]. |
@@ -49,14 +49,14 @@ Plausibility collapse occurs if the generated data looks random rather than orga
 Using a global seed (e.g., `Faker.seed(1234)`) is brittle; if the order of entity generation changes due to parallel processing, the generated data shifts entirely [10]. Instead, derive a stable, per-entity seed using `HMAC-SHA256(global_seed || entity_id)` [11] [12]. This guarantees that Policyholder #45 always gets the same name and address, regardless of when or how they are generated.
 
 ### NHPP Thinning Algorithm for Realistic Timestamp Spreading
-Randomly distributing timestamps over 18 months creates a flat, unrealistic distribution. Jungle3 must use a Non-Homogeneous Poisson Process (NHPP) with the Lewis-Shedler thinning algorithm [13] [14]. The intensity function must combine:
+Randomly distributing timestamps over 18 months creates a flat, unrealistic distribution. Jungl3 must use a Non-Homogeneous Poisson Process (NHPP) with the Lewis-Shedler thinning algorithm [13] [14]. The intensity function must combine:
 1. **Exponential Recency**: More claims recently, fewer 18 months ago.
 2. **Diurnal Bias**: Gaussian bump during business hours (9 AM - 5 PM).
 3. **Seasonality**: Multipliers for winter vs. summer months.
 
 ## 4. Seeding In-Flight Step Functions
 
-Jungle3 must seed 60 in-flight claims at specific mid-workflow states.
+Jungl3 must seed 60 in-flight claims at specific mid-workflow states.
 
 ### Fast-Forwarding via TaskTokens and SendTaskSuccess
 Step Functions does not support starting an execution at an arbitrary mid-point. Modifying the Amazon States Language (ASL) to include "resume-at" branching logic pollutes the production code. 
@@ -92,7 +92,7 @@ To achieve a <5-minute teardown, the Reaper must execute its tasks in parallel.
 When deleting a Lambda attached to a VPC, it can take up to 20 minutes for the ENIs to detach in the background, blocking the deletion of associated Security Groups and Subnets [31]. 
 **Optimization**: The Reaper should proactively detach the VPC configuration from the Lambda functions and forcefully delete the ENIs in parallel [32]. If possible, avoid attaching the Lambdas to a VPC entirely unless strictly required for RDS/ElastiCache access.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 * **Implement an Async Step Functions Seeder**: Do not use a synchronous Lambda for the custom resource. Have the Lambda trigger a Step Function that handles the data generation and signals the S3 `ResponseURL` upon completion.
 * **Use HMAC-SHA256 for Deterministic Seeding**: Abandon global PRNG seeds. Derive all entity attributes using a hash of the global seed and the specific entity ID to ensure order-independent determinism.

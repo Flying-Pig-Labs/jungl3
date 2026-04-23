@@ -20,6 +20,6 @@ See `00-context.md` for product framing. [findings.md §8](../findings.md) commi
 
 8. **Who cares?** Who is the forensically-curious reviewer, realistically? A prospective customer's security team, a specific class of AWS Marketplace reviewers, a DOI examiner (implausible), an adversarial demo attendee? For each audience, what's the actual evidence they would look at? This matters because plausibility beyond the audience's actual inspection is wasted effort.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

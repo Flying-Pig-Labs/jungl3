@@ -1,6 +1,6 @@
 # docs/research/
 
-Captured third-party analysis, market research, and external memos that inform Jungle3 design. **Not repo policy.**
+Captured third-party analysis, market research, and external memos that inform Jungl3 design. **Not repo policy.**
 
 ## Contents
 
@@ -23,7 +23,7 @@ Captured third-party analysis, market research, and external memos that inform J
 
 Documents that:
 
-- were written by someone (or something) outside the Jungle3 maintainers,
+- were written by someone (or something) outside the Jungl3 maintainers,
 - make specific claims, recommendations, or arguments,
 - and that we want to preserve so we can trace where decisions came from.
 
@@ -179,7 +179,7 @@ Older convention, before the deep-research cluster format. Three files; all cite
 
 ## Cluster 3: `sideband-2026-04-22/`
 
-**Seven reports** dropped into the repo on 2026-04-22 that do *not* follow the ADR path. They are an adjacent-market landscape sweep. The cluster's central finding: **no single vendor offers the Jungle3 bundle** — the category does not exist as a product, which validates Jungle3's novel-category positioning.
+**Seven reports** dropped into the repo on 2026-04-22 that do *not* follow the ADR path. They are an adjacent-market landscape sweep. The cluster's central finding: **no single vendor offers the Jungl3 bundle** — the category does not exist as a product, which validates Jungl3's novel-category positioning.
 
 | # | Report | Topic |
 |---|---|---|
@@ -189,9 +189,9 @@ Older convention, before the deep-research cluster format. Three files; all cite
 | 04 | [`04-ai-software-generation-multiagent.md`](./sideband-2026-04-22/04-ai-software-generation-multiagent.md) | Devin, OpenHands, SWE-agent, LangGraph vs CrewAI vs AutoGen |
 | 05 | [`05-synthetic-data-and-chaos-engineering.md`](./sideband-2026-04-22/05-synthetic-data-and-chaos-engineering.md) | Gretel/Tonic/MOSTLY AI/YData, Env0 TTL, k6 + Gremlin + Chaos Mesh |
 | 06 | [`06-ideation-bazaar-and-trend-detection.md`](./sideband-2026-04-22/06-ideation-bazaar-and-trend-detection.md) | Exploding Topics, Parallel.ai, Diffbot, hiQ v. LinkedIn, GDPR |
-| 07 | [`07-unrelated-individual-communication-strategies.md`](./sideband-2026-04-22/07-unrelated-individual-communication-strategies.md) | Psychology of interpersonal communication. No Jungle3 hook — the filename is the disposition. |
+| 07 | [`07-unrelated-individual-communication-strategies.md`](./sideband-2026-04-22/07-unrelated-individual-communication-strategies.md) | Psychology of interpersonal communication. No Jungl3 hook — the filename is the disposition. |
 
-**Synthesis:** [`sideband-2026-04-22/SYNTHESIS.md`](./sideband-2026-04-22/SYNTHESIS.md) — what each report says, what it changes for Jungle3 (mostly: nothing yet), what becomes useful later.
+**Synthesis:** [`sideband-2026-04-22/SYNTHESIS.md`](./sideband-2026-04-22/SYNTHESIS.md) — what each report says, what it changes for Jungl3 (mostly: nothing yet), what becomes useful later.
 
 **Status:** No ADR amendments, no new candidate ADRs, no CLAUDE.md §11 changes from this material. Reference-grade, not decision-grade.
 
@@ -199,7 +199,7 @@ Older convention, before the deep-research cluster format. Three files; all cite
 
 ## Cluster 4: `synthetic-user-testing/`
 
-**Five reports** dropped into the repo on 2026-04-22 (separate from the sideband drop). Unlike clusters 1–2 these were not commissioned via a `run.py` here, and unlike cluster 3 they are closer to the Jungle3 product surface — they describe capabilities that could live inside an install (AI-agent synthetic-user testing) and monetization mechanics the Marketplace listing will need (fees, metering, CDK→CFN, CPPO).
+**Five reports** dropped into the repo on 2026-04-22 (separate from the sideband drop). Unlike clusters 1–2 these were not commissioned via a `run.py` here, and unlike cluster 3 they are closer to the Jungl3 product surface — they describe capabilities that could live inside an install (AI-agent synthetic-user testing) and monetization mechanics the Marketplace listing will need (fees, metering, CDK→CFN, CPPO).
 
 | # | Report | Topic |
 |---|---|---|
@@ -209,7 +209,7 @@ Older convention, before the deep-research cluster format. Three files; all cite
 | 04 | [`04-build-it-yourself-claude-sdk.md`](./synthetic-user-testing/04-build-it-yourself-claude-sdk.md) | Planner/Executor split; Playwright MCP; PersonaGym; Stagehand/Steel/BrowserBase |
 | — | [`aws-marketplace-monetization-guide.md`](./synthetic-user-testing/aws-marketplace-monetization-guide.md) | Fee tiers; Concurrent Agreements (2026-06-01); Private Offers; CDK→CFN synthesis; TaskCat; CPPO |
 
-**Synthesis:** [`synthetic-user-testing/SYNTHESIS.md`](./synthetic-user-testing/SYNTHESIS.md) — splits the drop into two groups (AI-agent testing, Marketplace monetization), identifies 7 candidate ADRs (5 synthetic-user-testing, 2 Marketplace), names 3 Jungle3-specific risks (prompt injection from untrusted prototype UI, Think-Aloud PII leakage, "OK" bias).
+**Synthesis:** [`synthetic-user-testing/SYNTHESIS.md`](./synthetic-user-testing/SYNTHESIS.md) — splits the drop into two groups (AI-agent testing, Marketplace monetization), identifies 7 candidate ADRs (5 synthetic-user-testing, 2 Marketplace), names 3 Jungl3-specific risks (prompt injection from untrusted prototype UI, Think-Aloud PII leakage, "OK" bias).
 
 **Decision-ready artifacts (lifted from the synthesis for use):**
 

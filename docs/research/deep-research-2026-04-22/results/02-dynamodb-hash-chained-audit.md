@@ -1,4 +1,4 @@
-# Securing the Understory: Implementing a Tamper-Proof, Hash-Chained DynamoDB Audit Ledger for Jungle3
+# Securing the Understory: Implementing a Tamper-Proof, Hash-Chained DynamoDB Audit Ledger for Jungl3
 
 ## Executive Summary
 
@@ -51,17 +51,17 @@ The following table models the monthly cost of the ADR 0009 architecture (Dynamo
 
 ## 3. Capacity Strategy: On-Demand vs. Provisioned
 
-For Jungle3's "time to real" thesis, environments must be instantly available but may sit idle for days during evaluations.
+For Jungl3's "time to real" thesis, environments must be instantly available but may sit idle for days during evaluations.
 
 * **On-Demand (Default for v1):** At $1.25 per million WRUs [1], On-Demand is the only logical choice for Low and Medium bands. It prevents customers from paying for idle provisioned capacity ($11.70/month minimum for 25 WCU/RCU without free tier).
-* **Provisioned + Auto-scaling (High Band Only):** Provisioned capacity ($0.00065 per WCU-hour) [1] becomes mathematically cheaper than On-Demand only when sustained write throughput exceeds ~2.6 WCUs continuously (approx. 6.7M events/month). Jungle3 should default to On-Demand and only expose Provisioned capacity as an advanced configuration toggle for enterprise customers exceeding 5M events/month.
+* **Provisioned + Auto-scaling (High Band Only):** Provisioned capacity ($0.00065 per WCU-hour) [1] becomes mathematically cheaper than On-Demand only when sustained write throughput exceeds ~2.6 WCUs continuously (approx. 6.7M events/month). Jungl3 should default to On-Demand and only expose Provisioned capacity as an advanced configuration toggle for enterprise customers exceeding 5M events/month.
 
 ## 4. Cross-Account Replication & S3 Object Lock Overhead
 
 To ensure tamper resistance against root-account compromise, ADR 0009 requires shipping logs to an isolated `audit-verifier` account.
 * **Pipeline:** DynamoDB Streams -> Kinesis Data Streams -> Kinesis Data Firehose -> Cross-Account S3 Bucket.
 * **S3 Object Lock:** Enforcing Compliance Mode requires S3 Versioning [8]. This does not inherently multiply storage costs unless objects are overwritten, which Firehose does not do (it appends new objects).
-* **Cost Lever - Firehose Buffering:** The massive $150/month S3 PUT cost in the High workload band assumes Firehose is writing small files frequently. **Crucial Mitigation:** Jungle3 must configure Firehose with maximum buffering hints (e.g., 64 MB or 15 minutes) to batch thousands of audit events into a single S3 PUT request. This will reduce the High workload S3 PUT cost from $150.00 down to <$1.00/month.
+* **Cost Lever - Firehose Buffering:** The massive $150/month S3 PUT cost in the High workload band assumes Firehose is writing small files frequently. **Crucial Mitigation:** Jungl3 must configure Firehose with maximum buffering hints (e.g., 64 MB or 15 minutes) to batch thousands of audit events into a single S3 PUT request. This will reduce the High workload S3 PUT cost from $150.00 down to <$1.00/month.
 
 ## 5. QLDB Break-Even and Trade-offs
 
@@ -72,7 +72,7 @@ Amazon QLDB natively provides an immutable, cryptographically verifiable journal
 2. **Cost Ceiling:** With Firehose buffering properly configured, the DynamoDB stack drops back down to ~$38/month for High workloads, safely under the $100 ceiling.
 3. **Opt-in Path:** QLDB should only be introduced post-v1 if a specific enterprise customer requires SEC Rule 17a-4 compliance or native digest anchoring that cannot be satisfied by S3 Object Lock Compliance mode.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 * **Default to DynamoDB On-Demand:** Hardcode the CloudFormation templates to use On-Demand capacity for `jungle3-audit`. Do not use Provisioned capacity for v1 to avoid idle costs during customer trials.
 * **Configure Aggressive Firehose Buffering:** To prevent S3 PUT requests from breaching the $100/month ADR 0007 ceiling at high volumes, configure Kinesis Data Firehose with a 64 MB or 15-minute buffer hint.

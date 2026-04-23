@@ -5,7 +5,7 @@
 
 ## Context
 
-Jungle3 runs inside a customer's AWS account ([ADR 0003](./0003-installable-via-aws-marketplace.md)). The cost of the install is visible on the customer's bill, reviewed by the customer's FinOps team, and — crucially — is the first thing a labs-team sponsor has to defend when the install shows up in an internal cost review. A Jungle3 that runs $500/month idle is a product that gets killed in its first cost review regardless of how real it feels.
+Jungl3 runs inside a customer's AWS account ([ADR 0003](./0003-installable-via-aws-marketplace.md)). The cost of the install is visible on the customer's bill, reviewed by the customer's FinOps team, and — crucially — is the first thing a labs-team sponsor has to defend when the install shows up in an internal cost review. A Jungl3 that runs $500/month idle is a product that gets killed in its first cost review regardless of how real it feels.
 
 The 2026-04-21 research cluster produced three intersecting findings:
 
@@ -47,11 +47,11 @@ Resolves [`CLAUDE.md`](../../CLAUDE.md) §11 open question #18 (admin/observabil
 
 **Enables:**
 
-- A Jungle3 install is cost-predictable. A customer can look at the $100 infra + $50 LLM figures on the Marketplace listing and know what the bill will look like before subscribing.
+- A Jungl3 install is cost-predictable. A customer can look at the $100 infra + $50 LLM figures on the Marketplace listing and know what the bill will look like before subscribing.
 - The admin surface is one chat UI backed by tools — not three dashboards, not a search index. This is cheaper, simpler, and per [findings.md §6.2](../research/findings.md#6.2-admin-ui--resolved-llm-agent-over-deterministic-cloudwatchx-ray-tools) arguably better UX for the per-case observability question.
 - Audit integrity is preserved: the agent cannot invent facts about system state because every answer is cited to a tool invocation. The audit trail remains the source of truth.
 - The LLM gateway becomes a single point of policy enforcement — budget, model selection, retry logic, rate limiting. Every future LLM-using surface inherits these for free.
-- Customers can set their own CloudWatch alarms on the `Jungle3/LLM/BudgetRemaining` metric and on infra spend.
+- Customers can set their own CloudWatch alarms on the `Jungl3/LLM/BudgetRemaining` metric and on infra spend.
 
 **Forecloses:**
 

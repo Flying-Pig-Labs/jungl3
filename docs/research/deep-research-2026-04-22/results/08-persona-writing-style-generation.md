@@ -1,4 +1,4 @@
-# Engineering Plausibility: Deterministic Persona Generation and Cost-Zero Artifact Caching for Jungle3
+# Engineering Plausibility: Deterministic Persona Generation and Cost-Zero Artifact Caching for Jungl3
 
 ## Executive Summary
 
@@ -11,11 +11,11 @@
 
 ## 1. The Determinism and Cost Imperative — Pre-generation is the only viable path for v1
 
-Live generation of the Jungle3 seed corpus during CloudFormation deployment violates two core constraints: the ADR 0007 cost ceiling and the strict determinism requirement. 
+Live generation of the Jungl3 seed corpus during CloudFormation deployment violates two core constraints: the ADR 0007 cost ceiling and the strict determinism requirement. 
 
 ### Claude's lack of a seed parameter breaks install-time determinism
 
-The Claude Messages API does not expose a seed parameter for reproducibility [1]. This is a core architectural constraint that prevents deterministic output generation, even when all controllable parameters (model, temperature, system prompt, user message) are identical [1]. Furthermore, setting `temperature=0` does not guarantee determinism in Large Language Models due to floating-point arithmetic variations and GPU parallelism [2] [3]. Relying on live API calls at install time guarantees that no two Jungle3 instances will be byte-for-byte identical, breaking cryptographic audit trails (ADR 0009).
+The Claude Messages API does not expose a seed parameter for reproducibility [1]. This is a core architectural constraint that prevents deterministic output generation, even when all controllable parameters (model, temperature, system prompt, user message) are identical [1]. Furthermore, setting `temperature=0` does not guarantee determinism in Large Language Models due to floating-point arithmetic variations and GPU parallelism [2] [3]. Relying on live API calls at install time guarantees that no two Jungl3 instances will be byte-for-byte identical, breaking cryptographic audit trails (ADR 0009).
 
 ### 7.5M token corpus costs $154 on Sonnet, exceeding the $50 ADR 0007 budget
 
@@ -32,7 +32,7 @@ Generating the baseline synthetic environment requires approximately 3.02M input
 
 ### The Solution: Ship a canonical, immutable JSON artifact bundle via S3/AMI
 
-To satisfy both cost and determinism constraints, Jungle3 must abandon live generation for the default install. Instead, the engineering team must pre-generate the entire 7.5M token corpus during the build phase. This corpus should be packaged as an immutable, content-addressed JSON artifact bundle and distributed via the AWS Marketplace AMI or an S3 bucket. This reduces the install-time LLM cost to $0 and guarantees 100% determinism across all baseline installs.
+To satisfy both cost and determinism constraints, Jungl3 must abandon live generation for the default install. Instead, the engineering team must pre-generate the entire 7.5M token corpus during the build phase. This corpus should be packaged as an immutable, content-addressed JSON artifact bundle and distributed via the AWS Marketplace AMI or an S3 bucket. This reduces the install-time LLM cost to $0 and guarantees 100% determinism across all baseline installs.
 
 ## 2. Persona Style Specification and Steering — Combining LLM semantics with deterministic post-processing
 
@@ -40,7 +40,7 @@ LLMs naturally gravitate toward a "mean" style characterized by overly polished 
 
 ### The 9-dimension JSON style schema
 
-To reliably steer personas, Jungle3 should adopt a compact, measurable JSON schema for each of the 8 personas. 
+To reliably steer personas, Jungl3 should adopt a compact, measurable JSON schema for each of the 8 personas. 
 
 | Schema Field | Description | Target Range / Example |
 | :--- | :--- | :--- |
@@ -61,7 +61,7 @@ To make the 8 personas reliably distinguishable in a blind read, the LLM prompt 
 
 ### Defeating the "LLM Tell": Injecting abbreviations and typos via HMAC-SHA256 PRNG
 
-LLMs are notoriously bad at simulating human flaws like typos or telegraphic shorthand consistently. Instead of forcing the LLM to make mistakes, Jungle3 should use the LLM to generate clean, semantically correct text, and then pass it through a deterministic Python post-processor. 
+LLMs are notoriously bad at simulating human flaws like typos or telegraphic shorthand consistently. Instead of forcing the LLM to make mistakes, Jungl3 should use the LLM to generate clean, semantically correct text, and then pass it through a deterministic Python post-processor. 
 
 This post-processor must be completely stateless. It should use a counter-based Pseudo-Random Number Generator (PRNG) seeded via HMAC-SHA256 [6]. By deriving a key from the `install_seed` and a `context_key` (e.g., `persona:alice|claim:12345`), the post-processor can deterministically inject abbreviations (e.g., replacing "spoke with" with "s/w") and sparse typos (0-1% rate) without requiring external state lookups.
 
@@ -71,11 +71,11 @@ Writing-style specs require real-world exemplars to anchor the LLM. However, sou
 
 ### Why FEMA and PACER datasets fail AWS Marketplace compliance
 
-Public datasets like the FIMA NFIP Redacted Claims [7] or court filings from CourtListener [8] are legally toxic for commercial redistribution. Even "redacted" datasets often suffer from imperfect de-identification, risking the exposure of Protected Health Information (PHI) or Personally Identifiable Information (PII) [9]. Distributing an AWS Marketplace product containing accidentally unredacted PII/PHI violates vendor Terms of Service and exposes Jungle3 to massive liability.
+Public datasets like the FIMA NFIP Redacted Claims [7] or court filings from CourtListener [8] are legally toxic for commercial redistribution. Even "redacted" datasets often suffer from imperfect de-identification, risking the exposure of Protected Health Information (PHI) or Personally Identifiable Information (PII) [9]. Distributing an AWS Marketplace product containing accidentally unredacted PII/PHI violates vendor Terms of Service and exposes Jungl3 to massive liability.
 
 ### Commissioning the 24-exemplar library via SME work-for-hire
 
-The lowest-risk path is to completely avoid scraped public data. Jungle3 should commission domain Subject Matter Experts (SMEs) to write synthetic-but-realistic exemplars. For 8 personas with 3 exemplars each, this requires only 24 short texts (30-120 words each). 
+The lowest-risk path is to completely avoid scraped public data. Jungl3 should commission domain Subject Matter Experts (SMEs) to write synthetic-but-realistic exemplars. For 8 personas with 3 exemplars each, this requires only 24 short texts (30-120 words each). 
 
 ### Establishing provenance metadata and copyright assignment
 
@@ -87,7 +87,7 @@ To maintain the integrity of the audit trail (ADR 0009) and maximize prompt cach
 
 ### Enforcing RFC 8785 JSON Canonicalization to protect prompt caching
 
-Minor environmental differences—such as newline variations (CRLF vs LF) or JSON key ordering—will change the cryptographic hash of a prompt. This breaks prompt caching (costing money) and breaks the SHA-256 hash chains in the `jungle3-audit` table. Jungle3 must enforce strict RFC 8785 JSON Canonicalization [11] [12] and Unicode Normalization Form C (NFC) [13] on all inputs before they are hashed or sent to the LLM gateway.
+Minor environmental differences—such as newline variations (CRLF vs LF) or JSON key ordering—will change the cryptographic hash of a prompt. This breaks prompt caching (costing money) and breaks the SHA-256 hash chains in the `jungle3-audit` table. Jungl3 must enforce strict RFC 8785 JSON Canonicalization [11] [12] and Unicode Normalization Form C (NFC) [13] on all inputs before they are hashed or sent to the LLM gateway.
 
 ### CI/CD Stylometric Gates: Flesch-Kincaid, KL divergence, and TTR thresholds
 
@@ -102,7 +102,7 @@ If a generated batch deviates from the persona's target thresholds by more than 
 
 Modeling slow style drift (e.g., an adjuster learning new jargon over 18 months) requires complex, stateful tracking of time-indexed deltas. The plausibility gain from this micro-variation is negligible compared to the engineering cost and the risk of breaking intra-claim consistency. Style drift should be explicitly deferred to v1.1.
 
-## 5. Decision-Ready Recommendations for Jungle3
+## 5. Decision-Ready Recommendations for Jungl3
 
 * **Pre-generate the v1 seed corpus:** Do not execute live LLM calls for baseline synthetic data during CloudFormation deployment. Ship a pre-generated, canonical JSON artifact bundle to guarantee determinism and keep install-time LLM costs at $0 (satisfying ADR 0007).
 * **Implement a hybrid steering stack:** Use Claude Sonnet for semantic generation (guided by 3 SME-authored exemplars), followed by a deterministic, HMAC-SHA256 seeded Python post-processor to inject abbreviations, fragments, and typos.

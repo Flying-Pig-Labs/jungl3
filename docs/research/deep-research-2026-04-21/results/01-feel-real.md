@@ -1,6 +1,6 @@
 # Executive Summary
 
-To make Jungle3's synthetic enterprise environment feel real and prevent 'plausibility collapse,' the research overwhelmingly indicates that verifiable, operational depth is paramount, superseding superficial UI polish. Given Jungle3's deployment model—directly into a customer's AWS account via CloudFormation—engineers will inevitably inspect the underlying infrastructure. Therefore, the highest-signal realism cues are those that can be verified using standard AWS tools. The most critical elements for v1 are: 1) **Data Plausibility and Provenance**, ensuring that data (like names and addresses) is realistic and that every significant action is recorded in an immutable, inspectable audit trail; 2) **Asynchronous Realism**, demonstrated through visible message queue backlogs, retry logic, and Dead-Letter Queues (DLQs) that users can inspect and even replay from; and 3) **Correlated, Multi-Channel Evidence**, where a single simulated event generates a consistent trail of artifacts across the UI, application logs, AWS service logs (e.g., CloudTrail), and external notifications (e.g., emails, PDFs). Conversely, 'theater' cues to be avoided include decorative service maps, dashboards with untraceable metrics, and placeholder data like 'John Doe' or 'lorem ipsum'. The recommended threshold of believability for v1 is a small but well-structured topology of 8-12 microservices, 4-5 distinct user personas, and human-scale, bursty event rates. The analysis of existing systems like Salesforce dev orgs and Microsoft demo tenants reveals that while they succeed in providing narrative and persona context, they often fail by being static, shallow, and lacking the inspectable background activity and failure modes that engineers expect. The primary recommendation is to prioritize a 'data-first' and 'behavior-first' approach, where all visible states are the result of a generative engine creating plausible, interconnected activity backed by real, inspectable AWS resources.
+To make Jungl3's synthetic enterprise environment feel real and prevent 'plausibility collapse,' the research overwhelmingly indicates that verifiable, operational depth is paramount, superseding superficial UI polish. Given Jungl3's deployment model—directly into a customer's AWS account via CloudFormation—engineers will inevitably inspect the underlying infrastructure. Therefore, the highest-signal realism cues are those that can be verified using standard AWS tools. The most critical elements for v1 are: 1) **Data Plausibility and Provenance**, ensuring that data (like names and addresses) is realistic and that every significant action is recorded in an immutable, inspectable audit trail; 2) **Asynchronous Realism**, demonstrated through visible message queue backlogs, retry logic, and Dead-Letter Queues (DLQs) that users can inspect and even replay from; and 3) **Correlated, Multi-Channel Evidence**, where a single simulated event generates a consistent trail of artifacts across the UI, application logs, AWS service logs (e.g., CloudTrail), and external notifications (e.g., emails, PDFs). Conversely, 'theater' cues to be avoided include decorative service maps, dashboards with untraceable metrics, and placeholder data like 'John Doe' or 'lorem ipsum'. The recommended threshold of believability for v1 is a small but well-structured topology of 8-12 microservices, 4-5 distinct user personas, and human-scale, bursty event rates. The analysis of existing systems like Salesforce dev orgs and Microsoft demo tenants reveals that while they succeed in providing narrative and persona context, they often fail by being static, shallow, and lacking the inspectable background activity and failure modes that engineers expect. The primary recommendation is to prioritize a 'data-first' and 'behavior-first' approach, where all visible states are the result of a generative engine creating plausible, interconnected activity backed by real, inspectable AWS resources.
 
 # Ranked Realism Cues
 
@@ -142,7 +142,7 @@ Notifications (Email/Slack)
 
 ## Rationale
 
-Notifications that are sent to a user's actual work environment (their email inbox or a Slack channel) connect the synthetic system to their real world. This makes the system's actions feel tangible and consequential. For Jungle3, this is particularly powerful as it would use the customer's own AWS SES configuration, meaning emails would come from their own domain, passing SPF/DKIM checks.
+Notifications that are sent to a user's actual work environment (their email inbox or a Slack channel) connect the synthetic system to their real world. This makes the system's actions feel tangible and consequential. For Jungl3, this is particularly powerful as it would use the customer's own AWS SES configuration, meaning emails would come from their own domain, passing SPF/DKIM checks.
 
 ## Persona Impact
 
@@ -259,15 +259,15 @@ The v1 synthetic environment should be designed to operate within an approximate
 
 ## Engineer Analysis
 
-Engineers (both Infrastructure and Application) are the ultimate arbiters of 'realness' for Jungle3 due to the in-account deployment model. Their trust is foundational. Their top 5 cues are: 1) A verifiable CloudFormation stack creating tangible AWS resources, 2) Accessible, granular, and structured logs in CloudWatch, 3) A transparent and least-privilege IAM security posture, 4) Observable performance metrics and distributed traces in CloudWatch and X-Ray, and 5) Asynchronous patterns like SQS queues with visible backlogs and DLQs. Their typical inspection behavior involves immediately navigating to the AWS Console to scrutinize the CloudFormation stack, IAM roles, and security groups. They will trigger a UI action and then tail CloudWatch Logs to find the corresponding log entry and trace ID. Red flags that trigger immediate plausibility collapse include monolithic IAM roles with wildcard permissions, UI state changes with no corresponding log activity, simple `print()` statement logs, and the inability to locate the underlying AWS resources that are supposedly running the service. A successful demo path for an engineer starts in the AWS Marketplace, deploys the stack live, reviews the created resources and IAM roles, performs one action, and immediately pivots to CloudWatch Logs and X-Ray to show the real-time, verifiable evidence of that action.
+Engineers (both Infrastructure and Application) are the ultimate arbiters of 'realness' for Jungl3 due to the in-account deployment model. Their trust is foundational. Their top 5 cues are: 1) A verifiable CloudFormation stack creating tangible AWS resources, 2) Accessible, granular, and structured logs in CloudWatch, 3) A transparent and least-privilege IAM security posture, 4) Observable performance metrics and distributed traces in CloudWatch and X-Ray, and 5) Asynchronous patterns like SQS queues with visible backlogs and DLQs. Their typical inspection behavior involves immediately navigating to the AWS Console to scrutinize the CloudFormation stack, IAM roles, and security groups. They will trigger a UI action and then tail CloudWatch Logs to find the corresponding log entry and trace ID. Red flags that trigger immediate plausibility collapse include monolithic IAM roles with wildcard permissions, UI state changes with no corresponding log activity, simple `print()` statement logs, and the inability to locate the underlying AWS resources that are supposedly running the service. A successful demo path for an engineer starts in the AWS Marketplace, deploys the stack live, reviews the created resources and IAM roles, performs one action, and immediately pivots to CloudWatch Logs and X-Ray to show the real-time, verifiable evidence of that action.
 
 ## Product Manager Analysis
 
-Product Managers and Designers evaluate Jungle3 on its ability to model a coherent and believable business process. Their top 5 cues are: 1) Realistic and persistent data (believable names, dates, not 'Lorem Ipsum'), 2) End-to-end workflow cohesion, allowing a core user story to be completed across different roles (e.g., creator to approver), 3) A comprehensive, human-readable audit trail or history for key objects, 4) Authentic system feedback and latency (e.g., loading spinners for complex operations), and 5) Meaningful empty states and graceful error handling. Their typical inspection behavior involves trying to 'break' the product by testing edge cases, such as entering invalid data or trying to approve their own request. They will follow a single data object (e.g., a 'case') through its entire lifecycle to check for consistency. Red flags for them include buttons that do nothing, data reverting to a previous state on refresh, repetitive placeholder content, and a lack of history for changes. A persuasive demo involves walking through a complete user story, such as submitting an item for approval, logging in as a manager to approve it, and then showing the updated state and audit trail on the original item.
+Product Managers and Designers evaluate Jungl3 on its ability to model a coherent and believable business process. Their top 5 cues are: 1) Realistic and persistent data (believable names, dates, not 'Lorem Ipsum'), 2) End-to-end workflow cohesion, allowing a core user story to be completed across different roles (e.g., creator to approver), 3) A comprehensive, human-readable audit trail or history for key objects, 4) Authentic system feedback and latency (e.g., loading spinners for complex operations), and 5) Meaningful empty states and graceful error handling. Their typical inspection behavior involves trying to 'break' the product by testing edge cases, such as entering invalid data or trying to approve their own request. They will follow a single data object (e.g., a 'case') through its entire lifecycle to check for consistency. Red flags for them include buttons that do nothing, data reverting to a previous state on refresh, repetitive placeholder content, and a lack of history for changes. A persuasive demo involves walking through a complete user story, such as submitting an item for approval, logging in as a manager to approve it, and then showing the updated state and audit trail on the original item.
 
 ## Buyer Analysis
 
-Non-technical Buyers and Executives focus on business outcomes, risk, compliance, and cost. Realism for them is about whether Jungle3 behaves like a professional, enterprise-ready solution. Their top 5 cues are: 1) Professional, exportable reports in standard formats like PDF and CSV, 2) Clear cost attribution via resource tagging to understand Total Cost of Ownership (TCO) in their AWS account, 3) Enterprise identity integration (SSO/SAML) capabilities, 4) Compliance and governance artifacts like an exportable, comprehensive audit log, and 5) Tangible business outputs, like a formatted email sent to an external address. Their inspection behavior focuses on dashboards and summary views. They ask pointed questions about security, compliance, and cost. Red flags include vague answers to security questions, reports that are just screenshots, a simple username/password login with no mention of SSO, and no visible audit trail. A compelling demo for this persona starts by reinforcing the security model, showing an executive dashboard, exporting a report to PDF, displaying the comprehensive audit log, and explaining the cost model by showing the cost allocation tags in the AWS Billing Console.
+Non-technical Buyers and Executives focus on business outcomes, risk, compliance, and cost. Realism for them is about whether Jungl3 behaves like a professional, enterprise-ready solution. Their top 5 cues are: 1) Professional, exportable reports in standard formats like PDF and CSV, 2) Clear cost attribution via resource tagging to understand Total Cost of Ownership (TCO) in their AWS account, 3) Enterprise identity integration (SSO/SAML) capabilities, 4) Compliance and governance artifacts like an exportable, comprehensive audit log, and 5) Tangible business outputs, like a formatted email sent to an external address. Their inspection behavior focuses on dashboards and summary views. They ask pointed questions about security, compliance, and cost. Red flags include vague answers to security questions, reports that are just screenshots, a simple username/password login with no mention of SSO, and no visible audit trail. A compelling demo for this persona starts by reinforcing the security model, showing an executive dashboard, exporting a report to PDF, displaying the comprehensive audit log, and explaining the cost model by showing the cost allocation tags in the AWS Billing Console.
 
 
 # Competitive Landscape Analysis
@@ -288,9 +288,9 @@ Salesforce excels at providing a rich ecosystem out of the box, with sample data
 
 The data is static and fails the 'realness' test for engineers looking for dynamic signals. An action in the UI does not generate corresponding low-level, inspectable artifacts like API or database logs. The illusion of a 'lived-in' environment quickly collapses under scrutiny.
 
-## Key Takeaways For Jungle3
+## Key Takeaways For Jungl3
 
-Emulate the guided, gamified onboarding of Trailhead and the narrative-driven approach of eVerse. However, Jungle3 must avoid using static data and instead focus on generating dynamic, behavior-driven data with correlated, inspectable low-level artifacts.
+Emulate the guided, gamified onboarding of Trailhead and the narrative-driven approach of eVerse. However, Jungl3 must avoid using static data and instead focus on generating dynamic, behavior-driven data with correlated, inspectable low-level artifacts.
 
 ## System Name
 
@@ -308,9 +308,9 @@ Onboarding is extremely simple, provisioning a fully populated tenant in minutes
 
 The activity is entirely pre-canned, scripted, and shallow, not generative. The environment is a 'walled garden,' making it difficult to inspect underlying infrastructure or integrate third-party tools, which limits its utility for engineers and security teams.
 
-## Key Takeaways For Jungle3
+## Key Takeaways For Jungl3
 
-Jungle3 should emulate the effortless provisioning and the use of interconnected personas. However, it must avoid being a 'black box' by leaning into its in-account deployment model, making every component inspectable and extensible via APIs.
+Jungl3 should emulate the effortless provisioning and the use of interconnected personas. However, it must avoid being a 'black box' by leaning into its in-account deployment model, making every component inspectable and extensible via APIs.
 
 ## System Name
 
@@ -328,7 +328,7 @@ The primary strength is the immense breadth and depth of its transactional data,
 
 The system is extremely complex and expensive to deploy and maintain. The data, while voluminous, is stale, artificial, and lacks any dynamic activity. The user experience is often perceived as archaic, shattering the illusion of a modern enterprise.
 
-## Key Takeaways For Jungle3
+## Key Takeaways For Jungl3
 
 Avoid providing a massive, static data dump. The environment must feel alive and dynamic. Prioritize ease of deployment and a modern user experience over sheer data volume and complexity.
 
@@ -348,9 +348,9 @@ Excels at simplicity and speed, providing instant, browser-based lab environment
 
 The labs are disposable and lack the persistence, scale, and history of a real enterprise. The experience is a 'railroad' where users can only perform scripted actions, making it unsuitable for exploratory testing.
 
-## Key Takeaways For Jungle3
+## Key Takeaways For Jungl3
 
-Jungle3 should offer both a persistent, long-running 'world' and the ability to spin up ephemeral, isolated copies for specific tests or demos, combining the best of both models.
+Jungl3 should offer both a persistent, long-running 'world' and the ability to spin up ephemeral, isolated copies for specific tests or demos, combining the best of both models.
 
 ## System Name
 
@@ -368,9 +368,9 @@ Believability is created through the strong, unambiguous correlation between a d
 
 Plausibility collapses when a decoy lacks environmental context (e.g., a file server in a serverless-only environment) or when the honeypot system is 'too perfect' and clean.
 
-## Key Takeaways For Jungle3
+## Key Takeaways For Jungl3
 
-Jungle3's simulations must generate a trail of correlated artifacts across multiple channels (e.g., an alert, a log entry, a ticket). The believability comes from this interconnected evidence, not from a single perfect artifact.
+Jungl3's simulations must generate a trail of correlated artifacts across multiple channels (e.g., an alert, a log entry, a ticket). The believability comes from this interconnected evidence, not from a single perfect artifact.
 
 ## System Name
 
@@ -388,7 +388,7 @@ Realism is achieved by introducing real, measurable, but controlled failures int
 
 The illusion fails if an experiment has no visible impact or if it causes an uncontrolled, cascading failure that erodes trust in the tool.
 
-## Key Takeaways For Jungle3
+## Key Takeaways For Jungl3
 
 Simulations must produce observable state changes that are verifiable in native cloud tooling. They must also be controllable, with a clear 'blast radius' and a 'halt' button to build user trust.
 
@@ -482,11 +482,11 @@ Implement automated cross-system referential integrity checks as part of integra
 
 # Data Plausibility And Provenance Strategy
 
-### Detailed Report: Data Plausibility and Provenance for Jungle3 v1
+### Detailed Report: Data Plausibility and Provenance for Jungl3 v1
 
-This report provides a deep-dive into generating cross-field-coherent, distributionally realistic synthetic data for the Jungle3 v1 product, with a focus on clear provenance and minimizing PII risk.
+This report provides a deep-dive into generating cross-field-coherent, distributionally realistic synthetic data for the Jungl3 v1 product, with a focus on clear provenance and minimizing PII risk.
 
-#### **Executive Summary & Decision-Ready Recommendations for Jungle3 (v1)**
+#### **Executive Summary & Decision-Ready Recommendations for Jungl3 (v1)**
 
 **Priority (Implement in v1):**
 *   **Schema-First, Multi-Table Generation:** Implement synthetic generation that is driven by the database schema, enforcing referential integrity (foreign keys) and cross-field constraints (value domains, lifecycle state machines).
@@ -497,7 +497,7 @@ This report provides a deep-dive into generating cross-field-coherent, distribut
 
 **Defer (Scope for v2+):**
 *   **Built-in Differential Privacy at Scale:** Add this as an opt-in advanced feature with clear guidance on tuning. For v1, it is a lower priority.
-*   **Hosted Multi-Tenant Model Training:** Since Jungle3 is deployed into customer AWS accounts, avoid moving customer data off-premises. Advanced privacy features requiring model aggregation should be deferred or designed as Bring-Your-Own-Model (BYOM) APIs.
+*   **Hosted Multi-Tenant Model Training:** Since Jungl3 is deployed into customer AWS accounts, avoid moving customer data off-premises. Advanced privacy features requiring model aggregation should be deferred or designed as Bring-Your-Own-Model (BYOM) APIs.
 
 **Biggest Risk for v1:**
 The primary risk is the inadvertent leakage of Personally Identifiable Information (PII) and membership inference attacks resulting from model overfitting or seed reuse. Mitigation must be enforced through policy, sandboxing, and robust validation tooling.
@@ -528,7 +528,7 @@ The primary risk is the inadvertent leakage of Personally Identifiable Informati
 *   **Model-Based Platforms (Gretel, MOSTLY AI, Tonic, SDV):**
     *   **Strengths:** Excel at capturing joint distributions, support multi-table relational generation, and offer enterprise features like privacy controls (rare-category protection, differential privacy).
     *   **Weaknesses:** Risk of data memorization, can be opaque, and require robust provenance, seeds, and validation to be used safely.
-*   **Recommendation for Jungle3 v1:** Adopt a hybrid architecture: a schema-first approach combined with optional model-based synthesizers, enforced constraint repair, and strict validation.
+*   **Recommendation for Jungl3 v1:** Adopt a hybrid architecture: a schema-first approach combined with optional model-based synthesizers, enforced constraint repair, and strict validation.
 
 #### **Provenance & Signed Manifests: Practical Design**
 
@@ -585,13 +585,13 @@ The primary risk is the inadvertent leakage of Personally Identifiable Informati
 
 # Audit Trail And History Implementation
 
-### Comprehensive Findings on Audit Trails & Immutable History for Jungle3 v1
+### Comprehensive Findings on Audit Trails & Immutable History for Jungl3 v1
 
-This report provides a deep-dive into creating believable, inspectable, and compliant audit trails for Jungle3 v1. It compares various technical patterns, maps them to AWS services, and offers decision-ready recommendations.
+This report provides a deep-dive into creating believable, inspectable, and compliant audit trails for Jungl3 v1. It compares various technical patterns, maps them to AWS services, and offers decision-ready recommendations.
 
 #### Executive Summary
 
-The immediate recommendation for Jungle3 v1 is to implement an append-only, event-first audit trail. This approach combines event-sourced canonical events for core workflows with append-only audit records for operational clarity. The proposed architecture utilizes DynamoDB or RDS for metadata and fast queries, DynamoDB Streams routing to EventBridge, OpenSearch for search and UI timelines, and S3 with Object Lock for canonical event storage. For critical ledgers requiring cryptographic proof, Amazon QLDB can be used selectively. To ensure tamper-evidence, hash-chaining and signed daily manifests stored in S3 Object Lock are recommended.
+The immediate recommendation for Jungl3 v1 is to implement an append-only, event-first audit trail. This approach combines event-sourced canonical events for core workflows with append-only audit records for operational clarity. The proposed architecture utilizes DynamoDB or RDS for metadata and fast queries, DynamoDB Streams routing to EventBridge, OpenSearch for search and UI timelines, and S3 with Object Lock for canonical event storage. For critical ledgers requiring cryptographic proof, Amazon QLDB can be used selectively. To ensure tamper-evidence, hash-chaining and signed daily manifests stored in S3 Object Lock are recommended.
 
 **Biggest v1 Risk:** The primary risk is a "plausibility collapse," where the audit trail fails to form a coherent narrative linking UI state, notifications (like emails and PDFs), and support tickets. This can be mitigated by using stable event IDs across all systems and artifacts, and by storing artifact pointers and deltas within the events themselves.
 
@@ -652,7 +652,7 @@ To maintain a believable and coherent history, it is crucial to link audit entri
 *   **Canonical Event Envelope:** Every event should include a standard set of fields:
     *   `eventId` (UUID), `timestamp` (ISO8601), `actorId`, `action`, `resourceId`, `correlationId`, `causationId`, `humanNarrative`, `prevHash`, and an `artifacts[]` array containing pointers (e.g., S3 URIs, ticket IDs, email message-ids).
 
-*   **Embedding Event IDs:** The `eventId` should be made visible in the UI and embedded in the metadata of generated artifacts. For example, include it in PDF XMP metadata or a footer, and in email headers (`Message-ID`, `X-Jungle3-EventId`). The UI should provide links like "Show evidence" that open the canonical event record.
+*   **Embedding Event IDs:** The `eventId` should be made visible in the UI and embedded in the metadata of generated artifacts. For example, include it in PDF XMP metadata or a footer, and in email headers (`Message-ID`, `X-Jungl3-EventId`). The UI should provide links like "Show evidence" that open the canonical event record.
 
 *   **Field-Level Deltas:** Store `before` and `after` deltas for changed fields within the event payload. This allows the UI to display explicit changes (e.g., "amount changed from $100 to $150") rather than just opaque state snapshots.
 
@@ -746,9 +746,9 @@ To maintain a believable and coherent history, it is crucial to link audit entri
 
 # Asynchronous Realism Design
 
-### Deep Dive on Asynchronous Realism for Jungle3 v1
+### Deep Dive on Asynchronous Realism for Jungl3 v1
 
-This report provides a detailed design for a minimal yet high-signal asynchronous processing system for Jungle3 v1. The design focuses on using standard AWS primitives to create believable operational states that are inspectable by engineers, product managers, and non-technical stakeholders without causing user overload.
+This report provides a detailed design for a minimal yet high-signal asynchronous processing system for Jungl3 v1. The design focuses on using standard AWS primitives to create believable operational states that are inspectable by engineers, product managers, and non-technical stakeholders without causing user overload.
 
 #### **Executive Summary**
 
@@ -845,7 +845,7 @@ The CloudFormation template for the v1 bundle must create:
 
 # Exception Path And Review Loop Design
 
-For Jungle3's v1 domain of 'E-commerce Chargeback/Dispute Handling', the exception and review loop design is critical for demonstrating realism. The system will model the following paths:
+For Jungl3's v1 domain of 'E-commerce Chargeback/Dispute Handling', the exception and review loop design is critical for demonstrating realism. The system will model the following paths:
 
 **1. Top Exception Patterns & Workflows:**
 *   **Incomplete Evidence / Information Request:** This is the most common exception. When a merchant analyst receives a chargeback, they may need more information (e.g., clearer shipping proof). 
@@ -866,8 +866,8 @@ For Jungle3's v1 domain of 'E-commerce Chargeback/Dispute Handling', the excepti
     *   **Action:** The system automatically retries with exponential backoff and jitter. After a configured number of failures (e.g., 5 attempts over 8 hours), the event is moved to a Dead-Letter Queue (DLQ).
 
 **2. Technical Implementation & Reprocessing:**
-*   **Webhook System:** All external notifications will use a robust webhook system. Payloads will be signed with an HMAC-SHA256 signature included in a header (`X-Jungle3-Signature`) to ensure authenticity and prevent tampering. Payloads will also include a unique idempotency key to allow receivers to safely retry requests.
-*   **DLQ and Reprocessing:** The CloudFormation template will deploy a dedicated SQS queue to act as a DLQ for failed webhooks. An engineer persona can inspect this queue via the AWS Console or a minimal 'System Health' UI in Jungle3. This UI will show the failed message payloads and provide a 'Replay' button. Triggering a replay will generate a new audit event (`case.event.replayed`) and re-queue the message for delivery.
+*   **Webhook System:** All external notifications will use a robust webhook system. Payloads will be signed with an HMAC-SHA256 signature included in a header (`X-Jungl3-Signature`) to ensure authenticity and prevent tampering. Payloads will also include a unique idempotency key to allow receivers to safely retry requests.
+*   **DLQ and Reprocessing:** The CloudFormation template will deploy a dedicated SQS queue to act as a DLQ for failed webhooks. An engineer persona can inspect this queue via the AWS Console or a minimal 'System Health' UI in Jungl3. This UI will show the failed message payloads and provide a 'Replay' button. Triggering a replay will generate a new audit event (`case.event.replayed`) and re-queue the message for delivery.
 
 **3. Audit Trail and Linkage:**
 Every state transition, escalation, and notification attempt is recorded as an immutable event in an audit trail. For example, an escalation event would include the `case_id`, `timestamp`, `actor` ('System'), `event_type` ('case.escalated'), and `reason` ('SLA breach: 25 days in Information Gathering'). This audit trail is the primary source of truth and is visible on the case detail page.
@@ -878,7 +878,7 @@ Every state transition, escalation, and notification attempt is recorded as an i
 
 # Background Activity And Batch Job Design
 
-To create a credible sense of 'system life' and prevent the Jungle3 environment from feeling like a static demo, a series of recurring background activities and scheduled jobs will be implemented. These jobs are designed to be efficient, inspectable, and to produce tangible, auditable outputs.
+To create a credible sense of 'system life' and prevent the Jungl3 environment from feeling like a static demo, a series of recurring background activities and scheduled jobs will be implemented. These jobs are designed to be efficient, inspectable, and to produce tangible, auditable outputs.
 
 **1. Catalog of High-Signal Recurring Jobs for v1:**
 
@@ -895,7 +895,7 @@ To create a credible sense of 'system life' and prevent the Jungle3 environment 
 *   **C. Hourly Housekeeping & Queue Draining (Medium Priority):**
     *   **Purpose:** Performs small, recurring cleanup tasks. A key function is to periodically check for and retry failed webhook notifications from a secondary, time-delayed queue, simulating a robust retry mechanism.
     *   **Timing:** Runs every 15-60 minutes with a small jitter (0-120 seconds).
-    *   **Tangible Output:** Emits custom CloudWatch metrics like `Jungle3/Housekeeping.TasksCompleted` and `Jungle3/Housekeeping.RetriesAttempted`. These metrics are visible on a pre-built 'System Health' dashboard.
+    *   **Tangible Output:** Emits custom CloudWatch metrics like `Jungl3/Housekeeping.TasksCompleted` and `Jungl3/Housekeeping.RetriesAttempted`. These metrics are visible on a pre-built 'System Health' dashboard.
 
 **2. AWS Implementation and Orchestration:**
 
@@ -915,30 +915,30 @@ To create a credible sense of 'system life' and prevent the Jungle3 environment 
 
 # External Artifact And Notification Design
 
-To persuasively convey that Jungle3 is a real, functioning system, it must produce tangible artifacts that can be inspected and trusted by users outside of the main UI. The design for these artifacts emphasizes security, verifiability, and correlation.
+To persuasively convey that Jungl3 is a real, functioning system, it must produce tangible artifacts that can be inspected and trusted by users outside of the main UI. The design for these artifacts emphasizes security, verifiability, and correlation.
 
 **1. Prioritized Artifacts for v1:**
 
 *   **Transactional Emails (Essential):** The most common and expected notification type. Used for critical alerts, user invitations, and summaries.
-*   **Signed Webhooks (Essential for Engineers):** For programmatic integration, allowing other systems to react to events within Jungle3.
+*   **Signed Webhooks (Essential for Engineers):** For programmatic integration, allowing other systems to react to events within Jungl3.
 *   **Downloadable Reports (CSV - High Priority):** For data transparency and analysis, allowing users to export raw event data or summaries.
 
 **2. Design for Transactional Emails (via AWS SES):**
 
-*   **Constraint & Realism:** Jungle3 operates within the customer's AWS account, so it must use their Amazon Simple Email Service (SES) configuration. This is a powerful realism feature, as emails will originate from the customer's own verified domain.
-*   **Authentication:** To ensure deliverability and avoid spam filters, proper email authentication is mandatory. The Jungle3 UI will include a dedicated **SES Setup & Health Check** page. This wizard will guide the user to create the necessary SPF and DKIM DNS records for their sending domain and will perform checks to verify the configuration is correct before enabling email features. This mitigates the key risk of emails being marked as spam.
+*   **Constraint & Realism:** Jungl3 operates within the customer's AWS account, so it must use their Amazon Simple Email Service (SES) configuration. This is a powerful realism feature, as emails will originate from the customer's own verified domain.
+*   **Authentication:** To ensure deliverability and avoid spam filters, proper email authentication is mandatory. The Jungl3 UI will include a dedicated **SES Setup & Health Check** page. This wizard will guide the user to create the necessary SPF and DKIM DNS records for their sending domain and will perform checks to verify the configuration is correct before enabling email features. This mitigates the key risk of emails being marked as spam.
 *   **Content & Correlation:** Emails will be professionally formatted and contain a universal **Trace ID** in the footer. For example:
     ```
-    Subject: [Jungle3] Dispute Update: Case #C-12345 requires your review
+    Subject: [Jungl3] Dispute Update: Case #C-12345 requires your review
     ...
-    This is an automated notification from your Jungle3 instance.
+    This is an automated notification from your Jungl3 instance.
     Event Trace ID: 8a1b9c2d-4e5f-6a7b-8c9d-0e1f2a3b4c5d
     ```
 
 **3. Design for Signed Webhooks:**
 
-*   **Security & Authenticity:** All webhook payloads will be cryptographically signed to prove they originated from Jungle3 and were not tampered with in transit. The signing will use a standard HMAC-SHA256 mechanism.
-*   **Implementation:** When a user configures a webhook endpoint in the UI, Jungle3 will generate a secret signing key. The user is instructed to store this key securely in their receiving application. Each outgoing webhook request will include a signature in the `X-Jungle3-Signature` header, which the receiver can use to verify the payload.
+*   **Security & Authenticity:** All webhook payloads will be cryptographically signed to prove they originated from Jungl3 and were not tampered with in transit. The signing will use a standard HMAC-SHA256 mechanism.
+*   **Implementation:** When a user configures a webhook endpoint in the UI, Jungl3 will generate a secret signing key. The user is instructed to store this key securely in their receiving application. Each outgoing webhook request will include a signature in the `X-Jungl3-Signature` header, which the receiver can use to verify the payload.
 *   **Payload & Correlation:** The JSON payload will be structured and include the universal **Trace ID**.
     ```json
     {
@@ -963,16 +963,16 @@ To persuasively convey that Jungle3 is a real, functioning system, it must produ
 
 This is the cornerstone of the entire artifact strategy. A unique UUID, the **Trace ID**, is generated for every significant, auditable event. This ID is the thread that connects all evidence:
 *   It is a primary field in the **structured log entry** in CloudWatch.
-*   It is visible in the **event details page** in the Jungle3 UI.
+*   It is visible in the **event details page** in the Jungl3 UI.
 *   It is included in the **email footer**.
 *   It is a top-level field in the **webhook payload**.
 *   It is a column in the **CSV export**.
 
-This enables a powerful, closed-loop inspection flow. A user can copy the Trace ID from an email footer, paste it into the Jungle3 search bar, and immediately see the corresponding UI event, audit log, and raw log data, providing undeniable proof of the system's coherence and reality.
+This enables a powerful, closed-loop inspection flow. A user can copy the Trace ID from an email footer, paste it into the Jungl3 search bar, and immediately see the corresponding UI event, audit log, and raw log data, providing undeniable proof of the system's coherence and reality.
 
 # Domain Anchor Analysis
 
-A pressure test was conducted to evaluate the proposed v1 domain anchor of 'insurance-adjacent case processing' against alternatives to determine the optimal starting point for Jungle3's 'time-to-real' goal. The domains were assessed against several criteria: availability of believable artifacts, natural multi-role workflows, exception richness, auditability, privacy/safety, ease of demonstration, and portability across verticals.
+A pressure test was conducted to evaluate the proposed v1 domain anchor of 'insurance-adjacent case processing' against alternatives to determine the optimal starting point for Jungl3's 'time-to-real' goal. The domains were assessed against several criteria: availability of believable artifacts, natural multi-role workflows, exception richness, auditability, privacy/safety, ease of demonstration, and portability across verticals.
 
 **Domain Comparison:**
 
@@ -994,7 +994,7 @@ The primary risk with the chargeback domain is **trivialization**. If the simula
 
 # Measurement And Experiment Design
 
-To ensure Jungle3's development is data-driven and focused on the core goal of 'time to real', a formal framework for measurement and experimentation is proposed. This includes operational metrics, an A/B study to validate v1 trade-offs, and strict cost guardrails.
+To ensure Jungl3's development is data-driven and focused on the core goal of 'time to real', a formal framework for measurement and experimentation is proposed. This includes operational metrics, an A/B study to validate v1 trade-offs, and strict cost guardrails.
 
 **1. Operational Metrics for 'Realness':**
 
@@ -1054,13 +1054,13 @@ The v1 'data-first' approach will be considered validated and ready for broader 
 
 ## Biggest Risk
 
-The single biggest risk is **Plausibility Collapse due to Shallow Simulation**. Because Jungle3 is deployed into the customer's own AWS account, engineers will immediately verify what they see in the UI against the underlying resources in the AWS console. If a UI element—such as a message queue, an audit log, a user role, or a service status—is not backed by a real, inspectable, and plausibly configured AWS resource (e.g., an SQS queue, a CloudTrail log, an IAM role, or a CloudWatch alarm), the entire product will be instantly dismissed as a 'toy' or 'theater'. This 'leaky abstraction' shatters credibility and invalidates the product's core value proposition for all audiences.
+The single biggest risk is **Plausibility Collapse due to Shallow Simulation**. Because Jungl3 is deployed into the customer's own AWS account, engineers will immediately verify what they see in the UI against the underlying resources in the AWS console. If a UI element—such as a message queue, an audit log, a user role, or a service status—is not backed by a real, inspectable, and plausibly configured AWS resource (e.g., an SQS queue, a CloudTrail log, an IAM role, or a CloudWatch alarm), the entire product will be instantly dismissed as a 'toy' or 'theater'. This 'leaky abstraction' shatters credibility and invalidates the product's core value proposition for all audiences.
 
 ## Cross Links
 
 This research topic has significant knock-on effects across multiple areas:
 - **Synthetic Data & Privacy:** The need for plausible data directly dictates the requirements for the data generation engine, including the need for realistic distributions, cross-field coherence, and robust privacy controls to avoid PII leakage.
-- **Observability & Cost:** Implementing realism cues like logs, traces, metrics, and audit trails directly impacts the operational cost of a Jungle3 instance. This necessitates cost modeling, guardrails, and a cost-aware architecture (e.g., trace sampling, log retention policies).
+- **Observability & Cost:** Implementing realism cues like logs, traces, metrics, and audit trails directly impacts the operational cost of a Jungl3 instance. This necessitates cost modeling, guardrails, and a cost-aware architecture (e.g., trace sampling, log retention policies).
 - **CI/CD & Reproducibility:** The need to ship a believable environment requires that the CI/CD pipeline includes automated validation and 'realness' linting to catch anti-patterns before they reach customers. Reproducibility of scenarios is key for testing.
 - **Security & Deception:** The patterns for creating believable cross-channel evidence are directly borrowed from deception and chaos engineering platforms. A simulated security event must generate verifiable artifacts (logs, alerts, etc.) to be credible.
 - **UI/UX & Onboarding:** The UI must be designed to surface the underlying operational reality (e.g., queue depths, audit trails, failure states) without overwhelming the user. Onboarding documentation must guide users on how to inspect and verify these signals.

@@ -20,6 +20,6 @@ See `00-context.md` for product framing. ADR 0008 commits to AWS Step Functions 
 
 8. **Cost at realistic traffic.** Given the v1 scale (~60 in-flight claims, background activity at ~2 events/second per [findings.md §5.7](../findings.md), multi-month execution durations), what is the real Step Functions line item? Separate state-transition cost from Task invocation cost from execution duration (Standard Workflows bill duration for paused executions in some cases).
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

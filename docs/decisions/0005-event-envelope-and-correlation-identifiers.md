@@ -7,13 +7,13 @@
 
 The v1 [Understory](../glossary.md#understory) is a network of services that communicate by emitting and consuming events across SQS, EventBridge, Step Functions, and scheduled jobs. Two questions had to be answered before any service is written: what shape is on the wire, and how is a single unit of work traced through it.
 
-Five independent deep-research reports in the 2026-04-21 cluster converged on the same answer (see [findings.md §5.1–5.2](../research/findings.md#5.1-every-business-event-and-every-log-line-carries-two-ids-trace_id-and-case_id)). Operational observability ("which spans belong to this request across service hops") and business observability ("what happened to this specific claim") are distinct questions; one identifier cannot serve both. And the envelope itself needs to be a known thing, not a Jungle3 invention, so that customer auditors, SDKs, and downstream tooling all recognize it.
+Five independent deep-research reports in the 2026-04-21 cluster converged on the same answer (see [findings.md §5.1–5.2](../research/findings.md#5.1-every-business-event-and-every-log-line-carries-two-ids-trace_id-and-case_id)). Operational observability ("which spans belong to this request across service hops") and business observability ("what happened to this specific claim") are distinct questions; one identifier cannot serve both. And the envelope itself needs to be a known thing, not a Jungl3 invention, so that customer auditors, SDKs, and downstream tooling all recognize it.
 
 This ADR pins both.
 
 ## Decision
 
-**1. Envelope.** Every event crossing a service boundary — SQS message, EventBridge event, Step Functions input/output, scheduled-job payload — is a [CloudEvents v1.0](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md) structured envelope. No Jungle3-proprietary envelope.
+**1. Envelope.** Every event crossing a service boundary — SQS message, EventBridge event, Step Functions input/output, scheduled-job payload — is a [CloudEvents v1.0](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md) structured envelope. No Jungl3-proprietary envelope.
 
 **2. Type naming.** The CloudEvents `type` attribute follows reverse-DNS:
 
@@ -40,12 +40,12 @@ The audit-service (see [findings.md §6.5](../research/findings.md#6.5-microserv
 
 - The admin-agent tool set in [findings.md §6.2](../research/findings.md#6.2-admin-ui--resolved-llm-agent-over-deterministic-cloudwatchx-ray-tools) becomes tractable. "Show me everything that ever touched case CLM-2026-04-002137" is one CloudWatch Logs Insights query against a structured `case_id` field — not archaeology across traces.
 - CloudEvents-native tooling (EventBridge, OpenTelemetry, most log aggregators) recognizes the envelope without translation.
-- Customer auditors reviewing the install see a standard envelope with a published spec, not a Jungle3-specific schema they have to learn.
+- Customer auditors reviewing the install see a standard envelope with a published spec, not a Jungl3-specific schema they have to learn.
 - Future domain packs (e.g. a retail pack emitting `com.jungle3.retail.return.requested`) share namespace rules without collision.
 
 **Forecloses:**
 
-- Custom event envelopes in any Jungle3 service.
+- Custom event envelopes in any Jungl3 service.
 - A single-identifier correlation scheme (trace-only or case-only).
 - Free-form verbs. A service that needs a transition not in the verb list must amend this ADR or the glossary, not invent one locally.
 - Using log lines without `trace_id` and `case_id` as top-level structured fields.
@@ -58,7 +58,7 @@ The audit-service (see [findings.md §6.5](../research/findings.md#6.5-microserv
 
 ## Alternatives considered
 
-- **Custom Jungle3 envelope.** Smaller, exactly what we need, no CloudEvents overhead. Rejected — NIH syndrome. CloudEvents solves this problem and is the spec customers' auditors recognize.
+- **Custom Jungl3 envelope.** Smaller, exactly what we need, no CloudEvents overhead. Rejected — NIH syndrome. CloudEvents solves this problem and is the spec customers' auditors recognize.
 - **One identifier (either `trace_id` or `case_id`).** Simpler. Rejected — the research convergence is specifically that one ID cannot serve both operational and business observability. Picking one forces the other's queries to become reconstruction.
 - **Forward-DNS or flat type names (`claim.submitted`).** Shorter. Rejected — collides once a second domain exists; reverse-DNS is the JVM/Java-world convention and sorts hierarchically in log queries.
 - **Open verb vocabulary.** Lets teams name transitions precisely. Rejected — guarantees drift across services. The MVR floor is too small for bespoke verbs to earn their place; if a transition genuinely doesn't fit the closed list, the ADR gets amended.

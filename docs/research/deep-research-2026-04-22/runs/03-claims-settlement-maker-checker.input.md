@@ -1,14 +1,14 @@
 # Research context (cluster 2026-04-22)
 
-You are producing a deep-research report for **Jungle3** (stylized `jungl3`), a product with the following characteristics.
+You are producing a deep-research report for **Jungl3** (stylized `jungl3`), a product with the following characteristics.
 
-## What Jungle3 is
+## What Jungl3 is
 
-Jungle3 generates, deploys, and vends pre-built, integrated, "Understory" enterprise applications so product teams can start from a living, working system rather than from a blank page. Teams shape the generated system — subtracting what doesn't belong, substituting components, adding where the baseline stops — into their real product.
+Jungl3 generates, deploys, and vends pre-built, integrated, "Understory" enterprise applications so product teams can start from a living, working system rather than from a blank page. Teams shape the generated system — subtracting what doesn't belong, substituting components, adding where the baseline stops — into their real product.
 
 Key properties:
 
-- Distributed as an **AWS Marketplace** listing. Customers subscribe, launch a CloudFormation template into their own AWS account, and operate their own Jungle3 instance entirely inside that account. There is no hosted multi-tenant SaaS version of Jungle3 itself.
+- Distributed as an **AWS Marketplace** listing. Customers subscribe, launch a CloudFormation template into their own AWS account, and operate their own Jungl3 instance entirely inside that account. There is no hosted multi-tenant SaaS version of Jungl3 itself.
 - Each "Jungle" is a synthetic but believable enterprise environment: microservices, queues, events, stubs, scheduled jobs, seed data, personas, workflows, audit trails, and background activity — all deployed, running, and interacting on day one.
 - The central product thesis is "time to real": time from `subscribe` to the first click on running software that feels like a real enterprise system, not a demo.
 - The central failure mode is **plausibility collapse**: the moment a user (builder, judge, buyer) spots that the data, workflows, personas, or system behavior are obviously fake, every other investment loses value.
@@ -27,7 +27,7 @@ The full findings document these derive from is at `docs/research/findings.md` i
 
 ## Who the research audience is
 
-Jungle3 engineering leadership. They want **actionable, decision-ready findings** that move the ADRs above from "decided" to "buildable" — concrete recommendations, real numbers, named failure modes, and named trade-offs. Assume they are technically sophisticated and have already read the ADRs. Prefer opinionated synthesis over neutral hedging. Cite named systems, companies, open-source projects, and specifications where useful.
+Jungl3 engineering leadership. They want **actionable, decision-ready findings** that move the ADRs above from "decided" to "buildable" — concrete recommendations, real numbers, named failure modes, and named trade-offs. Assume they are technically sophisticated and have already read the ADRs. Prefer opinionated synthesis over neutral hedging. Cite named systems, companies, open-source projects, and specifications where useful.
 
 ## What this cluster is for
 
@@ -37,11 +37,11 @@ Do not re-argue the ADRs. They are settled. Accept their framing and go deeper.
 
 ## Output expectations for every research task
 
-Every deep-research report should end with a section titled **"Decision-ready recommendations for Jungle3"** that states, in 5–10 bullets:
+Every deep-research report should end with a section titled **"Decision-ready recommendations for Jungl3"** that states, in 5–10 bullets:
 
-- What Jungle3 should do in the next implementation step for this topic.
-- What Jungle3 should explicitly defer past v1.
-- The single biggest risk if Jungle3 ignores this topic.
+- What Jungl3 should do in the next implementation step for this topic.
+- What Jungl3 should explicitly defer past v1.
+- The single biggest risk if Jungl3 ignores this topic.
 - Any cross-links to the other 9 topics in this cluster where this one has knock-on effects.
 
 Treat this as a genuine advisory document. Be direct. Cite real systems, real pricing, real code where possible. It is better to be sharply opinionated and wrong in a named way than to be vaguely comprehensive.
@@ -61,7 +61,7 @@ See `00-context.md` for product framing. [ADR 0006](../../decisions/0006-v1-doma
 
 3. **Regulatory anchoring.** Which workflows have explicit regulatory text behind them (state DOI regulations, NAIC Model Acts, UCC, ERISA for disability)? A maker-checker example tied to a specific regulation is harder to dismiss than one that could be internal policy. Cite specific regulations where applicable.
 
-4. **Failure modes a real auditor would spot.** A state DOI market-conduct examiner walks the system through claim `CLM-2026-04-002137`, which has a settlement approval at $47,500 by Adjuster Sarah and Supervisor Marcus. What would they actually check? Timestamps, separation of duties, reason codes, supporting documentation attached, downstream payment authorization linkage? For each check, is the Jungle3 audit-trail shape (from [ADR 0009](../../decisions/0009-audit-trail-is-append-only-hash-chained.md)) sufficient? What is missing?
+4. **Failure modes a real auditor would spot.** A state DOI market-conduct examiner walks the system through claim `CLM-2026-04-002137`, which has a settlement approval at $47,500 by Adjuster Sarah and Supervisor Marcus. What would they actually check? Timestamps, separation of duties, reason codes, supporting documentation attached, downstream payment authorization linkage? For each check, is the Jungl3 audit-trail shape (from [ADR 0009](../../decisions/0009-audit-trail-is-append-only-hash-chained.md)) sufficient? What is missing?
 
 5. **Timing realism.** How long does a real settlement approval take end to end — from adjuster submission to supervisor decision? What's the distribution (mean, median, p95, p99)? This matters because the seeded state in v1 has to place 60 in-flight claims at realistic workflow stages.
 
@@ -71,6 +71,6 @@ See `00-context.md` for product framing. [ADR 0006](../../decisions/0006-v1-doma
 
 8. **Narrative credibility.** For a demo audience (prospective design partners, AWS Marketplace reviewers), which single workflow tells the cleanest 90-second story? "Adjuster Sarah proposes $47,500, Supervisor Marcus catches pre-existing damage and rejects, Sarah revises to $32,000, Marcus approves" — does that land, or is there a cleaner narrative?
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

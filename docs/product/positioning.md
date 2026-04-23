@@ -1,12 +1,12 @@
 # Positioning
 
-How Jungle3 is framed for the people who build, fund, judge, and use it. This is product framing, not architecture. For architecture see [`../architecture/system-context.md`](../architecture/system-context.md); for terms see [`../glossary.md`](../glossary.md).
+How Jungl3 is framed for the people who build, fund, judge, and use it. This is product framing, not architecture. For architecture see [`../architecture/system-context.md`](../architecture/system-context.md); for terms see [`../glossary.md`](../glossary.md).
 
 ## One-liner
 
 **Start with a working product. Then make it worth using.**
 
-Longer form: Jungle3 generates and deploys a working, integrated application so teams can start from reality instead of from scratch.
+Longer form: Jungl3 generates and deploys a working, integrated application so teams can start from reality instead of from scratch.
 
 ## The mental flip
 
@@ -14,13 +14,13 @@ The traditional motion is **additive from zero**:
 
 > idea → design → scaffold → wire infra → connect services → deploy → test → iterate
 
-Jungle3's motion is **shape a living baseline**:
+Jungl3's motion is **shape a living baseline**:
 
 > idea → vend a living system → trim, substitute, and extend → test → iterate
 
 Teams are not handed a blank page. They are handed an [Understory](../glossary.md#understory): deployed, integrated, emitting, rendering — a baseline that is already complete enough to be real on day one. Their job is to **shape it into the prototype they intend.** That shaping includes cutting parts that do not belong, substituting in parts that do, and adding what the baseline does not cover. Subtraction is a primary motion, not the only one.
 
-This is how most production systems actually evolve. Jungle3 just compresses the front half of that curve.
+This is how most production systems actually evolve. Jungl3 just compresses the front half of that curve.
 
 ## Why a living baseline
 
@@ -50,7 +50,7 @@ The early-stage work that delays the first real user interaction:
 - Setting up auth.
 - Getting to a deployable artifact.
 
-Jungle3 absorbs all of that into vending. A team's first action is editing something that runs, not assembling the things that let it run.
+Jungl3 absorbs all of that into vending. A team's first action is editing something that runs, not assembling the things that let it run.
 
 ## What the platform optimizes for
 
@@ -77,7 +77,7 @@ No new concepts introduced here. If a pillar can't be expressed in existing voca
 
 ## How it ships
 
-Jungle3 is distributed as an **AWS Marketplace listing**. A customer subscribes, launches the CloudFormation template into their own AWS account, and from that moment forward operates their own Jungle3 instance — Control Plane, Jungles, DMZs, Canopies, all of it — inside their account. Jungle3 the company does not run a hosted multi-tenant platform. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md) and [ADR 0011](../decisions/0011-canopy-and-ai-first-dmz.md).
+Jungl3 is distributed as an **AWS Marketplace listing**. A customer subscribes, launches the CloudFormation template into their own AWS account, and from that moment forward operates their own Jungl3 instance — Control Plane, Jungles, DMZs, Canopies, all of it — inside their account. Jungl3 the company does not run a hosted multi-tenant platform. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md) and [ADR 0011](../decisions/0011-canopy-and-ai-first-dmz.md).
 
 ## Pitch form
 

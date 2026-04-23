@@ -18,7 +18,7 @@ Investigate:
 
 5. **Deterministic vs randomized seeding.** Trade-offs between deterministic seeds (reproducible demos, shareable scenarios, debuggable) vs randomized generation (organic feel, harder to memorize). What do top-tier demo environments do?
 
-6. **Scenario packs vs continuous generation.** Should Jungle3 ship curated "scenario packs" (named, narrative-driven seed sets) or run a continuous background generator that produces new records over time, or both? What are the operational costs of each?
+6. **Scenario packs vs continuous generation.** Should Jungl3 ship curated "scenario packs" (named, narrative-driven seed sets) or run a continuous background generator that produces new records over time, or both? What are the operational costs of each?
 
 7. **Tools and libraries.** Survey the current state of synthetic data generation: Faker, Mimesis, SDV, Gretel, Mostly AI, LLM-based generators, domain-specific synthesizers. Which are production-grade? Which can hit believability without requiring real data for training?
 
@@ -26,6 +26,6 @@ Investigate:
 
 9. **Privacy / safety.** How to ensure synthetic data doesn't accidentally resemble real PII, especially for a product that will be installed into customer AWS accounts.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

@@ -1,10 +1,10 @@
 # Topic 7: Packaging and deployment strategy on AWS
 
-See `00-context.md` for product framing. Jungle3 ships via AWS Marketplace into a customer's own AWS account — not as hosted SaaS.
+See `00-context.md` for product framing. Jungl3 ships via AWS Marketplace into a customer's own AWS account — not as hosted SaaS.
 
 ## Research questions
 
-Investigate the concrete packaging and deployment choices that would let Jungle3 be genuinely *installable* — one subscribe-click by a customer, landing in their AWS account as a working Jungle — without creating a long-term operational tax for Jungle3 the company or the customer.
+Investigate the concrete packaging and deployment choices that would let Jungl3 be genuinely *installable* — one subscribe-click by a customer, landing in their AWS account as a working Jungle — without creating a long-term operational tax for Jungl3 the company or the customer.
 
 Research:
 
@@ -14,13 +14,13 @@ Research:
    - Install complexity
    - Upgrade path (see below)
    - Inspectability for the customer
-   - Maintenance burden for Jungle3 the company
+   - Maintenance burden for Jungl3 the company
    
    Consider hybrids and "mostly serverless with one ECS service for persistent UI/admin."
 
 2. **AWS Marketplace mechanics.** What does a well-designed Marketplace SaaS or CloudFormation listing look like today in 2026? What's new since the SaaS quick-launch templates? Contract negotiation, metering, entitlement checks, upgrade flows, cancellation / teardown. Cite live listings that do this well.
 
-3. **Customer-owned-account deployment patterns.** Best-practice patterns for installing into a customer account without needing Jungle3 cross-account access: CloudFormation, CDK-bootstrapped stacks, Terraform modules, custom launcher. Pros/cons.
+3. **Customer-owned-account deployment patterns.** Best-practice patterns for installing into a customer account without needing Jungl3 cross-account access: CloudFormation, CDK-bootstrapped stacks, Terraform modules, custom launcher. Pros/cons.
 
 4. **One-click install vs guided install.** When is one-click the right UX and when is it a trap (customer has not made critical config choices)? Is there a middle path — "one click, with a post-launch guided setup"?
 
@@ -32,6 +32,6 @@ Research:
 
 8. **Known Marketplace failure modes.** Survey listings that failed to gain traction despite good underlying products — often due to install pain, unclear entitlements, brittle CFN templates, or hidden ongoing costs.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

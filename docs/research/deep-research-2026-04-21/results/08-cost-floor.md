@@ -1,12 +1,12 @@
 # Executive Summary
 
-The primary challenge for Jungle3 is to deliver a believable, 'always-on' synthetic enterprise environment that does not trigger customer cost-rejection. Analysis across multiple cost models reveals that an unmanaged Jungle3 instance can easily exceed $500/month, a level that invites scrutiny from enterprise FinOps and procurement teams. The key cost drivers are consistently identified as data-intensive services, primarily CloudWatch Logs ingestion, compute services running 24/7 (like AWS Fargate and Lambda at scale), and networking charges, especially from NAT Gateways.
+The primary challenge for Jungl3 is to deliver a believable, 'always-on' synthetic enterprise environment that does not trigger customer cost-rejection. Analysis across multiple cost models reveals that an unmanaged Jungl3 instance can easily exceed $500/month, a level that invites scrutiny from enterprise FinOps and procurement teams. The key cost drivers are consistently identified as data-intensive services, primarily CloudWatch Logs ingestion, compute services running 24/7 (like AWS Fargate and Lambda at scale), and networking charges, especially from NAT Gateways.
 
-The absolute idle-cost floor for a minimally realistic instance is approximately $55-$85 per month, dominated by fixed hourly charges for components like an Application Load Balancer (ALB) and a single NAT Gateway or VPC Endpoints. However, to be 'alive on day one,' a more realistic background activity level is required. The recommended v1 default configuration targets a monthly cost of approximately $110-$150. This 'Default-Realism' profile balances plausibility with cost-sensitivity by employing a serverless-first architecture, defaulting to a single Availability Zone, implementing aggressive log retention policies (7-14 days), and using cost-effective service configurations like DynamoDB with auto-scaling and a 'zero GSI' policy. By proactively managing these drivers and providing built-in governance (e.g., default budgets and cost alerts), Jungle3 can maintain its core value proposition while staying below the critical ~$400/month customer perception threshold, ensuring wider adoption and preventing early termination due to bill shock.
+The absolute idle-cost floor for a minimally realistic instance is approximately $55-$85 per month, dominated by fixed hourly charges for components like an Application Load Balancer (ALB) and a single NAT Gateway or VPC Endpoints. However, to be 'alive on day one,' a more realistic background activity level is required. The recommended v1 default configuration targets a monthly cost of approximately $110-$150. This 'Default-Realism' profile balances plausibility with cost-sensitivity by employing a serverless-first architecture, defaulting to a single Availability Zone, implementing aggressive log retention policies (7-14 days), and using cost-effective service configurations like DynamoDB with auto-scaling and a 'zero GSI' policy. By proactively managing these drivers and providing built-in governance (e.g., default budgets and cost alerts), Jungl3 can maintain its core value proposition while staying below the critical ~$400/month customer perception threshold, ensuring wider adoption and preventing early termination due to bill shock.
 
 # Recommended V1 Cost Profile
 
-The recommended v1 cost profile for a default Jungle3 installation is the 'Default-Realism' tier, targeting a monthly operational cost of approximately **$110 to $150** in the customer's AWS account (based on us-east-1 pricing). This profile is engineered to provide a sufficiently 'alive on day one' experience that passes the plausibility bar without triggering immediate cost scrutiny from enterprise review teams.
+The recommended v1 cost profile for a default Jungl3 installation is the 'Default-Realism' tier, targeting a monthly operational cost of approximately **$110 to $150** in the customer's AWS account (based on us-east-1 pricing). This profile is engineered to provide a sufficiently 'alive on day one' experience that passes the plausibility bar without triggering immediate cost scrutiny from enterprise review teams.
 
 The specific configuration to achieve this cost profile includes:
 
@@ -29,7 +29,7 @@ Minimum-Realism
 
 ## Description
 
-This tier represents the idle-cost floor for a Jungle3 instance with always-on baseline activity. It simulates a system during off-hours or a very low-traffic business, sufficient to prove the system is operational but without feeling highly active. This scenario assumes a tiny UI (0.25 vCPU Fargate task running 24/7), 300,000 Lambda invocations per month, 30 GB of log ingestion, one idle NAT gateway, 10,000 Step Function executions, and 2 GB of DynamoDB storage.
+This tier represents the idle-cost floor for a Jungl3 instance with always-on baseline activity. It simulates a system during off-hours or a very low-traffic business, sufficient to prove the system is operational but without feeling highly active. This scenario assumes a tiny UI (0.25 vCPU Fargate task running 24/7), 300,000 Lambda invocations per month, 30 GB of log ingestion, one idle NAT gateway, 10,000 Step Function executions, and 2 GB of DynamoDB storage.
 
 ## Service Breakdown
 
@@ -45,7 +45,7 @@ Default-Realism
 
 ## Description
 
-This is the recommended default tier for a v1 Jungle3 installation, designed to provide a believable 'alive on day one' experience. It simulates a small to medium-sized enterprise with consistent, noticeable background activity, balancing plausibility with cost-effectiveness. This tier includes a single small UI (0.5 vCPU / 1GB Fargate), moderate background churn with 1 million Lambda invocations per month, 150 GB of log ingestion, a NAT gateway with 100GB of egress, 50,000 Step Function executions, a small OpenSearch instance, and 10 GB of DynamoDB storage with modest read capacity.
+This is the recommended default tier for a v1 Jungl3 installation, designed to provide a believable 'alive on day one' experience. It simulates a small to medium-sized enterprise with consistent, noticeable background activity, balancing plausibility with cost-effectiveness. This tier includes a single small UI (0.5 vCPU / 1GB Fargate), moderate background churn with 1 million Lambda invocations per month, 150 GB of log ingestion, a NAT gateway with 100GB of egress, 50,000 Step Function executions, a small OpenSearch instance, and 10 GB of DynamoDB storage with modest read capacity.
 
 ## Service Breakdown
 
@@ -99,7 +99,7 @@ Default to Provisioned Capacity with Auto Scaling for the mixed workload of cont
 
 ## Rationale
 
-The predictable baseline activity of Jungle3's background jobs exceeds the low break-even utilization thresholds (14.4% for reads, 28.9% for writes) where Provisioned Capacity becomes cheaper than On-Demand. Auto Scaling provides a cost-effective way to handle unpredictable bursts during demos without overprovisioning.
+The predictable baseline activity of Jungl3's background jobs exceeds the low break-even utilization thresholds (14.4% for reads, 28.9% for writes) where Provisioned Capacity becomes cheaper than On-Demand. Auto Scaling provides a cost-effective way to handle unpredictable bursts during demos without overprovisioning.
 
 ## Service Name
 
@@ -159,7 +159,7 @@ Do not enable Provisioned Concurrency (PC) broadly. Reserve it for a small, just
 
 ## Rationale
 
-PC has a high, fixed monthly baseline cost (e.g., ~$5.40/month per 512MB instance) that is often much higher than the on-demand cost. For most Jungle3 workloads, optimizing runtimes, using SnapStart for Java, and slimming packages will be more cost-effective than deploying PC.
+PC has a high, fixed monthly baseline cost (e.g., ~$5.40/month per 512MB instance) that is often much higher than the on-demand cost. For most Jungl3 workloads, optimizing runtimes, using SnapStart for Java, and slimming packages will be more cost-effective than deploying PC.
 
 ## Service Name
 
@@ -246,7 +246,7 @@ Observability
 
 ## Cost Impact
 
-Can multiply metrics and log ingestion costs by adding performance-event logs and custom metrics. For a default-realism Jungle3 instance, this can add an estimated $100–$330 per month.
+Can multiply metrics and log ingestion costs by adding performance-event logs and custom metrics. For a default-realism Jungl3 instance, this can add an estimated $100–$330 per month.
 
 ## Recommendation
 
@@ -359,7 +359,7 @@ Scheduled Teardowns / Auto-Stop
 
 Automatically destroying or stopping (pausing) cloud resources when not in use, typically on a schedule (e.g., outside business hours) or after a period of inactivity.
 
-## Applicability To Jungle3
+## Applicability To Jungl3
 
 A full teardown is incompatible with the 'always-on' demo, but an 'auto-stop/pause' mechanism is highly applicable and recommended as an optional feature for individual developer or temporary evaluation instances. This can reduce compute costs by 65-70% for those specific use cases by scaling Fargate tasks to zero while retaining stateful resources.
 
@@ -371,9 +371,9 @@ Aggressive Log Retention and Filtering
 
 Minimizing log volume by setting short retention periods (e.g., 3-7 days instead of indefinite) and filtering out verbose, low-value logs (e.g., DEBUG level) at the source.
 
-## Applicability To Jungle3
+## Applicability To Jungl3
 
-This is critical for Jungle3. An active synthetic environment is inherently 'chatty', and unmanaged logs can become the top cost driver. The key is to tier logging: preserve critical audit trails for plausibility while aggressively managing the retention and verbosity of background noise. This can save 50-90% of logging costs.
+This is critical for Jungl3. An active synthetic environment is inherently 'chatty', and unmanaged logs can become the top cost driver. The key is to tier logging: preserve critical audit trails for plausibility while aggressively managing the retention and verbosity of background noise. This can save 50-90% of logging costs.
 
 ## Pattern Name
 
@@ -383,7 +383,7 @@ Single-AZ Defaults
 
 Deploying resources in a single Availability Zone (AZ) instead of multiple AZs to avoid the cost of data replication and redundant resources (e.g., for RDS, NAT Gateways).
 
-## Applicability To Jungle3
+## Applicability To Jungl3
 
 This is an excellent fit for the v1 default. Enterprises commonly use Single-AZ for non-production environments to save costs, so this approach is both cost-effective and plausible. It can reduce costs for AZ-aware services by 30-50%.
 
@@ -395,9 +395,9 @@ Serverless-First Architecture
 
 Prioritizing the use of managed, serverless services (AWS Lambda, Fargate, DynamoDB On-Demand, EventBridge) over provisioned resources like EC2 to shift from paying for idle capacity to a pay-for-what-you-use model.
 
-## Applicability To Jungle3
+## Applicability To Jungl3
 
-This should be a foundational architectural principle. It enhances plausibility by reflecting modern enterprise design and fundamentally lowers the cost floor of the entire system by minimizing idle provisioned capacity. The microservices, event handlers, and background jobs in Jungle3 are prime candidates for serverless implementations.
+This should be a foundational architectural principle. It enhances plausibility by reflecting modern enterprise design and fundamentally lowers the cost floor of the entire system by minimizing idle provisioned capacity. The microservices, event handlers, and background jobs in Jungl3 are prime candidates for serverless implementations.
 
 ## Pattern Name
 
@@ -407,9 +407,9 @@ Fargate Spot / EC2 Spot for Non-Critical Work
 
 Using AWS's spare compute capacity (Spot Instances) at a steep discount (up to 70-90%) for workloads that can tolerate interruption.
 
-## Applicability To Jungle3
+## Applicability To Jungl3
 
-This is a perfect fit for specific components of Jungle3. The stateless background activity generators and synthetic persona jobs are ideal candidates. If a Spot task is terminated, the orchestrator can simply launch a new one, with minimal impact on perceived plausibility. This can save up to 70% on eligible compute costs.
+This is a perfect fit for specific components of Jungl3. The stateless background activity generators and synthetic persona jobs are ideal candidates. If a Spot task is terminated, the orchestrator can simply launch a new one, with minimal impact on perceived plausibility. This can save up to 70% on eligible compute costs.
 
 ## Pattern Name
 
@@ -419,14 +419,14 @@ Explicit 'Demo Mode' Toggles
 
 Exposing a high-level configuration parameter that allows the user to select a pre-canned set of cost-optimization settings (e.g., 'cost-optimized' vs. 'high-fidelity').
 
-## Applicability To Jungle3
+## Applicability To Jungl3
 
 Highly recommended. This pattern operationalizes all other recommendations and makes the trade-offs between cost and realism clear to the customer. It empowers users to align the instance's operating cost with their specific use case, whether it's a cheap developer sandbox or a high-fidelity pre-production testbed.
 
 
 # Customer Cost Perception Analysis
 
-Analysis of anecdotal and published FinOps benchmarks indicates that there are distinct monthly cost thresholds at which internal 'labs' or 'innovation' teams face scrutiny for AWS-native installations like Jungle3. A monthly cost under approximately $100 is generally considered easy to justify and flies under the radar. The first critical threshold is the **$200-$400 per month range**, which is a common decision boundary that often triggers a FinOps review, requiring the identification of an owner, proper cost-allocation tagging, and the establishment of budgets. The next level of scrutiny occurs between **$400-$1,000 per month**, a range that typically requires explicit sponsor approval and a demonstration of visible ROI. Costs exceeding **$1,000 per month** per sandbox are generally viewed as an ongoing operational cost rather than a temporary lab expense. This level of spending often invokes formal procurement processes, requiring purchase orders, contract reviews, and is usually considered unsustainable at scale without a central funding or chargeback mechanism in place. These thresholds inform the target price point for Jungle3's default configuration, which should aim to stay within the justifiable sub-$400 range to minimize procurement friction and avoid being killed in internal cost reviews.
+Analysis of anecdotal and published FinOps benchmarks indicates that there are distinct monthly cost thresholds at which internal 'labs' or 'innovation' teams face scrutiny for AWS-native installations like Jungl3. A monthly cost under approximately $100 is generally considered easy to justify and flies under the radar. The first critical threshold is the **$200-$400 per month range**, which is a common decision boundary that often triggers a FinOps review, requiring the identification of an owner, proper cost-allocation tagging, and the establishment of budgets. The next level of scrutiny occurs between **$400-$1,000 per month**, a range that typically requires explicit sponsor approval and a demonstration of visible ROI. Costs exceeding **$1,000 per month** per sandbox are generally viewed as an ongoing operational cost rather than a temporary lab expense. This level of spending often invokes formal procurement processes, requiring purchase orders, contract reviews, and is usually considered unsustainable at scale without a central funding or chargeback mechanism in place. These thresholds inform the target price point for Jungl3's default configuration, which should aim to stay within the justifiable sub-$400 range to minimize procurement friction and avoid being killed in internal cost reviews.
 
 # Networking Architecture Cost Comparison
 
@@ -491,7 +491,7 @@ Express workflows are substantially cheaper for short-lived, high-volume tasks. 
 
 # Encryption And Kms Cost Implications
 
-A detailed analysis of AWS Key Management Service (KMS) costs for a Jungle3 deployment reveals that the primary cost driver is the volume of API requests, not the number of encrypted objects. Based on 2026 pricing, each Customer-Managed Key (CMK) costs $1.00 per month, and API requests are billed at $0.03 per 10,000 requests, with a 20,000 request-per-month free tier.
+A detailed analysis of AWS Key Management Service (KMS) costs for a Jungl3 deployment reveals that the primary cost driver is the volume of API requests, not the number of encrypted objects. Based on 2026 pricing, each Customer-Managed Key (CMK) costs $1.00 per month, and API requests are billed at $0.03 per 10,000 requests, with a 20,000 request-per-month free tier.
 
 **S3 Encryption: SSE-KMS vs. SSE-S3 with Bucket Keys**
 The most critical cost decision involves S3 encryption. Standard Server-Side Encryption with KMS (SSE-KMS) makes a KMS API call for every single object read (Decrypt) or written (GenerateDataKey). For 100,000 objects written and 100,000 objects read, this would generate 200,000 KMS requests, costing approximately $0.60. In contrast, Server-Side Encryption with S3 Bucket Keys (SSE-S3) is designed to drastically reduce this cost. S3 requests a temporary, bucket-level key from KMS and caches it, using it to derive data keys for individual objects. This reduces KMS API traffic by up to 99%, making the cost for the same workload negligible, approaching $0.00.
@@ -504,11 +504,11 @@ Most other AWS services that integrate with KMS use efficient caching mechanisms
 *   **AWS Step Functions:** Similar to SQS, Step Functions uses a `KmsDataKeyReusePeriodSeconds` setting (default 5 minutes) to cache data keys, making the associated KMS costs minimal and time-based.
 
 **Key Design and Strategy:**
-The choice between AWS-managed keys (free) and CMKs ($1/month + API fees) is a trade-off between cost and control. While enterprises often require CMKs for compliance and auditing, the default for Jungle3 should prioritize cost-effectiveness. The recommended strategy is to default to AWS-managed keys for all services and mandate the use of SSE-S3 with Bucket Keys for all S3 buckets. CMK usage should be offered as an advanced, opt-in feature for enterprise customers, with clear documentation on the associated costs and the required `kms:CreateGrant` IAM permissions.
+The choice between AWS-managed keys (free) and CMKs ($1/month + API fees) is a trade-off between cost and control. While enterprises often require CMKs for compliance and auditing, the default for Jungl3 should prioritize cost-effectiveness. The recommended strategy is to default to AWS-managed keys for all services and mandate the use of SSE-S3 with Bucket Keys for all S3 buckets. CMK usage should be offered as an advanced, opt-in feature for enterprise customers, with clear documentation on the associated costs and the required `kms:CreateGrant` IAM permissions.
 
 # S3 Artifact Storage Strategy And Costs
 
-The monthly cost for storing artifacts in Amazon S3 for a single Jungle3 instance is highly dependent on the data lifecycle management strategy, data formats, and access patterns. A moderately active instance can expect to manage several types of artifacts:
+The monthly cost for storing artifacts in Amazon S3 for a single Jungl3 instance is highly dependent on the data lifecycle management strategy, data formats, and access patterns. A moderately active instance can expect to manage several types of artifacts:
 
 *   **Seed Data:** Small, frequently read datasets (e.g., 5,000 objects of 10 KB each) used by services and dashboards.
 *   **Case Attachments:** Larger files (e.g., 2 MB each) with high access when new, tapering off over time.
@@ -544,22 +544,22 @@ AWS Budgets, Alerts, and Automated Actions
 
 ## Recommendation
 
-Jungle3 should automatically create a set of AWS Budgets for each deployed instance to provide customers with immediate cost visibility and control. This includes setting up three distinct monthly cost budgets corresponding to the expected usage tiers: a 'Min' tier (e.g., $25/month), a 'Default' tier (e.g., $150/month), and a 'Max' guardrail tier (e.g., $500/month). For each budget, notifications should be configured to trigger on both forecasted and actual spend at 50%, 80%, and 100% thresholds. At the 100% threshold of the 'Max' budget, an automated action should be triggered to throttle the Jungle3 instance's activity and prevent further cost escalation.
+Jungl3 should automatically create a set of AWS Budgets for each deployed instance to provide customers with immediate cost visibility and control. This includes setting up three distinct monthly cost budgets corresponding to the expected usage tiers: a 'Min' tier (e.g., $25/month), a 'Default' tier (e.g., $150/month), and a 'Max' guardrail tier (e.g., $500/month). For each budget, notifications should be configured to trigger on both forecasted and actual spend at 50%, 80%, and 100% thresholds. At the 100% threshold of the 'Max' budget, an automated action should be triggered to throttle the Jungl3 instance's activity and prevent further cost escalation.
 
 ## Implementation Details
 
-This should be implemented directly within the Jungle3 CloudFormation template. Use `AWS::Budgets::Budget` resources to define the cost budgets. The notifications for these budgets should be directed to a per-stack `AWS::SNS::Topic`. This SNS topic will have subscriptions for the customer's owner email (provided as a CloudFormation parameter) and a central 'DemoSwitch' AWS Lambda function. This Lambda function, also deployed by the template, serves as the control plane for remediation. When it receives a 100% budget alert notification, it will perform a series of safe, reversible actions, such as updating an SSM Parameter to signal 'demo-mode', which causes synthetic load generators to reduce their frequency, disabling high-frequency EventBridge schedule rules, and reducing the provisioned read/write capacity on DynamoDB tables. This creates a closed-loop system where cost overruns are automatically contained.
+This should be implemented directly within the Jungl3 CloudFormation template. Use `AWS::Budgets::Budget` resources to define the cost budgets. The notifications for these budgets should be directed to a per-stack `AWS::SNS::Topic`. This SNS topic will have subscriptions for the customer's owner email (provided as a CloudFormation parameter) and a central 'DemoSwitch' AWS Lambda function. This Lambda function, also deployed by the template, serves as the control plane for remediation. When it receives a 100% budget alert notification, it will perform a series of safe, reversible actions, such as updating an SSM Parameter to signal 'demo-mode', which causes synthetic load generators to reduce their frequency, disabling high-frequency EventBridge schedule rules, and reducing the provisioned read/write capacity on DynamoDB tables. This creates a closed-loop system where cost overruns are automatically contained.
 
 
 # Key Risks And Tradeoffs
 
-The operational cost of Jungle3 presents several critical risks and trade-offs that directly impact its product strategy and customer adoption.
+The operational cost of Jungl3 presents several critical risks and trade-offs that directly impact its product strategy and customer adoption.
 
-1.  **Plausibility Collapse vs. Budget Overrun:** This is the central tension for Jungle3. If costs are cut too aggressively by minimizing background activity, log volume, and telemetry, the system risks 'plausibility collapse'—it will feel static and fake, undermining the core 'time to real' value proposition. Conversely, if the default configuration is too realistic and 'chatty,' the resulting monthly bill (potentially exceeding $400-$500) risks triggering rejection by customer FinOps teams, killing adoption before the product's value can be demonstrated. The v1 strategy must navigate this narrow channel by providing just enough activity to be believable while staying under key cost-perception thresholds.
+1.  **Plausibility Collapse vs. Budget Overrun:** This is the central tension for Jungl3. If costs are cut too aggressively by minimizing background activity, log volume, and telemetry, the system risks 'plausibility collapse'—it will feel static and fake, undermining the core 'time to real' value proposition. Conversely, if the default configuration is too realistic and 'chatty,' the resulting monthly bill (potentially exceeding $400-$500) risks triggering rejection by customer FinOps teams, killing adoption before the product's value can be demonstrated. The v1 strategy must navigate this narrow channel by providing just enough activity to be believable while staying under key cost-perception thresholds.
 
 2.  **Observability & Security vs. Cost:** Many AWS features that enhance observability and security are 'expensive-by-default.' Enabling CloudWatch Container Insights, full AWS X-Ray tracing, or VPC Flow Logs to CloudWatch can easily add hundreds of dollars to the monthly bill. The trade-off for v1 is to default these features to OFF or to minimal (e.g., 1% sampling for X-Ray) settings. This reduces the baseline cost but sacrifices deep, out-of-the-box visibility, potentially making the environment harder to debug or less appealing for security-focused use cases until these features are explicitly enabled.
 
-3.  **Resilience vs. Cost:** Standard enterprise best practices call for high availability via multi-Availability Zone (AZ) deployments. However, for services like NAT Gateways, RDS, and ElastiCache, a multi-AZ configuration effectively doubles the cost. The trade-off is to default Jungle3 to a cheaper, less resilient single-AZ deployment. This is a plausible configuration for a non-production sandbox but means the demo environment is not representative of a production HA architecture and is vulnerable to a single AZ failure.
+3.  **Resilience vs. Cost:** Standard enterprise best practices call for high availability via multi-Availability Zone (AZ) deployments. However, for services like NAT Gateways, RDS, and ElastiCache, a multi-AZ configuration effectively doubles the cost. The trade-off is to default Jungl3 to a cheaper, less resilient single-AZ deployment. This is a plausible configuration for a non-production sandbox but means the demo environment is not representative of a production HA architecture and is vulnerable to a single AZ failure.
 
 4.  **Enterprise Compliance vs. Cost:** Enterprise customers in regulated industries often require the use of Customer-Managed Keys (CMKs) in AWS KMS for auditable control over encryption. The trade-off is that CMKs incur costs ($1/month per key plus API request fees), whereas default AWS-managed keys are free. The recommended approach is to default to the free, secure option and offer CMK integration as an explicit, opt-in configuration for customers who require it for compliance, clearly documenting the associated costs.
 
@@ -573,9 +573,9 @@ The operational cost of Jungle3 presents several critical risks and trade-offs t
 
 *   **4. Enforce Service-Level Optimizations:** Default to DynamoDB Provisioned Capacity with Auto Scaling and a 'Zero GSI' policy. Use a hybrid Step Functions model (Standard for parent workflows, Express for high-volume child simulations). Standardize Lambda functions on 128-512MB memory on the arm64 architecture. Mandate S3 lifecycle policies (Standard -> IA -> Glacier) and the use of Parquet format for analytics data.
 
-*   **5. Ship Governance-as-Infrastructure:** The v1 template is incomplete unless it automatically creates: a) an AWS Budget preset to ~$200/month with alerts wired to an SNS topic; b) a mandatory tagging schema (`Jungle3:account`, `Stack`, `Owner`, etc.) on all resources; and c) a per-stack CloudWatch Dashboard visualizing the top cost drivers (log ingest, NAT egress, compute hours).
+*   **5. Ship Governance-as-Infrastructure:** The v1 template is incomplete unless it automatically creates: a) an AWS Budget preset to ~$200/month with alerts wired to an SNS topic; b) a mandatory tagging schema (`Jungl3:account`, `Stack`, `Owner`, etc.) on all resources; and c) a per-stack CloudWatch Dashboard visualizing the top cost drivers (log ingest, NAT egress, compute hours).
 
-*   **6. Build a 'Demo-Mode Switchboard':** Implement a simple control plane (e.g., Lambda triggered by EventBridge) that listens for budget or metric alarms and can automatically throttle the Jungle3 instance into a low-power mode by reducing synthetic job frequency, scaling down compute, and lowering DynamoDB capacity.
+*   **6. Build a 'Demo-Mode Switchboard':** Implement a simple control plane (e.g., Lambda triggered by EventBridge) that listens for budget or metric alarms and can automatically throttle the Jungl3 instance into a low-power mode by reducing synthetic job frequency, scaling down compute, and lowering DynamoDB capacity.
 
 *   **7. What to Defer Post-v1:** Defer full multi-AZ resilience as a default, using OpenSearch for logs, and implementing granular, per-API log filtering. Focus v1 on perfecting the cost-optimized baseline.
 

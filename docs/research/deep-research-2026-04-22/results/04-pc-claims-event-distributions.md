@@ -1,8 +1,8 @@
-# Triangulating P&C Claims Data: Grounding Jungle3's Synthetic Environment in Empirical Reality
+# Triangulating P&C Claims Data: Grounding Jungl3's Synthetic Environment in Empirical Reality
 
 ## Executive Summary
 
-To prevent plausibility collapse in Jungle3's v1 P&C claims environment, synthetic data generation must be anchored in reconciled empirical benchmarks. Analysis of statutory filings and vendor data reveals stark operational realities: property claims now average 44 days to close [1], auto total loss frequencies have hit a record 23.1% [2], and up to 51% of homeowner claims close without payment [3]. Furthermore, a "lived-in" auto claim requires a median of 21 distinct communications [4]. Because vendor data (e.g., CCC, Verisk) inherently skews toward severe or litigated claims, Jungle3 must reconcile these operational metrics against NAIC statutory baselines to maintain realistic overall frequencies and cost ceilings under ADR 0007.
+To prevent plausibility collapse in Jungl3's v1 P&C claims environment, synthetic data generation must be anchored in reconciled empirical benchmarks. Analysis of statutory filings and vendor data reveals stark operational realities: property claims now average 44 days to close [1], auto total loss frequencies have hit a record 23.1% [2], and up to 51% of homeowner claims close without payment [3]. Furthermore, a "lived-in" auto claim requires a median of 21 distinct communications [4]. Because vendor data (e.g., CCC, Verisk) inherently skews toward severe or litigated claims, Jungl3 must reconcile these operational metrics against NAIC statutory baselines to maintain realistic overall frequencies and cost ceilings under ADR 0007.
 
 ## Source Inventory & Reconciliation Methodology
 
@@ -10,7 +10,7 @@ To prevent plausibility collapse in Jungle3's v1 P&C claims environment, synthet
 
 To generate defendable parameters, we must reconcile conflicting data sources. Statutory data provides the ground truth for macro frequencies, while vendor data provides the micro-operational texture required for plausibility. 
 
-| Source Category | Key Providers | Usage in Jungle3 v1 | Access/Data Quality Constraints |
+| Source Category | Key Providers | Usage in Jungl3 v1 | Access/Data Quality Constraints |
 | :--- | :--- | :--- | :--- |
 | **Statutory/Regulatory** | NAIC Auto Database [5], State DOIs | Baseline claim frequencies, macro outcome mixes. | High credibility, but lags by 1-2 years. Lacks operational workflow granularity. |
 | **Claims Processing Vendors** | CCC Intelligent Solutions [2], Verisk [6] | Auto total loss rates, repair cycle times, property severity. | Skews severe. Vendors see claims that require their software; minor/fast-track claims are underrepresented. |
@@ -21,7 +21,7 @@ To generate defendable parameters, we must reconcile conflicting data sources. S
 **Reconciliation Method:** 
 1. **Weights:** Weight NAIC data at 80% for top-level arrival frequencies. Weight vendor data (CCC, Five Sigma) at 90% for artifact density and cycle times.
 2. **Recency:** Prioritize 2024-2026 data to capture post-pandemic supply chain inflation and rising litigation trends [10].
-3. **Data Quality Warning:** Data regarding "partial denials" and "reopened claims" is notoriously weak across all sources, as carriers classify these differently. Jungle3 should use conservative point estimates for these edge cases.
+3. **Data Quality Warning:** Data regarding "partial denials" and "reopened claims" is notoriously weak across all sources, as carriers classify these differently. Jungl3 should use conservative point estimates for these edge cases.
 
 ## Defendable Claim Frequencies & Arrival Parameters
 
@@ -85,7 +85,7 @@ The parameters above assume a standard mid-latitude US book.
 * **Geography Sensitivity:** If simulating a coastal/Florida book, property denial rates should be pushed to the 51% upper bound [3], and storm-surge multipliers must be injected into the NHPP.
 * **Replication Instructions:** To update these parameters in the future, operators should query the annual NAIC Auto Insurance Database Report for frequency shifts, and the annual CCC Crash Course report for total loss and severity updates.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 * **Implement LOB-specific outcome routing:** Hardcode the Step Functions to force a 23.1% total loss rate for auto claims and a 45% zero-payment/denial rate for property claims to match 2024-2026 realities.
 * **Cap artifact generation:** Constrain the data seeder to generate a median of 21 communications per auto claim [4] to maintain realism while strictly adhering to the ADR 0007 $100/month infrastructure cap.

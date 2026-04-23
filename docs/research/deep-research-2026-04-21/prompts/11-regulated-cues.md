@@ -4,7 +4,7 @@ See `00-context.md` for product framing.
 
 ## Research questions
 
-Jungle3 wants the *atmosphere* of a regulated environment (audit trails, approvals, separation of duties, retention, immutability, compliance-adjacent behavior) without committing to the cost and complexity of actual regulatory compliance in v1. Research which regulated-environment cues meaningfully improve realism and which are pure drag.
+Jungl3 wants the *atmosphere* of a regulated environment (audit trails, approvals, separation of duties, retention, immutability, compliance-adjacent behavior) without committing to the cost and complexity of actual regulatory compliance in v1. Research which regulated-environment cues meaningfully improve realism and which are pure drag.
 
 Investigate:
 
@@ -22,10 +22,10 @@ Investigate:
 
 7. **Which compliance-adjacent behaviors meaningfully improve realism.** Rank: audit log, actor attribution, approvals, SoD, immutability, retention, access logs, signed exports, change management tickets, break-glass flows.
 
-8. **Which are pure drag in v1.** Which commonly-included regulated-system behaviors add maintenance burden without improving plausibility for Jungle3's target audience?
+8. **Which are pure drag in v1.** Which commonly-included regulated-system behaviors add maintenance burden without improving plausibility for Jungl3's target audience?
 
 9. **Cross-industry patterns.** Are there cues that are recognizable across many regulated industries (healthcare, finance, insurance, government) vs industry-specific? Favor cross-industry cues for v1.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

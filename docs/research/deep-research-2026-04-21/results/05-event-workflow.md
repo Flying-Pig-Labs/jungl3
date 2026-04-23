@@ -1,10 +1,10 @@
 # Executive Summary
 
-To deliver on its core 'time to real' value proposition, Jungle3 v1 must create a believable, 'operationally alive' enterprise system from the moment of deployment to prevent 'plausibility collapse'. Research indicates this is best achieved not through a multitude of features, but by implementing a minimal, high-impact set of event-driven and workflow patterns that make the system's internal workings, resilience, and failure handling tangible to an operator. The recommended strategy is to build the system on a foundation of essential patterns: State-Machine-Driven Workflows (using AWS Step Functions for visibility), Retries with Backoff, Dead-Letter Queues (SQS), the Transactional Outbox pattern (for data integrity), Scheduled Jobs (EventBridge Scheduler), and Manual-Review Loops. These patterns should be implemented using canonical, serverless-first AWS services (Step Functions, SQS, EventBridge, Lambda, DynamoDB), which are inexpensive at idle (estimated ~$6-10/month for a light-activity profile), easy for customers to inspect, and simple to package via CloudFormation. This architectural foundation is then brought to life by a 'plausibility engine' that generates synthetic activity using realistic statistical models (e.g., lognormal distributions for task times), regional calendars, and varied personas. The system's aliveness is made manifest through a pre-configured CloudWatch dashboard surfacing non-zero queue depths, recent event feeds, and a low but non-zero error rate. By focusing on these core patterns of work, resilience, and observable failure, Jungle3 can provide a system that feels robust and enterprise-grade from day one.
+To deliver on its core 'time to real' value proposition, Jungl3 v1 must create a believable, 'operationally alive' enterprise system from the moment of deployment to prevent 'plausibility collapse'. Research indicates this is best achieved not through a multitude of features, but by implementing a minimal, high-impact set of event-driven and workflow patterns that make the system's internal workings, resilience, and failure handling tangible to an operator. The recommended strategy is to build the system on a foundation of essential patterns: State-Machine-Driven Workflows (using AWS Step Functions for visibility), Retries with Backoff, Dead-Letter Queues (SQS), the Transactional Outbox pattern (for data integrity), Scheduled Jobs (EventBridge Scheduler), and Manual-Review Loops. These patterns should be implemented using canonical, serverless-first AWS services (Step Functions, SQS, EventBridge, Lambda, DynamoDB), which are inexpensive at idle (estimated ~$6-10/month for a light-activity profile), easy for customers to inspect, and simple to package via CloudFormation. This architectural foundation is then brought to life by a 'plausibility engine' that generates synthetic activity using realistic statistical models (e.g., lognormal distributions for task times), regional calendars, and varied personas. The system's aliveness is made manifest through a pre-configured CloudWatch dashboard surfacing non-zero queue depths, recent event feeds, and a low but non-zero error rate. By focusing on these core patterns of work, resilience, and observable failure, Jungl3 can provide a system that feels robust and enterprise-grade from day one.
 
 # Decision Ready Recommendations
 
-Based on the comprehensive research into event and workflow patterns, the following actionable recommendations are provided for Jungle3 leadership:
+Based on the comprehensive research into event and workflow patterns, the following actionable recommendations are provided for Jungl3 leadership:
 
 *   **V1 / Do-Now (Essential Patterns):** The immediate focus for the v1 build must be on a core set of patterns that provide the highest 'aliveness-per-dollar' and are critical for operator trust.
     1.  **State-Machine-Driven Workflows (Step Functions):** Implement the primary insurance case lifecycle using AWS Step Functions Standard for its unparalleled visibility, durability, and built-in audit history.
@@ -201,7 +201,7 @@ Idempotency
 
 ## Justification
 
-While critical for correctness in a high-volume production system, the occasional duplicate processing in a v1 Jungle3 instance is unlikely to cause 'plausibility collapse'. Implementing idempotency using tools like AWS Lambda Powertools adds complexity that can be deferred. Correctly handled idempotent operations are also invisible by design, offering low aliveness impact.
+While critical for correctness in a high-volume production system, the occasional duplicate processing in a v1 Jungl3 instance is unlikely to cause 'plausibility collapse'. Implementing idempotency using tools like AWS Lambda Powertools adds complexity that can be deferred. Correctly handled idempotent operations are also invisible by design, offering low aliveness impact.
 
 ## Future Value
 
@@ -241,7 +241,7 @@ While sending a webhook to a simulated 'external partner' makes the system feel 
 
 ## Future Value
 
-Demonstrates the system's ability to integrate with a larger ecosystem. Implementing this with a robust retry strategy shows production-readiness and expands the scope of believable scenarios Jungle3 can model.
+Demonstrates the system's ability to integrate with a larger ecosystem. Implementing this with a robust retry strategy shows production-readiness and expands the scope of believable scenarios Jungl3 can model.
 
 
 # Deferred Patterns V1
@@ -291,7 +291,7 @@ AWS Step Functions (Standard)
 
 ## Rationale
 
-Step Functions Standard provides durable, long-running, and visually debuggable workflows, which is highly valuable for creating believable enterprise processes in Jungle3. It is preferred over Express for v1 because its full state history and visual graph are critical for operator visibility and plausibility, despite being priced per state transition.
+Step Functions Standard provides durable, long-running, and visually debuggable workflows, which is highly valuable for creating believable enterprise processes in Jungl3. It is preferred over Express for v1 because its full state history and visual graph are critical for operator visibility and plausibility, despite being priced per state transition.
 
 ## Inspectability Details
 
@@ -363,7 +363,7 @@ AWS Step Functions with Task Tokens
 
 ## Rationale
 
-This is the canonical AWS-native pattern for HITL. A Step Function Standard workflow can pause indefinitely using a `.waitForTaskToken` integration, incurring no cost while waiting. This provides excellent durability and visibility, perfectly aligning with Jungle3's goals.
+This is the canonical AWS-native pattern for HITL. A Step Function Standard workflow can pause indefinitely using a `.waitForTaskToken` integration, incurring no cost while waiting. This provides excellent durability and visibility, perfectly aligning with Jungl3's goals.
 
 ## Inspectability Details
 
@@ -589,7 +589,7 @@ High. The state of the entire workflow is managed and durably persisted by the A
 
 ## Operator Visibility
 
-Excellent. The AWS Management Console provides a built-in, visual graph of the state machine for every single execution. Operators can see the exact current state of any case (e.g., 'Paused at Awaiting_Approval'), the full history of the path it has taken, and the specific input and output data for each step. This provides immediate, powerful, and 'plausible' enterprise-grade visibility with zero custom development required, which is a core tenet of Jungle3.
+Excellent. The AWS Management Console provides a built-in, visual graph of the state machine for every single execution. Operators can see the exact current state of any case (e.g., 'Paused at Awaiting_Approval'), the full history of the path it has taken, and the specific input and output data for each step. This provides immediate, powerful, and 'plausible' enterprise-grade visibility with zero custom development required, which is a core tenet of Jungl3.
 
 ## Auditability
 
@@ -605,7 +605,7 @@ Very Low. The pricing model for Step Functions Standard is based on the number o
 
 ## Recommendation Summary
 
-AWS Step Functions with Task Tokens is the ideal primary choice for Jungle3's HITL workflows. Its strategic fit is perfect: it delivers enterprise-grade visibility and auditability out-of-the-box, directly supporting the 'plausibility' and 'time to real' value propositions. Crucially, as a serverless, native AWS service, it packages cleanly into the product's CloudFormation distribution model, minimizing installation friction and operational cost for the customer. The pay-per-transition model with no cost for paused states is perfectly suited for the often-idle nature of human approval workflows. The manageable learning curve of ASL is a small price to pay for these overwhelming strategic benefits.
+AWS Step Functions with Task Tokens is the ideal primary choice for Jungl3's HITL workflows. Its strategic fit is perfect: it delivers enterprise-grade visibility and auditability out-of-the-box, directly supporting the 'plausibility' and 'time to real' value propositions. Crucially, as a serverless, native AWS service, it packages cleanly into the product's CloudFormation distribution model, minimizing installation friction and operational cost for the customer. The pay-per-transition model with no cost for paused states is perfectly suited for the often-idle nature of human approval workflows. The manageable learning curve of ASL is a small price to pay for these overwhelming strategic benefits.
 
 
 # Observable Signals Of Life
@@ -780,7 +780,7 @@ Variability will be generated using appropriate statistical distributions to mim
 Believable seed data is critical for avoiding plausibility collapse:
 - **Data Generation:** The **Faker** Python package will be used to generate localized data, including names, addresses, and company details, using its specific locale features (e.g., `Faker('ja_JP')`).
 - **Naming Conventions:** For US-based personas, names will be sampled from the Social Security Administration's (SSA) public data on popular baby names for a given birth year, ensuring a 25-year-old persona doesn't have a name popular in the 1940s.
-- **Uniqueness:** Faker's `unique` property will be used to guarantee the uniqueness of critical identifiers like email addresses, phone numbers, and policy numbers within a single Jungle3 instance.
+- **Uniqueness:** Faker's `unique` property will be used to guarantee the uniqueness of critical identifiers like email addresses, phone numbers, and policy numbers within a single Jungl3 instance.
 
 ## Cost And Noise Tuning Knobs
 
@@ -810,7 +810,7 @@ A Dead-Letter Queue (DLQ) must be configured at every asynchronous process bound
 
 ## Visibility Artifacts
 
-To make failures visible, Jungle3 will ship with a pre-configured CloudWatch Dashboard named `[Jungle3] System Health & Processing Exceptions`. This dashboard will feature key metrics and alarms, including: an alarm if `NumberOfMessagesVisible` for any DLQ is greater than 0 for 5 minutes; an alarm on `ApproximateAgeOfOldestMessage` for main queues to detect stalled consumers; and alarms on Step Function `ExecutionsFailed` and `ExecutionsTimedOut`. To enhance plausibility, messages in the DLQ will be enriched with context, including a human-readable failure reason and a history of delivery attempts.
+To make failures visible, Jungl3 will ship with a pre-configured CloudWatch Dashboard named `[Jungl3] System Health & Processing Exceptions`. This dashboard will feature key metrics and alarms, including: an alarm if `NumberOfMessagesVisible` for any DLQ is greater than 0 for 5 minutes; an alarm on `ApproximateAgeOfOldestMessage` for main queues to detect stalled consumers; and alarms on Step Function `ExecutionsFailed` and `ExecutionsTimedOut`. To enhance plausibility, messages in the DLQ will be enriched with context, including a human-readable failure reason and a history of delivery attempts.
 
 ## Interaction Rules
 
@@ -848,11 +848,11 @@ For use cases that require strict ordering of events (e.g., all updates for a si
 
 ## Tactical Per Message Reprocessing
 
-The v1 strategy for tactical reprocessing focuses on individual failed messages using Amazon SQS Dead-Letter Queues (DLQs) and the SQS Redrive feature. This mechanism is intended for correcting isolated processing failures, such as a single event failing due to a transient downstream error. The operator-facing UI within the Jungle3 console will provide a view of all DLQs with non-zero message counts. From this UI, an operator can inspect the payload and attributes of a failed message to diagnose the issue. To initiate reprocessing, the operator uses a simple form to redrive selected messages back to the source queue. This action requires the operator to provide a mandatory 'Reason for Redrive', which is then attached to the message as a custom SQS attribute (`jungle3-redrive-details`) to provide a clear audit trail for the re-processed message.
+The v1 strategy for tactical reprocessing focuses on individual failed messages using Amazon SQS Dead-Letter Queues (DLQs) and the SQS Redrive feature. This mechanism is intended for correcting isolated processing failures, such as a single event failing due to a transient downstream error. The operator-facing UI within the Jungl3 console will provide a view of all DLQs with non-zero message counts. From this UI, an operator can inspect the payload and attributes of a failed message to diagnose the issue. To initiate reprocessing, the operator uses a simple form to redrive selected messages back to the source queue. This action requires the operator to provide a mandatory 'Reason for Redrive', which is then attached to the message as a custom SQS attribute (`jungle3-redrive-details`) to provide a clear audit trail for the re-processed message.
 
 ## Strategic Time Window Replay
 
-For strategic recovery from systemic issues, the v1 strategy utilizes Amazon EventBridge Archives and its native Replay feature. This allows an operator to replay all events that passed through the main event bus within a specific, user-defined time window. This is the designated recovery method for incidents like a buggy deployment that corrupted event processing for a period of time. After a fix is deployed, the operator can use the Jungle3 console to start a new replay by providing a name, start time, and end time. This action resends all events from that window to the original event bus, allowing the corrected services to process them properly. The system provides clear warnings about the powerful nature of this tool and its potential to generate significant system load.
+For strategic recovery from systemic issues, the v1 strategy utilizes Amazon EventBridge Archives and its native Replay feature. This allows an operator to replay all events that passed through the main event bus within a specific, user-defined time window. This is the designated recovery method for incidents like a buggy deployment that corrupted event processing for a period of time. After a fix is deployed, the operator can use the Jungl3 console to start a new replay by providing a name, start time, and end time. This action resends all events from that window to the original event bus, allowing the corrected services to process them properly. The system provides clear warnings about the powerful nature of this tool and its potential to generate significant system load.
 
 ## Safety Guardrails
 
@@ -860,11 +860,11 @@ A set of non-negotiable safety controls are mandated for v1 to prevent data corr
 
 ## Storage And Retention Policy
 
-Jungle3 will be configured with a multi-tiered storage strategy for events to balance cost, replayability, and auditability. The first tier consists of Amazon SQS Dead-Letter Queues (DLQs) for short-term holding of failed messages, with a retention period of 14 days to allow ample time for operator intervention. The second tier is Amazon EventBridge Archives, which provides medium-term, replayable storage for all events on the main bus with a default retention of 90 days. The third tier is a long-term, append-only audit log in an Amazon S3 bucket, intended for compliance and non-repudiation. An EventBridge rule sends a copy of every event to a Kinesis Firehose stream, which writes batched, immutable records to S3 with a default retention of one year and S3 Object Lock enabled.
+Jungl3 will be configured with a multi-tiered storage strategy for events to balance cost, replayability, and auditability. The first tier consists of Amazon SQS Dead-Letter Queues (DLQs) for short-term holding of failed messages, with a retention period of 14 days to allow ample time for operator intervention. The second tier is Amazon EventBridge Archives, which provides medium-term, replayable storage for all events on the main bus with a default retention of 90 days. The third tier is a long-term, append-only audit log in an Amazon S3 bucket, intended for compliance and non-repudiation. An EventBridge rule sends a copy of every event to a Kinesis Firehose stream, which writes batched, immutable records to S3 with a default retention of one year and S3 Object Lock enabled.
 
 ## Observability For Replays
 
-To provide clear visibility into replay activities, Jungle3 will include a pre-configured CloudWatch Dashboard named 'Jungle3 - Event Flow Health'. This dashboard will track key metrics such as `ApproximateNumberOfMessagesVisible` for all DLQs and EventBridge Replay metrics like `ReplayStarted`, `ReplayCompleted`, and `ReplayFailed`. Pre-configured CloudWatch Alarms will provide proactive notifications, including a high-priority alarm if any DLQ has messages for more than 15 minutes and an informational alarm whenever a replay is initiated or completed. Furthermore, all services must emit structured JSON logs. When processing a replayed event, the log entry must include the `replay-name` from EventBridge or the `jungle3-redrive-details` from SQS, enabling easy searching and correlation in CloudWatch Logs Insights.
+To provide clear visibility into replay activities, Jungl3 will include a pre-configured CloudWatch Dashboard named 'Jungl3 - Event Flow Health'. This dashboard will track key metrics such as `ApproximateNumberOfMessagesVisible` for all DLQs and EventBridge Replay metrics like `ReplayStarted`, `ReplayCompleted`, and `ReplayFailed`. Pre-configured CloudWatch Alarms will provide proactive notifications, including a high-priority alarm if any DLQ has messages for more than 15 minutes and an informational alarm whenever a replay is initiated or completed. Furthermore, all services must emit structured JSON logs. When processing a replayed event, the log entry must include the `replay-name` from EventBridge or the `jungle3-redrive-details` from SQS, enabling easy searching and correlation in CloudWatch Logs Insights.
 
 
 # Webhook Integration Patterns
@@ -875,11 +875,11 @@ The recommended pattern for receiving webhooks from simulated third-party provid
 
 ## Outbound Webhook Pattern
 
-For sending webhooks from Jungle3 to customer-defined endpoints, the recommended pattern utilizes a dedicated Amazon SQS queue for each unique destination endpoint. When a business event triggers an outbound webhook, the event payload is placed into the specific SQS queue associated with its target. A dedicated worker process (e.g., an AWS Lambda function) consumes messages from this queue, attempts delivery to the customer's endpoint, and records the outcome. This queue-based approach provides a durable buffer, isolates delivery failures between different endpoints, and allows for precise control over the delivery, retry, and rate-limiting logic for each destination independently.
+For sending webhooks from Jungl3 to customer-defined endpoints, the recommended pattern utilizes a dedicated Amazon SQS queue for each unique destination endpoint. When a business event triggers an outbound webhook, the event payload is placed into the specific SQS queue associated with its target. A dedicated worker process (e.g., an AWS Lambda function) consumes messages from this queue, attempts delivery to the customer's endpoint, and records the outcome. This queue-based approach provides a durable buffer, isolates delivery failures between different endpoints, and allows for precise control over the delivery, retry, and rate-limiting logic for each destination independently.
 
 ## Retry And Circuit Breaker Logic
 
-The retry policy for outbound webhooks uses exponential backoff with full jitter to prevent thundering herd problems during endpoint recovery. Failures are classified: `5xx` server errors and timeouts are retriable, while most `4xx` client errors are treated as permanent failures and sent to a Dead-Letter Queue (DLQ). A per-endpoint circuit breaker is implemented to protect both Jungle3 and the customer's endpoint from cascading failures. If a specific endpoint exceeds a failure threshold (e.g., >50% 5xx errors in 5 minutes), the circuit breaker 'opens,' temporarily pausing delivery attempts to that endpoint and either queuing new events or sending them directly to the DLQ. Events that exhaust all retry attempts are also moved to the DLQ for manual operator inspection and potential replay.
+The retry policy for outbound webhooks uses exponential backoff with full jitter to prevent thundering herd problems during endpoint recovery. Failures are classified: `5xx` server errors and timeouts are retriable, while most `4xx` client errors are treated as permanent failures and sent to a Dead-Letter Queue (DLQ). A per-endpoint circuit breaker is implemented to protect both Jungl3 and the customer's endpoint from cascading failures. If a specific endpoint exceeds a failure threshold (e.g., >50% 5xx errors in 5 minutes), the circuit breaker 'opens,' temporarily pausing delivery attempts to that endpoint and either queuing new events or sending them directly to the DLQ. Events that exhaust all retry attempts are also moved to the DLQ for manual operator inspection and potential replay.
 
 ## Attempt Storage And Schema
 
@@ -887,7 +887,7 @@ A comprehensive record of all webhook delivery attempts is stored to provide ful
 
 ## Operator Console Design
 
-Inspired by platforms like Stripe and Twilio, Jungle3 will feature a rich, operator-facing console for webhook management. This console will provide a summary list of all configured endpoints with their current success rates and DLQ counts. For each endpoint, an operator can drill down into a detailed delivery history, viewing a timeline of every attempt for a specific event, including timestamps, response codes, and the 'visible lag' between event generation and successful delivery. The console will also feature a robust DLQ management interface for inspecting, exporting, and replaying failed events (individually or in bulk). A key feature is a 'realism' slider that allows the operator to tune the simulation by adjusting injected error rates and processing delays.
+Inspired by platforms like Stripe and Twilio, Jungl3 will feature a rich, operator-facing console for webhook management. This console will provide a summary list of all configured endpoints with their current success rates and DLQ counts. For each endpoint, an operator can drill down into a detailed delivery history, viewing a timeline of every attempt for a specific event, including timestamps, response codes, and the 'visible lag' between event generation and successful delivery. The console will also feature a robust DLQ management interface for inspecting, exporting, and replaying failed events (individually or in bulk). A key feature is a 'realism' slider that allows the operator to tune the simulation by adjusting injected error rates and processing delays.
 
 
 # Advanced Patterns V1 Approach
@@ -919,7 +919,7 @@ The v1 fan-out implementation using SNS and SQS is already a production-grade, h
 
 The CloudFormation template is designed for minimal friction and maximum clarity. 
 - **Parameters:** A minimal set of parameters is exposed: `EnvironmentName` (default: 'eval'), `AdminContactEmail`, `InstancePrefix` (default: `AWS::StackName`), and `EnableSeedData` (default: 'Yes'). An optional `GrantMarketplaceRoleArn` allows for opt-in seller automation.
-- **Outputs:** Outputs are purposeful and provide immediate access without exposing secrets. They include `Jungle3ConsoleUrl` (application URL), `Jungle3PlatformDashboardUrl` (direct link to the main CloudWatch dashboard), `Jungle3RunbookS3Url` (link to Quick Start guide), and `Jungle3AlarmSNSTopicArn`.
+- **Outputs:** Outputs are purposeful and provide immediate access without exposing secrets. They include `Jungl3ConsoleUrl` (application URL), `Jungl3PlatformDashboardUrl` (direct link to the main CloudWatch dashboard), `Jungl3RunbookS3Url` (link to Quick Start guide), and `Jungl3AlarmSNSTopicArn`.
 - **Resource Naming & Tagging:** A consistent naming pattern (`jungl3-${EnvironmentName}-${AWS::StackName}-${service-short}`) and mandatory tagging (`jungl3:product`, `environment`, `owner`, `version`) are enforced on all resources for cost allocation and automation.
 
 ## Default Observability Setup
@@ -953,9 +953,9 @@ The system is deployed with a secure-by-default posture.
 
 An operator can validate the deployment's success and aliveness in under 10 minutes by following this checklist:
 1.  Verify CloudFormation stack status is `CREATE_COMPLETE`.
-2.  Click the `Jungle3ConsoleUrl` from the outputs and confirm the admin landing page loads.
+2.  Click the `Jungl3ConsoleUrl` from the outputs and confirm the admin landing page loads.
 3.  Run the 'First 10 Minutes' SSM Automation or a one-click smoke test.
-4.  Open the `Jungle3PlatformDashboardUrl` and confirm business activity widgets show recent transactions.
+4.  Open the `Jungl3PlatformDashboardUrl` and confirm business activity widgets show recent transactions.
 5.  Open CloudWatch Logs and run a saved query to check for initial errors.
 6.  Check the `SeedDataStatusParameter` in SSM Parameter Store to confirm `seeded:true`.
 7.  Confirm in CloudTrail that the `CreateStack` API call was recorded.
@@ -976,7 +976,7 @@ Based on pricing in the US-East (N. Virginia) region, the estimated monthly cost
 
 ## Regional Cost Variations
 
-The cost of the Jungle3 stack varies by AWS region due to differences in service pricing. An illustrative analysis shows that deploying in EU-Central (Frankfurt) would result in an approximate 10% cost increase, leading to an idle cost of ~$6.96/month and a light-activity cost of ~$10.16/month. Deploying in a more expensive region like AP-Northeast (Tokyo) would result in an approximate 20% increase, with an idle cost of ~$7.60/month and a light-activity cost of ~$11.09/month. These variations are primarily driven by differences in pricing for Step Functions, CloudWatch, SQS, and SNS.
+The cost of the Jungl3 stack varies by AWS region due to differences in service pricing. An illustrative analysis shows that deploying in EU-Central (Frankfurt) would result in an approximate 10% cost increase, leading to an idle cost of ~$6.96/month and a light-activity cost of ~$10.16/month. Deploying in a more expensive region like AP-Northeast (Tokyo) would result in an approximate 20% increase, with an idle cost of ~$7.60/month and a light-activity cost of ~$11.09/month. These variations are primarily driven by differences in pricing for Step Functions, CloudWatch, SQS, and SNS.
 
 ## Sensitivity Analysis And Tuning
 
@@ -984,7 +984,7 @@ Several key configuration 'knobs' significantly affect the monthly cost. SQS pol
 
 ## Cost Control Recommendations
 
-To maintain low operational costs for customers, a set of default configurations and guardrails is recommended. The Jungle3 CloudFormation template should default to using Step Functions Standard for workflows with wait states, enable 20-second long polling for SQS with a limited number of pollers, set a default CloudWatch log retention of 30 days, and minimize default SNS fan-out. Crucially, the template should include pre-configured AWS Budgets alarms to notify customers if costs exceed a predefined threshold, preventing unexpected bills.
+To maintain low operational costs for customers, a set of default configurations and guardrails is recommended. The Jungl3 CloudFormation template should default to using Step Functions Standard for workflows with wait states, enable 20-second long polling for SQS with a limited number of pollers, set a default CloudWatch log retention of 30 days, and minimize default SNS fan-out. Crucially, the template should include pre-configured AWS Budgets alarms to notify customers if costs exceed a predefined threshold, preventing unexpected bills.
 
 ## Red Flags For Cost Overruns
 
@@ -1001,7 +1001,7 @@ AWS Prescriptive Guidance
 
 The key pattern is the 'Transactional Outbox Pattern'. The primary takeaway is that this pattern reliably solves the 'dual-write' problem in microservices, where a service needs to atomically update its own database and publish an event to notify other services of the change. By writing the business state change and the outbound event record into an 'outbox' table within the same single database transaction, it guarantees that the event will be published if and only if the state change is successfully committed. A separate, asynchronous publisher process then reads from the outbox table and sends the events to a message bus.
 
-## Relevance To Jungle3
+## Relevance To Jungl3
 
-This pattern is critically relevant to Jungle3's goal of preventing 'plausibility collapse'. A system that loses events or has inconsistencies between its internal database state and the events it communicates to other services feels buggy and fake. For example, if a claim is approved in the database but the 'Claim Approved' event is never published, the system's integrity is compromised. By implementing the Transactional Outbox pattern by default, Jungle3 ensures a high degree of data consistency and reliability, which are fundamental characteristics of a real, production-grade enterprise system. It provides a robust foundation that makes the entire event-driven architecture believable and trustworthy.
+This pattern is critically relevant to Jungl3's goal of preventing 'plausibility collapse'. A system that loses events or has inconsistencies between its internal database state and the events it communicates to other services feels buggy and fake. For example, if a claim is approved in the database but the 'Claim Approved' event is never published, the system's integrity is compromised. By implementing the Transactional Outbox pattern by default, Jungl3 ensures a high degree of data consistency and reliability, which are fundamental characteristics of a real, production-grade enterprise system. It provides a robust foundation that makes the entire event-driven architecture believable and trustworthy.
 

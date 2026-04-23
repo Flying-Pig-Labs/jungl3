@@ -1,33 +1,33 @@
 # Executive Summary
 
-After a comprehensive evaluation of six candidate domains, the definitive recommendation is to anchor Jungle3 v1 in **Claims-adjacent workflows**, specifically focusing on e-commerce returns, warranty claims, and payment disputes. This domain provides the optimal balance of high realism, universal audience understanding, rich workflow complexity, and significant future extensibility. Unlike the high-risk domains of loan origination or the niche appeal of government permitting, claims-adjacent workflows offer a tangible, modern problem space that is highly compelling for Jungle3's target buyer personas (innovation teams, hackathon organizers). It avoids the 'plausibility collapse' risks associated with simulating heavily regulated industries while still feeling serious and rules-based. Furthermore, it positions Jungle3 as a powerful tool for the massive e-commerce and logistics verticals, providing a stronger narrative and broader market appeal than the initially considered, but ultimately too generic, ITSM domain.
+After a comprehensive evaluation of six candidate domains, the definitive recommendation is to anchor Jungl3 v1 in **Claims-adjacent workflows**, specifically focusing on e-commerce returns, warranty claims, and payment disputes. This domain provides the optimal balance of high realism, universal audience understanding, rich workflow complexity, and significant future extensibility. Unlike the high-risk domains of loan origination or the niche appeal of government permitting, claims-adjacent workflows offer a tangible, modern problem space that is highly compelling for Jungl3's target buyer personas (innovation teams, hackathon organizers). It avoids the 'plausibility collapse' risks associated with simulating heavily regulated industries while still feeling serious and rules-based. Furthermore, it positions Jungl3 as a powerful tool for the massive e-commerce and logistics verticals, providing a stronger narrative and broader market appeal than the initially considered, but ultimately too generic, ITSM domain.
 
 # Recommended Domain Ranking
 
-Based on a holistic evaluation against Jungle3's strategic goals, the recommended ranking for the v1 domain anchor is as follows:
+Based on a holistic evaluation against Jungl3's strategic goals, the recommended ranking for the v1 domain anchor is as follows:
 
-1.  **#1 Recommendation: Claims-adjacent workflows (warranty, returns, disputes, chargebacks).** This domain is the clear winner, offering an exceptional combination of high realism, universal relatability, rich asynchronous workflows, and a direct, extensible path into the massive e-commerce and supply chain verticals. It is a modern problem space that strongly resonates with Jungle3's target audience and provides the most compelling narrative for demos and hackathons.
+1.  **#1 Recommendation: Claims-adjacent workflows (warranty, returns, disputes, chargebacks).** This domain is the clear winner, offering an exceptional combination of high realism, universal relatability, rich asynchronous workflows, and a direct, extensible path into the massive e-commerce and supply chain verticals. It is a modern problem space that strongly resonates with Jungl3's target audience and provides the most compelling narrative for demos and hackathons.
 
 2.  **#2 Fallback Option: Insurance-like case processing.** This domain remains a powerful and viable alternative. It is the archetypal example of complex enterprise case management and excels at showcasing workflow richness and realism. However, it is ranked second due to its steeper learning curve, higher seed-data complexity, and a more traditional, less broadly exciting feel compared to the e-commerce space.
 
 3.  **Domains to Explicitly Avoid for v1:**
     *   **Loan / application review:** The seed-data complexity and PII/regulatory risks are unacceptably high for a v1 product. The potential for 'plausibility collapse' is severe if the simulation of fair lending and compliance is not perfect.
-    *   **Permit / review workflows:** This domain is too niche (GovTech) and risks pigeonholing the Jungle3 brand, limiting its appeal to the broader market of enterprise developers and innovation teams.
-    *   **Generic service-request operations (ITSM):** While safe and easy to understand, this domain is too generic. It fails to tell a compelling business story and undersells Jungle3's power, risking the product being perceived as a simple internal tool builder rather than a sophisticated enterprise application generator.
+    *   **Permit / review workflows:** This domain is too niche (GovTech) and risks pigeonholing the Jungl3 brand, limiting its appeal to the broader market of enterprise developers and innovation teams.
+    *   **Generic service-request operations (ITSM):** While safe and easy to understand, this domain is too generic. It fails to tell a compelling business story and undersells Jungl3's power, risking the product being perceived as a simple internal tool builder rather than a sophisticated enterprise application generator.
 
 # Decision Ready Recommendations
 
 ## V1 Action
 
-For v1, Jungle3 should anchor its 'Frankenstein' application on **Claims-Adjacent Workflows**, specifically focusing on e-commerce returns, warranty processing, and payment disputes. To maximize plausibility, this should be framed within a concrete fictional company (e.g., a direct-to-consumer electronics brand). The generated application must immediately showcase the key interactions between a customer portal, an internal agent dashboard, and simulated backend services for inventory, shipping, and payments, emphasizing state transitions and asynchronous events.
+For v1, Jungl3 should anchor its 'Frankenstein' application on **Claims-Adjacent Workflows**, specifically focusing on e-commerce returns, warranty processing, and payment disputes. To maximize plausibility, this should be framed within a concrete fictional company (e.g., a direct-to-consumer electronics brand). The generated application must immediately showcase the key interactions between a customer portal, an internal agent dashboard, and simulated backend services for inventory, shipping, and payments, emphasizing state transitions and asynchronous events.
 
 ## Defer Past V1
 
-Jungle3 should explicitly defer several domains past v1 to avoid critical risks. These include: **Loan/application review** (due to extreme regulatory and PII data complexity), **Permit/review workflows** (due to its niche appeal and high risk of brand pigeonholing), and **Generic ITSM** (as it is too generic and undersells the product's capabilities to model complex business domains). These can be explored as future add-on 'domain packs' but should not be the v1 anchor.
+Jungl3 should explicitly defer several domains past v1 to avoid critical risks. These include: **Loan/application review** (due to extreme regulatory and PII data complexity), **Permit/review workflows** (due to its niche appeal and high risk of brand pigeonholing), and **Generic ITSM** (as it is too generic and undersells the product's capabilities to model complex business domains). These can be explored as future add-on 'domain packs' but should not be the v1 anchor.
 
 ## Biggest Risk
 
-The single biggest risk if this topic is ignored is a **fundamental mismatch between the product and its audience**. Choosing a domain that is too niche (Permit/review), too risky (Loans), or too generic (ITSM) will lead to 'plausibility collapse,' poor audience resonance, and a failed product launch. The domain anchor is the primary vehicle for communicating Jungle3's value, and getting it wrong will undermine all other technical investments.
+The single biggest risk if this topic is ignored is a **fundamental mismatch between the product and its audience**. Choosing a domain that is too niche (Permit/review), too risky (Loans), or too generic (ITSM) will lead to 'plausibility collapse,' poor audience resonance, and a failed product launch. The domain anchor is the primary vehicle for communicating Jungl3's value, and getting it wrong will undermine all other technical investments.
 
 ## Cross Links
 
@@ -110,7 +110,7 @@ Insurance-like case processing
 
 ## Summary Analysis
 
-Recommended as the #2 fallback option. This domain is the archetypal complex enterprise case management problem, making it an excellent showcase for Jungle3's workflow engine. However, its steep learning curve, difficult and sensitive seed data requirements, and risk of brand pigeonholing make it less suitable than claims-adjacent workflows for the v1 anchor. It is a powerful option for future domain packs targeting traditional enterprise buyers.
+Recommended as the #2 fallback option. This domain is the archetypal complex enterprise case management problem, making it an excellent showcase for Jungl3's workflow engine. However, its steep learning curve, difficult and sensitive seed data requirements, and risk of brand pigeonholing make it less suitable than claims-adjacent workflows for the v1 anchor. It is a powerful option for future domain packs targeting traditional enterprise buyers.
 
 ## Domain Name
 
@@ -182,7 +182,7 @@ Generic service-request operations (ITSM)
 
 ## Summary Analysis
 
-Recommended to avoid for v1 anchor. While universally understood by the target audience and easy to implement, this domain is too generic and undersells Jungle3's potential. It positions the product as an internal tool builder rather than a platform for complex business applications, lacks an aspirational narrative, and has limited extensibility into specific business verticals. It fails to showcase the product's ability to model a vivid, complex business.
+Recommended to avoid for v1 anchor. While universally understood by the target audience and easy to implement, this domain is too generic and undersells Jungl3's potential. It positions the product as an internal tool builder rather than a platform for complex business applications, lacks an aspirational narrative, and has limited extensibility into specific business verticals. It fails to showcase the product's ability to model a vivid, complex business.
 
 ## Domain Name
 
@@ -254,56 +254,56 @@ Permit / review workflows
 
 ## Summary Analysis
 
-Recommended to avoid for v1. This is a niche GovTech vertical with low audience resonance for a broad developer and innovation team audience. The domain is perceived as dry and bureaucratic, and anchoring here would create a high risk of pigeonholing the Jungle3 brand as a niche tool, severely limiting its market appeal and future extensibility.
+Recommended to avoid for v1. This is a niche GovTech vertical with low audience resonance for a broad developer and innovation team audience. The domain is perceived as dry and bureaucratic, and anchoring here would create a high risk of pigeonholing the Jungl3 brand as a niche tool, severely limiting its market appeal and future extensibility.
 
 
 # Top Recommendation Deep Dive
 
-The #1 recommended domain anchor for Jungle3 v1 is 'Claims-adjacent workflows,' encompassing warranty claims, e-commerce returns, payment disputes, and chargebacks. This domain is the optimal choice because it provides the best balance of all key evaluation criteria: high realism, universal ease of understanding, rich and complex workflows, and outstanding future extensibility.
+The #1 recommended domain anchor for Jungl3 v1 is 'Claims-adjacent workflows,' encompassing warranty claims, e-commerce returns, payment disputes, and chargebacks. This domain is the optimal choice because it provides the best balance of all key evaluation criteria: high realism, universal ease of understanding, rich and complex workflows, and outstanding future extensibility.
 
 Strengths:
 - **Audience Resonance & Modern Appeal:** The process of returning a product, filing a warranty claim, or disputing a charge is a modern, tangible problem that nearly every developer and product manager has experienced as a consumer. This makes the domain instantly grokkable and highly relevant for demos and hackathons, resonating strongly with innovation teams in the vibrant e-commerce and logistics sectors.
-- **Rich, Tangible Workflows:** This domain naturally surfaces the complex, asynchronous, multi-actor workflows that Jungle3 is designed to showcase. A single return process can involve a customer, a support agent, a warehouse inspector, and a finance analyst, with interactions spanning physical logistics (shipping) and digital systems (payment gateways, inventory management). This provides a rich ground for demonstrating state transitions, escalations (e.g., a disputed damage claim), approvals (e.g., a high-value refund), and integrations.
+- **Rich, Tangible Workflows:** This domain naturally surfaces the complex, asynchronous, multi-actor workflows that Jungl3 is designed to showcase. A single return process can involve a customer, a support agent, a warehouse inspector, and a finance analyst, with interactions spanning physical logistics (shipping) and digital systems (payment gateways, inventory management). This provides a rich ground for demonstrating state transitions, escalations (e.g., a disputed damage claim), approvals (e.g., a high-value refund), and integrations.
 - **Balanced Data Complexity:** While requiring thoughtful generation of synthetic product catalogs, customer profiles, and order histories, the data is less sensitive and regulated than in finance or healthcare. This lowers the risk of PII exposure and makes creating plausible seed data more manageable for v1.
-- **Strategic Extensibility:** Mastering this domain provides a powerful wedge into the broader, high-growth verticals of e-commerce fulfillment, supply chain logistics, inventory management, and customer relationship management. It positions Jungle3 as a platform for building modern commerce and operations software.
+- **Strategic Extensibility:** Mastering this domain provides a powerful wedge into the broader, high-growth verticals of e-commerce fulfillment, supply chain logistics, inventory management, and customer relationship management. It positions Jungl3 as a platform for building modern commerce and operations software.
 
 Personas & Workflows:
 - **Personas:** The synthetic environment would be populated with roles like the **Customer** (initiating a return), the **RMA Agent** (triaging claims), the **Warehouse Technician** (inspecting returned items), the **Finance Analyst** (processing refunds), and the **Risk/Chargeback Specialist** (managing payment disputes).
-- **Workflows:** Canonical workflows include: 1) A customer initiating a return via a self-service portal, triggering an automated RMA approval and shipping label generation. 2) The physical return item being tracked, received, and inspected at a warehouse, triggering subsequent refund or replacement processes. 3) A customer initiating a chargeback with their bank, creating a dispute case in Jungle3 that requires a risk analyst to gather evidence (e.g., proof of delivery, customer communications) for representment to the payment processor.
+- **Workflows:** Canonical workflows include: 1) A customer initiating a return via a self-service portal, triggering an automated RMA approval and shipping label generation. 2) The physical return item being tracked, received, and inspected at a warehouse, triggering subsequent refund or replacement processes. 3) A customer initiating a chargeback with their bank, creating a dispute case in Jungl3 that requires a risk analyst to gather evidence (e.g., proof of delivery, customer communications) for representment to the payment processor.
 
-This domain allows Jungle3 to tell a compelling, end-to-end business story that is both complex and easy to follow, making it the ideal foundation for the v1 product.
+This domain allows Jungl3 to tell a compelling, end-to-end business story that is both complex and easy to follow, making it the ideal foundation for the v1 product.
 
 # Fallback Option Analysis
 
-'Insurance-like case processing' serves as the best fallback option for Jungle3's v1 anchor. It represents the archetypal complex enterprise case management problem, making it a powerful demonstrator of Jungle3's core workflow, automation, and audit capabilities.
+'Insurance-like case processing' serves as the best fallback option for Jungl3's v1 anchor. It represents the archetypal complex enterprise case management problem, making it a powerful demonstrator of Jungl3's core workflow, automation, and audit capabilities.
 
 **Pros:**
-*   **Unmatched Workflow Richness:** The insurance claims lifecycle (intake → triage → investigation → adjudication → payout) is naturally filled with the exact features Jungle3 wants to showcase: long-running asynchronous processes, complex approval chains (e.g., supervisor sign-off for high-value payouts), escalations (e.g., routing a suspicious case to a Special Investigations Unit), and the need for immutable audit trails.
+*   **Unmatched Workflow Richness:** The insurance claims lifecycle (intake → triage → investigation → adjudication → payout) is naturally filled with the exact features Jungl3 wants to showcase: long-running asynchronous processes, complex approval chains (e.g., supervisor sign-off for high-value payouts), escalations (e.g., routing a suspicious case to a Special Investigations Unit), and the need for immutable audit trails.
 *   **High Realism & 'Serious' Feel:** The domain feels important and regulated, which resonates strongly with traditional enterprise B2B buyers. A plausible simulation of a claims system immediately establishes credibility and demonstrates the platform's capacity for handling mission-critical processes.
 *   **Strong Extensibility:** The core patterns of case management, evidence gathering, and rule-based decisioning are foundational and can be extended to many other regulated or process-heavy industries.
 
 **Cons:**
 *   **Steep Learning Curve:** The domain is filled with industry-specific jargon (e.g., subrogation, indemnity, reserves) and complex business rules that can be difficult for a generalist developer to understand quickly, hindering the 'time-to-grok'.
 *   **High Seed-Data Complexity:** Generating plausible synthetic data is very challenging. It requires believable policies, coverages, incident reports, and financial data (reserves, payments), which can easily trigger 'plausibility collapse' if not expertly crafted. The data also carries a higher implied PII risk.
-*   **Brand Pigeonholing Risk:** Anchoring on insurance, a very specific vertical, risks branding Jungle3 as a niche 'insurtech tool,' which could make it harder to pivot to a horizontal platform message later.
+*   **Brand Pigeonholing Risk:** Anchoring on insurance, a very specific vertical, risks branding Jungl3 as a niche 'insurtech tool,' which could make it harder to pivot to a horizontal platform message later.
 
 **Suitable Scenarios:** This domain would be a suitable alternative if market feedback indicates that the primary target audience for v1 consists of large, traditional enterprises that prioritize demonstrations of extreme workflow complexity and regulatory-style process management over modern, e-commerce-focused narratives. It could also be introduced as a 'domain pack' in a later release to specifically target the financial services and insurance industries.
 
 # Domains To Avoid Rationale
 
-For the v1 anchor, Jungle3 should explicitly avoid Loan/Application Review, Permit/Review Workflows, and Generic Service-Request Operations. While each is rich in its own way, they carry significant strategic risks that outweigh their benefits for an initial product launch.
+For the v1 anchor, Jungl3 should explicitly avoid Loan/Application Review, Permit/Review Workflows, and Generic Service-Request Operations. While each is rich in its own way, they carry significant strategic risks that outweigh their benefits for an initial product launch.
 
-*   **Loan/Application Review:** This domain should be avoided due to its 'dangerously high' regulatory baggage and extreme seed-data complexity. The data involved (income, credit scores, personal identification) is highly sensitive, and generating it plausibly is a major challenge. The domain is governed by strict, real-world regulations (e.g., Fair Lending, KYC, AML). Any misstep in simulating these complex requirements would be immediately obvious to a domain expert, leading to a catastrophic 'plausibility collapse' and undermining Jungle3's credibility. The risk is simply too high for v1.
+*   **Loan/Application Review:** This domain should be avoided due to its 'dangerously high' regulatory baggage and extreme seed-data complexity. The data involved (income, credit scores, personal identification) is highly sensitive, and generating it plausibly is a major challenge. The domain is governed by strict, real-world regulations (e.g., Fair Lending, KYC, AML). Any misstep in simulating these complex requirements would be immediately obvious to a domain expert, leading to a catastrophic 'plausibility collapse' and undermining Jungl3's credibility. The risk is simply too high for v1.
 
-*   **Permit/Review Workflows:** This domain is not recommended because of its low audience resonance and high risk of brand pigeonholing. It is a niche GovTech vertical that is unlikely to excite or feel relevant to the broader target audience of enterprise innovation teams, hackathon participants, and generalist developers. Anchoring here would likely brand Jungle3 as a niche government software tool, making it difficult to expand into other markets and limiting its overall appeal.
+*   **Permit/Review Workflows:** This domain is not recommended because of its low audience resonance and high risk of brand pigeonholing. It is a niche GovTech vertical that is unlikely to excite or feel relevant to the broader target audience of enterprise innovation teams, hackathon participants, and generalist developers. Anchoring here would likely brand Jungl3 as a niche government software tool, making it difficult to expand into other markets and limiting its overall appeal.
 
-*   **Generic Service-Request Operations (ITSM):** This domain should be avoided because it is too generic and fails to tell a compelling business story, thereby underselling Jungle3's potential. While universally understood and easy to implement, it positions the product as a simple 'internal tool builder' or helpdesk creator. This fails to showcase Jungle3's power in modeling complex, revenue-impacting business applications. The narrative is not aspirational and does not create the 'wow' factor needed to capture the market's imagination for what is possible with the platform.
+*   **Generic Service-Request Operations (ITSM):** This domain should be avoided because it is too generic and fails to tell a compelling business story, thereby underselling Jungl3's potential. While universally understood and easy to implement, it positions the product as a simple 'internal tool builder' or helpdesk creator. This fails to showcase Jungl3's power in modeling complex, revenue-impacting business applications. The narrative is not aspirational and does not create the 'wow' factor needed to capture the market's imagination for what is possible with the platform.
 
 # Scoring Framework Summary
 
 ## Criteria Summary
 
-The scoring framework for Jungle3 v1 domain selection is built upon seven explicit criteria, each scored on a 1-5 scale. The criteria are:
+The scoring framework for Jungl3 v1 domain selection is built upon seven explicit criteria, each scored on a 1-5 scale. The criteria are:
 1. **Time-to-Real Acceleration:** Measures how significantly the generated application accelerates a customer's path to a real, shippable product. A score of 5 indicates the app is over 80% of a typical MVP.
 2. **Demo & Hackathon Appeal:** Assesses how easily and impressively the domain can be demonstrated in short-form settings. A score of 5 is for highly visual, intuitive, and relatable domains.
 3. **Plausibility Collapse Risk:** Evaluates the risk that the synthetic data and activity will degrade and lose believability over time. A score of 5 (low risk) is for domains grounded in abundant, structured, human-produced public data.
@@ -368,7 +368,7 @@ Platforms typically ship a package of artifacts to make the environment feel ali
 
 ## Buyer Personas Summary
 
-Four primary buyer personas for Jungle3 have been defined, each with specific criteria for a successful demo:
+Four primary buyer personas for Jungl3 have been defined, each with specific criteria for a successful demo:
 
 1.  **Innovation Teams:** Internal enterprise product squads focused on rapid prototyping. Their success criteria include the ability to see a complete, working flow, generate measurable artifacts like logs and audit trails, and easily deploy the demo into their own cloud account for safe ownership of the proof-of-concept code.
 
@@ -386,11 +386,11 @@ Based on a detailed analysis of suitability for hackathons and short-form demos,
 
 1.  **Fintech (Banking Payments, Reconciliation):** Ranked as the best overall fit. It offers the highest 'wow per minute' due to clear, measurable business flows (onboarding, payment, reconciliation). The availability of mature sandbox APIs from providers like Stripe and Plaid significantly reduces integration risk and compliance barriers, making it ideal for fast-paced environments.
 
-2.  **Enterprise SaaS / IT Service Management (ITSM):** A very strong fit. This domain directly maps to Jungle3's native features like workflows, audit trails, and scheduled jobs. It aligns well with common hackathon themes, as seen in events like ServiceNow's CreatorCon, and is universally understood by the target audience.
+2.  **Enterprise SaaS / IT Service Management (ITSM):** A very strong fit. This domain directly maps to Jungl3's native features like workflows, audit trails, and scheduled jobs. It aligns well with common hackathon themes, as seen in events like ServiceNow's CreatorCon, and is universally understood by the target audience.
 
 3.  **Retail / E-commerce (Order Lifecycle, Inventory):** A good fit. It provides clear, visually compelling user flows (checkout, fulfillment) and dashboards that are easy to demonstrate. This makes it highly suitable for hackathons and product-discovery teams.
 
-4.  **Supply Chain / Logistics (Tracking, Reconciliation):** A moderate fit. While the complex, multi-party flows are an excellent showcase for Jungle3's eventing and microservice architecture, they can be difficult for an audience to grasp in a short demo, increasing viewer confusion.
+4.  **Supply Chain / Logistics (Tracking, Reconciliation):** A moderate fit. While the complex, multi-party flows are an excellent showcase for Jungl3's eventing and microservice architecture, they can be difficult for an audience to grasp in a short demo, increasing viewer confusion.
 
 5.  **Healthcare (EHR Workflows, Clinical Pipelines):** The lowest fit for v1. The high compliance and legal friction (HIPAA, PHI) and significant trust requirements make it unsuitable for a frictionless, rapid-deployment demo. The setup friction is prohibitively high.
 
@@ -399,7 +399,7 @@ Based on a detailed analysis of suitability for hackathons and short-form demos,
 Compelling 5-10 minute demo narratives for the top-ranked domains include:
 
 *   **Fintech (Top Ranked):**
-    1.  (0-1 min) Show a seeded merchant dashboard in Jungle3 with a list of pending orders.
+    1.  (0-1 min) Show a seeded merchant dashboard in Jungl3 with a list of pending orders.
     2.  (1-3 min) Initiate a merchant onboarding flow using test API keys to provision a test Stripe account. Process a payment with a Stripe test card, which triggers a webhook that updates the order status in real-time.
     3.  (3-6 min) A background reconciliation microservice matches the payment to the order, flags a suspicious duplicate transaction, and creates an audit trail and an incident ticket.
     4.  (6-7 min) Display a KPI dashboard showing the financial impact of the suspected fraud and present a clear call-to-action to deploy the demo into the user's own AWS account.
@@ -416,7 +416,7 @@ Compelling 5-10 minute demo narratives for the top-ranked domains include:
 
 ## Setup Friction Analysis
 
-The setup friction, defined as the time to seed data and configure necessary integrations for a ready Jungle3 instance, varies significantly by domain:
+The setup friction, defined as the time to seed data and configure necessary integrations for a ready Jungl3 instance, varies significantly by domain:
 
 *   **ITSM/Enterprise SaaS:** Low friction, estimated at 15–45 minutes. This is because the stack can be entirely internal, with external systems like Slack easily stubbed. The primary blocker can be enterprise SSO, which can be mitigated by providing demo-specific bypass user accounts.
 
@@ -433,9 +433,9 @@ The setup friction, defined as the time to seed data and configure necessary int
 
 ## Pigeonhole Risk Summary
 
-The risk of Jungle3 being perceived as a niche vertical tool varies significantly by the chosen v1 domain anchor:
+The risk of Jungl3 being perceived as a niche vertical tool varies significantly by the chosen v1 domain anchor:
 
-*   **High Risk Domains (Claims, KYC, Loans, Permits):** Anchoring in highly specialized and regulated fields like Insurance Claims, KYC/Onboarding, Loan Applications, or Government Permitting carries a high risk of pigeonholing. Buyers in these markets expect deep domain expertise and compliance features, which would brand Jungle3 as a single-vertical tool and make it very difficult and expensive to pivot to a broader platform play later.
+*   **High Risk Domains (Claims, KYC, Loans, Permits):** Anchoring in highly specialized and regulated fields like Insurance Claims, KYC/Onboarding, Loan Applications, or Government Permitting carries a high risk of pigeonholing. Buyers in these markets expect deep domain expertise and compliance features, which would brand Jungl3 as a single-vertical tool and make it very difficult and expensive to pivot to a broader platform play later.
 
 *   **Medium Risk Domains (Supply Chain, Customer Support):** Domains like Supply Chain Exceptions or Customer Support carry a medium risk. They often use specialized vocabulary and require specific integrations (e.g., carrier APIs, helpdesk tools) that can trap the brand's perception. A pivot is possible but requires a deliberate strategy to emphasize the underlying generic platform.
 
@@ -443,13 +443,13 @@ The risk of Jungle3 being perceived as a niche vertical tool varies significantl
 
 ## Recommended Naming Strategy
 
-To avoid vertical pigeonholing, the naming and packaging strategy must emphasize Jungle3's foundational, horizontal nature. The following strategy is recommended:
+To avoid vertical pigeonholing, the naming and packaging strategy must emphasize Jungl3's foundational, horizontal nature. The following strategy is recommended:
 
-1.  **Primary Product Title:** Adopt a horizontal and explicit title that clearly communicates its purpose as a developer accelerator. The recommended title is **"Jungle3 — Application Foundations (CloudFormation)"**. This keeps any specific domain out of the core product name.
+1.  **Primary Product Title:** Adopt a horizontal and explicit title that clearly communicates its purpose as a developer accelerator. The recommended title is **"Jungl3 — Application Foundations (CloudFormation)"**. This keeps any specific domain out of the core product name.
 
-2.  **Generalizable Naming Families:** Use abstract naming families for internal concepts and marketing, such as "Application Blueprints" or "Product Accelerators," to signal that Jungle3 is a launchpad.
+2.  **Generalizable Naming Families:** Use abstract naming families for internal concepts and marketing, such as "Application Blueprints" or "Product Accelerators," to signal that Jungl3 is a launchpad.
 
-3.  **Hybrid Labeling for Domain Packs:** Use domain-specific labels, such as the popular '-Ops' suffix (e.g., CaseOps, IncidentOps, ExceptionsOps) or '-Flow' suffix (e.g., CaseFlow), only for optional, add-on domain packs. For example, a customer might subscribe to **"Jungle3 Application Foundations (with IncidentOps Pack)"**. This structure allows Jungle3 to attract different user segments with domain-specific language without compromising the core brand's horizontal positioning.
+3.  **Hybrid Labeling for Domain Packs:** Use domain-specific labels, such as the popular '-Ops' suffix (e.g., CaseOps, IncidentOps, ExceptionsOps) or '-Flow' suffix (e.g., CaseFlow), only for optional, add-on domain packs. For example, a customer might subscribe to **"Jungl3 Application Foundations (with IncidentOps Pack)"**. This structure allows Jungl3 to attract different user segments with domain-specific language without compromising the core brand's horizontal positioning.
 
 ## Ux Abstraction Recommendations
 
@@ -467,7 +467,7 @@ The product's UX and data model must be designed to be obviously extensible. Key
 
 The AWS Marketplace listing is a critical channel for discovery and must be optimized to attract the target audience of platform and engineering buyers.
 
-*   **Title:** The title must be explicit and avoid domain-specific jargon. The recommended title is: **"Jungle3 — Application Foundations (CloudFormation)"**.
+*   **Title:** The title must be explicit and avoid domain-specific jargon. The recommended title is: **"Jungl3 — Application Foundations (CloudFormation)"**.
 
 *   **Category:** The product should be listed under the **Developer Tools / Application Development** category to ensure it reaches the correct audience.
 
@@ -478,11 +478,11 @@ The AWS Marketplace listing is a critical channel for discovery and must be opti
 
 # Seed Data Strategy And Complexity Analysis
 
-A comparative analysis of potential domains for Jungle3 v1 reveals a spectrum of complexity and risk related to synthetic data generation. High-risk domains such as Healthcare and FinTech introduce significant PII/regulatory exposure (PHI, PCI-DSS, KYC), requiring complex, causally correct data histories that are difficult to generate and carry severe risks of misinterpretation. Medium-risk domains like B2C E-commerce involve extensive but more standardized PII (names, addresses, order history) governed by regulations like GDPR and CCPA. Low-risk domains, including B2B Logistics and Internal IT Asset Management, are recommended for v1 as they offer rich, interconnected data models with minimal PII, allowing focus on the core Jungle3 engine.
+A comparative analysis of potential domains for Jungl3 v1 reveals a spectrum of complexity and risk related to synthetic data generation. High-risk domains such as Healthcare and FinTech introduce significant PII/regulatory exposure (PHI, PCI-DSS, KYC), requiring complex, causally correct data histories that are difficult to generate and carry severe risks of misinterpretation. Medium-risk domains like B2C E-commerce involve extensive but more standardized PII (names, addresses, order history) governed by regulations like GDPR and CCPA. Low-risk domains, including B2B Logistics and Internal IT Asset Management, are recommended for v1 as they offer rich, interconnected data models with minimal PII, allowing focus on the core Jungl3 engine.
 
 A safe-by-default strategy for v1 involves several key components:
 
-1.  **Domain Selection:** The explicit recommendation is to anchor v1 in **Internal IT Asset Management**. This domain provides a complex system of assets, users, locations, and tickets, showcasing Jungle3's capabilities without the overhead of external regulations. The data (e.g., laptop serial numbers, internal user emails) has no real-world sensitivity.
+1.  **Domain Selection:** The explicit recommendation is to anchor v1 in **Internal IT Asset Management**. This domain provides a complex system of assets, users, locations, and tickets, showcasing Jungl3's capabilities without the overhead of external regulations. The data (e.g., laptop serial numbers, internal user emails) has no real-world sensitivity.
 
 2.  **Generation Tools & Techniques:**
     *   **Faker/Mockaroo:** Utilize libraries like Faker for generating format-correct, locale-specific data points (names, addresses) and tools like Mockaroo for schema-based generation with simple dependencies.
@@ -527,7 +527,7 @@ Plausibility collapse occurs when the synthetic environment behaves in a logical
 
 ## Simulation Harness Design Summary
 
-A simulation harness is proposed to drive the Jungle3 environment for controlled and repeatable testing. Its key components are:
+A simulation harness is proposed to drive the Jungl3 environment for controlled and repeatable testing. Its key components are:
 
 *   **Persona-Driven Event Generators:** Instead of purely random data, these generators create realistic event streams based on persona models (e.g., 'High-Value Shopper' vs. 'Bargain Hunter'). They use statistical models like Poisson distribution for event arrival times and Markov chains for session behavior.
 
@@ -550,7 +550,7 @@ To make realism a visible and measurable metric, the standard observability stac
 
 ## V1 Qa Runbook Summary
 
-To gate a v1 release of a Jungle3 kit, a series of QA checks must be passed:
+To gate a v1 release of a Jungl3 kit, a series of QA checks must be passed:
 
 1.  **24-Hour Soak Test:** Run the environment with the simulation harness generating load for 24 simulated hours. The pass criterion is zero critical plausibility failures on the Plausibility Dashboard.
 2.  **Time-Jump Test:** Advance the 'Jungle Chronos' clock by one month to verify that all monthly scheduled jobs (billing, reporting) execute correctly and data remains consistent.
@@ -562,7 +562,7 @@ To gate a v1 release of a Jungle3 kit, a series of QA checks must be passed:
 
 ## Adjacency Map Summary
 
-Two primary extensibility pathways have been identified to ensure Jungle3 avoids being pigeonholed into a single vertical:
+Two primary extensibility pathways have been identified to ensure Jungl3 avoids being pigeonholed into a single vertical:
 
 1.  **Case/Incident Management Pathway:** This path starts with a familiar domain and generalizes broadly across enterprise functions.
     *   **v1 Anchor:** IT Service Management (ITSM) - Managing incidents, problems, and changes.
@@ -637,7 +637,7 @@ To guide different users and showcase the product's value, the demo kit includes
 
 2.  **Hackathon Kit:** Aimed at developers, this playbook focuses on the 'subtract and reshape' value proposition. It presents a series of challenges, such as removing an existing microservice (e.g., an email notification service), integrating a new one (e.g., a Slack notification service), and extending the system with a new workflow (e.g., a returns process). It includes pointers to the relevant source code and IaC templates.
 
-3.  **Buyer Evaluation Guide:** A checklist for decision-makers that maps Jungle3's features to tangible business value. It prompts the buyer to verify key claims, such as the deployment time, the presence of automated synthetic activity, and the completeness of the observability dashboards, helping to justify the purchase with concrete proof points.
+3.  **Buyer Evaluation Guide:** A checklist for decision-makers that maps Jungl3's features to tangible business value. It prompts the buyer to verify key claims, such as the deployment time, the presence of automated synthetic activity, and the completeness of the observability dashboards, helping to justify the purchase with concrete proof points.
 
 ## External Stubs Summary
 
@@ -660,7 +660,7 @@ To quantitatively measure the effectiveness of the demo kit and the 'time to rea
 
 # Build Estimation Summary
 
-The estimated effort to build a v1 Jungle3 kit is significant, reflecting the complexity of creating a believable, integrated enterprise application generator. The estimation is based on a detailed work breakdown and analysis of analogous systems.
+The estimated effort to build a v1 Jungl3 kit is significant, reflecting the complexity of creating a believable, integrated enterprise application generator. The estimation is based on a detailed work breakdown and analysis of analogous systems.
 
 **Work Breakdown Structure (WBS):**
 A v1 kit for any domain requires development across several key areas:
@@ -681,7 +681,7 @@ The total estimated effort for a v1 MVP is in the range of **11 to 29 engineer-w
 *   **Claims-Adjacent Workflows:** Medium complexity, estimated at **6–12 weeks** for a team of 3-5 engineers.
 
 **AWS Monthly Cost Bands:**
-The cost for a customer to run a single, small-scale demo footprint of a Jungle3 kit in their own AWS account is estimated to be low, leveraging serverless and consumption-based pricing.
+The cost for a customer to run a single, small-scale demo footprint of a Jungl3 kit in their own AWS account is estimated to be low, leveraging serverless and consumption-based pricing.
 *   **Minimal/Idle Demo:** **$50 - $600 per month**. This covers a small serverless stack (Lambda, Fargate, SQS, DynamoDB) with low synthetic traffic.
 *   **Active Simulated Demo:** **$500 - $2,000 per month**. This higher band accounts for increased synthetic activity or the inclusion of more resource-intensive services like an OpenSearch cluster.
 

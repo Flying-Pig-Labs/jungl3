@@ -5,7 +5,7 @@
 
 ## Context
 
-Jungle3 is a multi-domain platform (marketplace website, control plane, DMZ provisioning, synthetic runtime, agents, CLI, shared AWS infra, integration contracts). A "domain = subdir" monorepo layout is the natural fit: each domain builds, tests, and deploys independently, with its own dependency manifest.
+Jungl3 is a multi-domain platform (marketplace website, control plane, DMZ provisioning, synthetic runtime, agents, CLI, shared AWS infra, integration contracts). A "domain = subdir" monorepo layout is the natural fit: each domain builds, tests, and deploys independently, with its own dependency manifest.
 
 The website — currently a TanStack Start + React 19 + Tailwind v4 + shadcn/ui app on Cloudflare Workers — is scaffolded and maintained by **Lovable.dev**, which commits directly to `main` autonomously. Lovable's file-writing logic assumes a standard Vite project **at repo root**: `src/`, `package.json`, `vite.config.ts`, `wrangler.jsonc`, `.lovable/`, and related files all live where Lovable expects them.
 
@@ -39,4 +39,4 @@ Cursor Agent (and any other non-Lovable contributor) treats the Lovable-owned pa
 
 - **Move website into `website/` or `marketplace-web/`.** Rejected: breaks Lovable autonomously, on its next run. Non-starter unless Lovable is first replaced.
 - **Keep website at root, put nothing else in the repo.** Rejected: the platform is larger than the website; the repo will hold IaC, agents, CLI, and more. Splitting into multiple repos would fragment the design work we are doing now.
-- **Multi-repo from the start.** Rejected for the same reason: Jungle3 is in the concept-to-architecture phase, and coherence across domains matters more than independent release cadence right now. A split can happen later if a domain outgrows the shared repo.
+- **Multi-repo from the start.** Rejected for the same reason: Jungl3 is in the concept-to-architecture phase, and coherence across domains matters more than independent release cadence right now. A split can happen later if a domain outgrows the shared repo.

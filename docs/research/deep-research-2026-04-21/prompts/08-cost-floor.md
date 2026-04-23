@@ -1,6 +1,6 @@
 # Topic 8: Cost floor and operational footprint
 
-See `00-context.md` for product framing. Jungle3 runs in the customer's AWS account.
+See `00-context.md` for product framing. Jungl3 runs in the customer's AWS account.
 
 ## Research questions
 
@@ -24,6 +24,6 @@ Research:
 
 8. **Customer-perception threshold.** Anecdotally, what is the $/month ceiling above which an AWS-native product installed by "labs" teams gets killed in internal cost reviews? Cite industry benchmarks where possible.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

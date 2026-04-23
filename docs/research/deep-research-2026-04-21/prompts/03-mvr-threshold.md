@@ -29,6 +29,6 @@ Research:
 
 5. **Prior art on minimalist realism.** Which products, platforms, training environments, or research projects have explicitly aimed at *minimalist* believability (Stripe's test mode, Temporal sample apps, AWS workshops, Salesforce org scratch orgs)? What design choices do they share?
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

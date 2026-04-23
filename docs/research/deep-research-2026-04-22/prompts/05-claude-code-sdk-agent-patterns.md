@@ -16,10 +16,10 @@ See `00-context.md` for product framing. [ADR 0007](../../decisions/0007-v1-cost
 
 6. **Degraded-mode without the LLM.** ADR 0007 requires graceful degradation — when the budget is exhausted, the admin UI still works, with keyword matching selecting tools and raw output returned. What is the cleanest pattern for this fallback? Sub-agent design (a keyword-only "sibling" that shares the tool set), a tool-name dispatch table, a small local model (ONNX/distilled) for intent classification?
 
-7. **Evaluation harness.** How should Jungle3 continuously test that the admin agent (a) picks the right tool for common queries, (b) does not invent facts, and (c) degrades correctly at budget exhaustion? Cite eval frameworks for tool-using agents (Anthropic's MCP evals, OpenAI evals, Braintrust, LangSmith, etc.). What does a real eval suite for this agent look like?
+7. **Evaluation harness.** How should Jungl3 continuously test that the admin agent (a) picks the right tool for common queries, (b) does not invent facts, and (c) degrades correctly at budget exhaustion? Cite eval frameworks for tool-using agents (Anthropic's MCP evals, OpenAI evals, Braintrust, LangSmith, etc.). What does a real eval suite for this agent look like?
 
 8. **Claude Code SDK vs alternatives.** Briefly: is there a reason to reconsider the Claude Code SDK choice in favor of bare Anthropic API, MCP over Anthropic API, LangChain/LangGraph, or Bedrock Converse API? ADR 0007 is settled; this is a sanity check on whether the SDK ships what we assume it ships.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

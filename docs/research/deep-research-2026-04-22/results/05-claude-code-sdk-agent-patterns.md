@@ -1,8 +1,8 @@
-# Zero-Hallucination Agent Architecture: Implementing Deterministic Tool Constraints and Cost Governance in Jungle3
+# Zero-Hallucination Agent Architecture: Implementing Deterministic Tool Constraints and Cost Governance in Jungl3
 
 ## Executive Summary
 
-To meet Jungle3's "time to real" thesis and avoid plausibility collapse, the v1 admin agent must operate with absolute determinism. Relying on system prompts to prevent LLM hallucinations is insufficient. Instead, Jungle3 must enforce strict structural constraints using the Claude Agent SDK's in-process Model Context Protocol (MCP) servers, structured JSON outputs, and deterministic post-processing. 
+To meet Jungl3's "time to real" thesis and avoid plausibility collapse, the v1 admin agent must operate with absolute determinism. Relying on system prompts to prevent LLM hallucinations is insufficient. Instead, Jungl3 must enforce strict structural constraints using the Claude Agent SDK's in-process Model Context Protocol (MCP) servers, structured JSON outputs, and deterministic post-processing. 
 
 Key strategic actions include:
 * **In-Process MCP**: Utilize the Claude Agent SDK's `create_sdk_mcp_server` to run tools directly within the Python application, eliminating the IPC overhead and deployment complexity of external subprocesses [1] [2].
@@ -14,18 +14,18 @@ Key strategic actions include:
 ## 1. Claude Agent SDK Surface and In-Process MCP Architecture
 
 ### Eliminating IPC Overhead with In-Process Servers
-The Claude Agent SDK (v0.1.64+) provides the exact primitives needed for Jungle3's v1 architecture. By using `create_sdk_mcp_server`, Jungle3 can implement custom tools as Python functions that run directly within the application process [1] [2]. This approach eliminates subprocess management, improves performance by removing IPC overhead, and ensures type safety with direct Python function calls [1].
+The Claude Agent SDK (v0.1.64+) provides the exact primitives needed for Jungl3's v1 architecture. By using `create_sdk_mcp_server`, Jungl3 can implement custom tools as Python functions that run directly within the application process [1] [2]. This approach eliminates subprocess management, improves performance by removing IPC overhead, and ensures type safety with direct Python function calls [1].
 
 ### Streaming and Event Interleaving
 The SDK handles streaming via the `query()` and `ClaudeSDKClient` interfaces, returning an async iterator of messages [1]. The UI must track the event stream to differentiate between `AssistantMessage` text blocks and `ToolUseBlock` / `ToolResultBlock` events [3] [1]. This allows the frontend to render an `in_tool` state, showing users exactly when the agent is fetching data versus reasoning.
 
 ### Deterministic Control via SDK Hooks
-To enforce governance, Jungle3 must utilize SDK hooks. A hook is a Python function invoked at specific points in the agent loop [1]. For example, a `PreToolUse` hook can validate arguments or block unauthorized actions, returning a `permissionDecision` of `"allow"` or `"deny"` [6].
+To enforce governance, Jungl3 must utilize SDK hooks. A hook is a Python function invoked at specific points in the agent loop [1]. For example, a `PreToolUse` hook can validate arguments or block unauthorized actions, returning a `permissionDecision` of `"allow"` or `"deny"` [6].
 
 ## 2. Zero-Confabulation Enforcement and Citation Schemas
 
 ### Structured Output Enforcement
-To prevent the agent from inventing system state, Jungle3 must mandate structured outputs. The SDK's `output_format` option allows passing a JSON Schema (or Pydantic model) that forces the agent to return validated JSON [4]. 
+To prevent the agent from inventing system state, Jungl3 must mandate structured outputs. The SDK's `output_format` option allows passing a JSON Schema (or Pydantic model) that forces the agent to return validated JSON [4]. 
 
 ### Citation Mapping via tool_call_id
 The schema must require a `citations` array. Every factual claim must include an exact substring quote and the `tool_call_id` of the `ToolResultBlock` it originated from [3] [4]. A deterministic Python post-processor must intercept the final output, verify that the cited substring exists exactly within the payload of the referenced `tool_call_id`, and drop or flag the response if verification fails.
@@ -58,15 +58,15 @@ The `llm-gateway` Lambda must track cumulative spend. When the $50 budget reache
 
 ## 5. Degraded Mode: ONNX-Based Deterministic Fallback
 
-When the LLM budget is exhausted, Jungle3 must fall back to a deterministic router [11]. 
+When the LLM budget is exhausted, Jungl3 must fall back to a deterministic router [11]. 
 
 ### MiniLM INT8 Intent Classification
-Instead of brittle regex rules, Jungle3 should deploy a quantized ONNX `intent-classifier-minilm` model. The `model_int8.onnx` variant is approximately 22MB, executes in under 30ms, and provides robust intent-to-tool mapping [9]. This allows the admin UI to continue functioning by mapping natural language directly to parameterized tool calls (e.g., "Show me claim 123" -> `mcp__dynamodb__get_claim(id="123")`).
+Instead of brittle regex rules, Jungl3 should deploy a quantized ONNX `intent-classifier-minilm` model. The `model_int8.onnx` variant is approximately 22MB, executes in under 30ms, and provides robust intent-to-tool mapping [9]. This allows the admin UI to continue functioning by mapping natural language directly to parameterized tool calls (e.g., "Show me claim 123" -> `mcp__dynamodb__get_claim(id="123")`).
 
 ## 6. Evaluation Harness and LangSmith Integration
 
 ### Continuous Verification
-To maintain a <1% hallucination rate, Jungle3 must implement an evaluation harness using LangSmith. LangSmith integrates via OpenTelemetry to trace every agent step, capturing `tool_calls.{n}.id` and `gen_ai.prompt` [12].
+To maintain a <1% hallucination rate, Jungl3 must implement an evaluation harness using LangSmith. LangSmith integrates via OpenTelemetry to trace every agent step, capturing `tool_calls.{n}.id` and `gen_ai.prompt` [12].
 
 ### Golden Dataset Gates
 CI/CD pipelines must run offline evaluations against a curated dataset of 10-20 golden claims-processing queries [13]. The pipeline must use a `ToolCorrectnessMetric` to verify that the agent selected the optimal tools and that all citations map correctly to the tool outputs [14].
@@ -82,7 +82,7 @@ CI/CD pipelines must run offline evaluations against a curated dataset of 10-20 
 
 *Takeaway: The Claude Agent SDK is the correct choice for v1 due to its native MCP support and low overhead. LangGraph should be deferred until v2 if complex, multi-actor durable execution becomes necessary [17].*
 
-## 8. Decision-ready recommendations for Jungle3
+## 8. Decision-ready recommendations for Jungl3
 
 * **Implement in-process MCP servers** using `create_sdk_mcp_server` for all v1 domain tools to eliminate subprocess management and simplify the AWS deployment footprint.
 * **Enforce structured outputs** with a mandatory `citations` array mapping claims to `tool_call_id`, backed by a deterministic Python post-processor that drops unverified claims.

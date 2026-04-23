@@ -4,7 +4,7 @@ See `00-context.md` for product framing.
 
 ## Research questions
 
-Jungle3's v1 picks one domain anchor (see Topic 2), but the long-term vision is multiple domain variants — different synthetic worlds sharing a common platform. Research how to architect the platform so domain variance is cheap to add, without premature abstraction in v1.
+Jungl3's v1 picks one domain anchor (see Topic 2), but the long-term vision is multiple domain variants — different synthetic worlds sharing a common platform. Research how to architect the platform so domain variance is cheap to add, without premature abstraction in v1.
 
 Investigate:
 
@@ -24,6 +24,6 @@ Investigate:
 
 8. **Reference platforms that got this right or wrong.** Survey platforms that successfully generalized across domains (Salesforce, ServiceNow, Airtable, Retool, Temporal) and ones that didn't (internal tools, failed PaaS plays). What design decisions differentiated the outcomes?
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

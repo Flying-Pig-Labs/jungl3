@@ -1,9 +1,9 @@
-# Jungle3 Deep-Research Report: Data Retention and Archival Strategy
+# Jungl3 Deep-Research Report: Data Retention and Archival Strategy
 
 ## Executive Summary
 
-* **[OVERCOMING THE 90-DAY LIMIT]**: AWS Step Functions enforces a hard 90-day retention limit on Standard workflow execution history [1], [2]. To meet enterprise audit requirements, Jungle3 must explicitly configure Step Functions to stream execution history to CloudWatch Logs [3], [4].
-* **[COST-AWARE LOG EXPORT]**: CloudWatch Logs ingestion is expensive at $0.50 per GB [5], [6]. To stay under the ADR 0007 $100/month ceiling, Jungle3 must implement a strict 7-day retention policy in CloudWatch, paired with automated exports to Amazon S3 [7], [8], followed by lifecycle transitions to Glacier Deep Archive [9].
+* **[OVERCOMING THE 90-DAY LIMIT]**: AWS Step Functions enforces a hard 90-day retention limit on Standard workflow execution history [1], [2]. To meet enterprise audit requirements, Jungl3 must explicitly configure Step Functions to stream execution history to CloudWatch Logs [3], [4].
+* **[COST-AWARE LOG EXPORT]**: CloudWatch Logs ingestion is expensive at $0.50 per GB [5], [6]. To stay under the ADR 0007 $100/month ceiling, Jungl3 must implement a strict 7-day retention policy in CloudWatch, paired with automated exports to Amazon S3 [7], [8], followed by lifecycle transitions to Glacier Deep Archive [9].
 * **[DYNAMODB DATA LIFECYCLE]**: Operational, non-audit DynamoDB data must utilize Time to Live (TTL) for automatic, zero-capacity-cost expiration [10]. Conversely, the `jungle3-audit` table must remain strictly append-only and hash-chained to guarantee cryptographic immutability [11], [12].
 * **[BUDGET VIABILITY]**: Cost projections indicate that a "Medium" scale deployment (5GB logs/month, 5GB operational data, growing audit table) will cost approximately $99.02 over 24 months for storage and retention, safely fitting within the $100/month infrastructure ceiling.
 
@@ -12,27 +12,27 @@
 ### Overcoming the 90-Day Step Functions Limit
 By default, AWS Step Functions retains the execution history for Standard workflows for exactly 90 days after an execution closes, after which the data is permanently deleted [1], [2]. This is a hard service quota [13]. Furthermore, Express workflows do not record execution history natively at all [3], [2]. 
 
-To ensure long-term auditability and plausibility for enterprise customers, Jungle3 cannot rely on the native Step Functions console for historical data. Instead, all state machines must be configured to log their execution history directly to Amazon CloudWatch Logs [3], [4]. This provides a unified, queryable log stream for both Standard and Express workflows.
+To ensure long-term auditability and plausibility for enterprise customers, Jungl3 cannot rely on the native Step Functions console for historical data. Instead, all state machines must be configured to log their execution history directly to Amazon CloudWatch Logs [3], [4]. This provides a unified, queryable log stream for both Standard and Express workflows.
 
 ### CloudWatch to S3 Export Pipeline
 While CloudWatch Logs is excellent for immediate operational querying via Logs Insights, it is not cost-effective for long-term storage. CloudWatch ingestion costs $0.50 per GB [5], [6], and standard storage costs accumulate quickly. 
 
-Jungle3 must implement a short retention window (e.g., 7 days) on the CloudWatch Log Groups. Before the logs expire, an automated process (such as an EventBridge scheduled rule triggering a Lambda function) must use the `CreateExportTask` API to export the log data to an Amazon S3 bucket [7], [14], [8]. This approach drastically reduces storage costs while preserving the data for compliance purposes.
+Jungl3 must implement a short retention window (e.g., 7 days) on the CloudWatch Log Groups. Before the logs expire, an automated process (such as an EventBridge scheduled rule triggering a Lambda function) must use the `CreateExportTask` API to export the log data to an Amazon S3 bucket [7], [14], [8]. This approach drastically reduces storage costs while preserving the data for compliance purposes.
 
 ## DynamoDB Data Lifecycle and Audit Immutability
 
 ### TTL for Non-Audit Operational Data
-For standard operational data (e.g., temporary claim states, idempotency tokens, or session data), Jungle3 should leverage DynamoDB's Time to Live (TTL) feature. TTL allows you to define a per-item expiration timestamp; DynamoDB automatically deletes expired items without consuming any Write Capacity Units (WCUs) [10]. This is critical for maintaining a lean database footprint and avoiding unnecessary storage costs ($0.25 per GB-month for Standard storage) [15].
+For standard operational data (e.g., temporary claim states, idempotency tokens, or session data), Jungl3 should leverage DynamoDB's Time to Live (TTL) feature. TTL allows you to define a per-item expiration timestamp; DynamoDB automatically deletes expired items without consuming any Write Capacity Units (WCUs) [10]. This is critical for maintaining a lean database footprint and avoiding unnecessary storage costs ($0.25 per GB-month for Standard storage) [15].
 
 ### Preserving the Immutable Audit Chain
 In stark contrast to operational data, the `jungle3-audit` table (defined in ADR 0009) must never use TTL. This table serves as the cryptographic source of truth. It must be strictly append-only, utilizing hash-chaining to ensure that any tampering is mathematically detectable [11], [12]. 
 
-To verify the integrity of this chain without incurring massive read costs, Jungle3 should provide an operator runbook or a lightweight Lambda utility that can sequentially query the table by `case_id` and recompute the SHA-256 hashes to validate the `prev_hash` links.
+To verify the integrity of this chain without incurring massive read costs, Jungl3 should provide an operator runbook or a lightweight Lambda utility that can sequentially query the table by `case_id` and recompute the SHA-256 hashes to validate the `prev_hash` links.
 
 ## S3 Lifecycle and Glacier Deep Archive Strategy
 
 ### Long-Term Archival Tiers
-Once execution history and application logs are exported to Amazon S3, they should not remain in the S3 Standard storage class indefinitely. Jungle3 must configure S3 Lifecycle rules to automatically transition older objects to colder, cheaper storage tiers [9].
+Once execution history and application logs are exported to Amazon S3, they should not remain in the S3 Standard storage class indefinitely. Jungl3 must configure S3 Lifecycle rules to automatically transition older objects to colder, cheaper storage tiers [9].
 
 For compliance data that is rarely accessed but must be retained for years, S3 Glacier Deep Archive is the optimal target. While S3 Standard costs roughly $0.023 per GB-month, Glacier Deep Archive drops this cost to approximately $0.00099 per GB-month. A standard lifecycle rule should transition logs from S3 Standard to Glacier Deep Archive 30 days after the export date.
 
@@ -49,7 +49,7 @@ To validate that this retention strategy aligns with the ADR 0007 infrastructure
 
 *Takeaway: The "Medium" scenario (5GB of logs and 5GB of operational data) scales perfectly within the $100/month ceiling over two years. However, if a customer generates 20GB of logs monthly, the ingestion and storage costs will breach the ADR 0007 limit, necessitating aggressive log sampling or a budget exception.*
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 * **Configure Step Functions to log to CloudWatch:** Explicitly enable CloudWatch logging for all state machines to bypass the native 90-day execution history limit.
 * **Implement aggressive CloudWatch retention:** Set CloudWatch Log Group retention to 7 days to minimize storage costs, paired with a weekly automated export task to Amazon S3.

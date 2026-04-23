@@ -1,16 +1,16 @@
 # Executive Summary
 
-For Jungle3 to succeed in its mission of delivering 'time to real' and avoiding 'plausibility collapse', it is strategically imperative to build a custom, opinionated observability and administration user interface. Relying on raw AWS consoles like CloudWatch and X-Ray would undermine the core value proposition, presenting the product as a complex 'box of parts' rather than a pre-built, integrated enterprise application. The research strongly indicates that this custom admin surface is not feature bloat but a critical component for product differentiation, sales enablement, and a positive builder experience. The recommended approach is a hybrid model: Jungle3 should build the high-value, business-context-aware views that generic tools cannot provide, such as per-entity case timelines, queue health dashboards framed in business terms, and one-click failure replay mechanisms. For deep, generic observability functions like log searching and trace analysis, Jungle3 should embed or deep-link to best-in-class vendor tools or the native AWS consoles. This strategy allows Jungle3 to own the narrative and user experience, translating raw telemetry into meaningful, plausible signals, thereby reinforcing the product's core thesis.
+For Jungl3 to succeed in its mission of delivering 'time to real' and avoiding 'plausibility collapse', it is strategically imperative to build a custom, opinionated observability and administration user interface. Relying on raw AWS consoles like CloudWatch and X-Ray would undermine the core value proposition, presenting the product as a complex 'box of parts' rather than a pre-built, integrated enterprise application. The research strongly indicates that this custom admin surface is not feature bloat but a critical component for product differentiation, sales enablement, and a positive builder experience. The recommended approach is a hybrid model: Jungl3 should build the high-value, business-context-aware views that generic tools cannot provide, such as per-entity case timelines, queue health dashboards framed in business terms, and one-click failure replay mechanisms. For deep, generic observability functions like log searching and trace analysis, Jungl3 should embed or deep-link to best-in-class vendor tools or the native AWS consoles. This strategy allows Jungl3 to own the narrative and user experience, translating raw telemetry into meaningful, plausible signals, thereby reinforcing the product's core thesis.
 
 # Overall Summary Of Findings
 
-The comprehensive research into Jungle3's observability UX for builders reveals a consistent and strong need for a custom, business-context-aware admin surface to uphold the product's core theses of 'time to real' and avoiding 'plausibility collapse'.
+The comprehensive research into Jungl3's observability UX for builders reveals a consistent and strong need for a custom, business-context-aware admin surface to uphold the product's core theses of 'time to real' and avoiding 'plausibility collapse'.
 
-**Custom Admin Surface and Tooling:** The most significant finding is that relying on raw AWS consoles is a strategic risk that would commoditize the product and create a poor builder experience. A custom admin surface is not bloat but a necessity for sales demos, reducing customer support, and reinforcing the value proposition. The recommended strategy is a hybrid 'Build+Link' or 'Build+Embed' model. Jungle3 should build the unique, context-aware views (like case timelines) and embed or deep-link to specialized tools (Grafana, Honeycomb) or native consoles for low-level analysis. The recommended v1 stack is OpenTelemetry (via AWS Distro for OpenTelemetry) for instrumentation, with a default export path to AWS X-Ray and CloudWatch, and an optional path to third-party vendors. This stack should be provisioned via CloudFormation out-of-the-box.
+**Custom Admin Surface and Tooling:** The most significant finding is that relying on raw AWS consoles is a strategic risk that would commoditize the product and create a poor builder experience. A custom admin surface is not bloat but a necessity for sales demos, reducing customer support, and reinforcing the value proposition. The recommended strategy is a hybrid 'Build+Link' or 'Build+Embed' model. Jungl3 should build the unique, context-aware views (like case timelines) and embed or deep-link to specialized tools (Grafana, Honeycomb) or native consoles for low-level analysis. The recommended v1 stack is OpenTelemetry (via AWS Distro for OpenTelemetry) for instrumentation, with a default export path to AWS X-Ray and CloudWatch, and an optional path to third-party vendors. This stack should be provisioned via CloudFormation out-of-the-box.
 
 **Key Observability Views:**
 *   **Queue Health:** A first-class queue dashboard is critical. It must display canonical metrics like backlog depth, age of oldest message, throughput, and DLQ count. The UX must support drill-downs from a high-level queue status to individual messages and the related synthetic business case. It must also provide safe, one-click actions like 'DLQ Redrive' and 'Purge', with built-in, non-configurable PII masking for message peeking.
-*   **Event Timelines:** The 'Per-Entity Timeline' (e.g., tracing a single insurance claim) is the most valuable paradigm for Jungle3's builders. This requires a robust correlation strategy using both a technical `trace_id` and a business `case_id`. The v1 implementation should build the high-level business milestone view and deep-link to a vendor or native trace waterfall UI for detailed technical inspection.
+*   **Event Timelines:** The 'Per-Entity Timeline' (e.g., tracing a single insurance claim) is the most valuable paradigm for Jungl3's builders. This requires a robust correlation strategy using both a technical `trace_id` and a business `case_id`. The v1 implementation should build the high-level business milestone view and deep-link to a vendor or native trace waterfall UI for detailed technical inspection.
 *   **Failure Inspection & Replay:** When failures occur, builders need a minimal-click path from alert to root cause without writing complex queries. This involves providing a rich 'Context Pack' (inputs, feature flags, persona data), automated 'golden-path comparison' (diffing against a successful run), and pre-filtered links to logs and traces. The replay UX must be safe, supporting single-event and batch replays with guardrails like blast radius limits, dry-run previews, and clear audit trails. Idempotency via `eventId` and `idempotencyKey` is a prerequisite.
 
 **Plausibility and Personas:** To avoid 'plausibility collapse', the observability signals themselves must be realistic. The synthetic data generator must produce believable workload shapes (diurnal patterns, weekend lulls), noise, partial failures, and plausible audit trails tied to specific personas (e.g., Claims Adjuster, Underwriter). The system should even surface a 'Realism Score' to self-diagnose. Different personas require different views: Engineers need a dense 'Cockpit', Product Managers a narrative 'Mission Control', Demo-givers a polished 'Story Mode', and Buyers a high-level 'Executive Briefing'.
@@ -21,7 +21,7 @@ The comprehensive research into Jungle3's observability UX for builders reveals 
 
 ## Canonical Metrics
 
-A first-class queue health dashboard for Jungle3 should display a canonical set of metrics on a per-queue basis to provide an immediate understanding of system health. These essential metrics include:
+A first-class queue health dashboard for Jungl3 should display a canonical set of metrics on a per-queue basis to provide an immediate understanding of system health. These essential metrics include:
 
 *   **Backlog Depth (Queue Depth):** The number of messages waiting to be processed (SQS's `ApproximateNumberOfMessagesVisible`). A consistently growing backlog is a primary indicator of a consumption problem.
 *   **Age of Oldest Message:** The time the longest-waiting message has been in the queue (SQS's `ApproximateAgeOfOldestMessage`). This is critical for processing time SLOs and indicates if messages are being processed in a timely manner.
@@ -41,22 +41,22 @@ The recommended user experience for drilling down from a high-level alert to a r
 3.  **Message-Level View:** From the queue view, the user can browse or search for specific messages, particularly within a DLQ. This view should list messages with metadata like `MessageId`, timestamp, and retry count.
 4.  **Individual Message Details:** Clicking on a single message reveals its full payload (with PII masking), attributes, and a detailed history of all processing attempts, including failures and error messages.
 5.  **Consumer Context:** From the message's history, the user can click on the consumer (e.g., a Lambda function) to deep-link to a view of that consumer's specific logs or configuration in the native AWS console.
-6.  **Synthetic Case/Persona Link:** A crucial, value-add step for Jungle3. The message detail view should link the technical failure back to the synthetic business context it belongs to (e.g., 'Related to Synthetic Case: Order #S-12345'). This connects an abstract system failure to a tangible business process, which is invaluable for builders.
+6.  **Synthetic Case/Persona Link:** A crucial, value-add step for Jungl3. The message detail view should link the technical failure back to the synthetic business context it belongs to (e.g., 'Related to Synthetic Case: Order #S-12345'). This connects an abstract system failure to a tangible business process, which is invaluable for builders.
 
 ## Essential Actions
 
-To enable effective queue management and recovery, the Jungle3 queue health UI must provide a set of safe, one-click actions. These critical affordances include:
+To enable effective queue management and recovery, the Jungl3 queue health UI must provide a set of safe, one-click actions. These critical affordances include:
 
 *   **Purge:** An action to delete all messages from a queue. This is a destructive but necessary operation for clearing backed-up non-critical queues or DLQs after an issue is resolved. It must be protected by a confirmation dialog.
 *   **Retry/Requeue (Redrive):** The most critical action for a DLQ. This allows an operator to move a single message, a selected batch, or all messages from the DLQ back to the source queue for another processing attempt. This is often referred to as a 'DLQ Redrive'.
 *   **Quarantine:** An action to move a suspected 'poison message' from a DLQ to a separate, manual-review queue. This isolates the problematic message, allowing other messages in the DLQ to be safely retried.
-*   **Sample Message Peek (with PII Masking):** The ability to view the body of messages directly in the UI is essential for debugging. For an enterprise product like Jungle3, this feature must include built-in, non-configurable PII masking that automatically redacts sensitive fields (e.g., email, SSN) before rendering the payload.
+*   **Sample Message Peek (with PII Masking):** The ability to view the body of messages directly in the UI is essential for debugging. For an enterprise product like Jungl3, this feature must include built-in, non-configurable PII masking that automatically redacts sensitive fields (e.g., email, SSN) before rendering the payload.
 
 ## Build Vs Offload Strategy
 
-Jungle3's value is in providing an integrated, context-aware UX, not in replicating the entire AWS console. The strategy for building features versus offloading to native consoles should be as follows:
+Jungl3's value is in providing an integrated, context-aware UX, not in replicating the entire AWS console. The strategy for building features versus offloading to native consoles should be as follows:
 
-**Build in Jungle3 Admin UI:**
+**Build in Jungl3 Admin UI:**
 *   The unified dashboard showing the health status of all queues and streams.
 *   The complete, context-aware drill-down flow from a high-level queue metric down to the specific synthetic business case.
 *   All essential action affordances: Purge, Retry/Redrive, and Quarantine, with appropriate safety guards.
@@ -87,7 +87,7 @@ There are three primary paradigms for visualizing event timelines, each with dis
 
 ## Recommended Correlation Strategy
 
-A robust, multi-layered correlation strategy is the foundation for any meaningful timeline view. The recommended approach for Jungle3 is to link technical events to business processes using two key identifiers propagated with every event and service call:
+A robust, multi-layered correlation strategy is the foundation for any meaningful timeline view. The recommended approach for Jungl3 is to link technical events to business processes using two key identifiers propagated with every event and service call:
 
 1.  **Global Correlation ID (`trace.trace_id`):** Following the OpenTelemetry standard, every request entering the system must be assigned a unique `trace.trace_id`. This ID must be propagated across all subsequent synchronous and asynchronous service calls. It is the backbone of distributed tracing, allowing tools to reconstruct the 'waterfall diagram' of a single technical transaction.
 
@@ -97,15 +97,15 @@ Causality is established within a trace by the parent-child relationships of spa
 
 ## V1 Recommendation
 
-For Jungle3 v1, the recommended approach is to prioritize the user experience that provides the most direct value to the 'builder' persona. The suggestions are:
+For Jungl3 v1, the recommended approach is to prioritize the user experience that provides the most direct value to the 'builder' persona. The suggestions are:
 
 *   **Suggested Default Timeline:** The **Per-Entity Timeline** should be the default and primary observability view. It aligns directly with the business logic that builders are creating and debugging, offering the highest value for understanding end-to-end flows.
 
 *   **Suggested Navigation Pattern:** A hybrid build/offload approach is recommended:
-    1.  The user starts in the Jungle3 Admin UI on a high-level dashboard showing a list of recent business entities (e.g., recent claims).
+    1.  The user starts in the Jungl3 Admin UI on a high-level dashboard showing a list of recent business entities (e.g., recent claims).
     2.  The user selects an entity, which navigates them to its **Per-Entity Timeline**. This view shows a simplified, chronological sequence of major business milestones (e.g., 'Claim Submitted', 'Fraud Check Passed').
     3.  The user clicks a specific milestone. This action drills down by constructing a deep link to a specialized observability vendor's UI (like Honeycomb or Grafana Tempo).
-    4.  The user lands in the vendor's detailed **trace waterfall view**, where they can inspect individual spans, logs, and attributes for that specific technical transaction. This leverages the vendor's investment in complex visualization while Jungle3 provides the crucial business context.
+    4.  The user lands in the vendor's detailed **trace waterfall view**, where they can inspect individual spans, logs, and attributes for that specific technical transaction. This leverages the vendor's investment in complex visualization while Jungl3 provides the crucial business context.
 
 
 # Failure Inspection Ux Analysis
@@ -188,31 +188,31 @@ A complete and immutable audit trail for all replay operations is non-negotiable
 
 # Cloud Native Tooling Strategy
 
-Jungle3 should adopt a hybrid 'Build+Link' strategy, creating a curated, opinionated observability experience within its own admin UI while providing deep-links to native AWS consoles (CloudWatch, X-Ray, Grafana) for advanced use cases. This approach is segmented by customer maturity:
+Jungl3 should adopt a hybrid 'Build+Link' strategy, creating a curated, opinionated observability experience within its own admin UI while providing deep-links to native AWS consoles (CloudWatch, X-Ray, Grafana) for advanced use cases. This approach is segmented by customer maturity:
 
-*   **For Small/Junior Teams:** The Jungle3 UI should focus on **building** simple, curated views that abstract away AWS complexity. This includes high-level health summaries, top-5 KPI lists, and error/latency overviews. The goal is to reduce cognitive load and context switching. Deep-links to pre-filtered CloudWatch Logs or X-Ray traces should be provided for specific, guided investigations.
+*   **For Small/Junior Teams:** The Jungl3 UI should focus on **building** simple, curated views that abstract away AWS complexity. This includes high-level health summaries, top-5 KPI lists, and error/latency overviews. The goal is to reduce cognitive load and context switching. Deep-links to pre-filtered CloudWatch Logs or X-Ray traces should be provided for specific, guided investigations.
 
-*   **For Medium/Mixed-Seniority Teams:** The strategy shifts to **wrapping** common AWS APIs. The Jungle3 UI can invoke the CloudWatch Logs Insights `StartQuery` API to allow in-app log exploration without forcing users into the AWS console. This should be supplemented with a rich library of pre-built, parameterized query definitions that are provisioned via CloudFormation. Deep-links to Grafana and AWS consoles remain available for power users.
+*   **For Medium/Mixed-Seniority Teams:** The strategy shifts to **wrapping** common AWS APIs. The Jungl3 UI can invoke the CloudWatch Logs Insights `StartQuery` API to allow in-app log exploration without forcing users into the AWS console. This should be supplemented with a rich library of pre-built, parameterized query definitions that are provisioned via CloudFormation. Deep-links to Grafana and AWS consoles remain available for power users.
 
-*   **For Large/Mature Teams:** A **link-first** strategy is most effective. These teams often have established workflows in Grafana or the AWS console. Jungle3's value is in pre-provisioning a comprehensive set of observability artifacts (dashboards, alarms, query definitions, X-Ray groups) via its CloudFormation template and providing seamless, context-preserving deep-links from the Jungle3 business-entity view (e.g., a specific case) directly into the relevant trace or log query in the native tool.
+*   **For Large/Mature Teams:** A **link-first** strategy is most effective. These teams often have established workflows in Grafana or the AWS console. Jungl3's value is in pre-provisioning a comprehensive set of observability artifacts (dashboards, alarms, query definitions, X-Ray groups) via its CloudFormation template and providing seamless, context-preserving deep-links from the Jungl3 business-entity view (e.g., a specific case) directly into the relevant trace or log query in the native tool.
 
 **Core Principles of the Strategy:**
-1.  **Build for Business Context:** The Jungle3 UI should own the views that require business context that native tools lack, such as the 'Per-Entity Timeline' that connects technical traces to a specific business case ID.
-2.  **Pre-Provision Artifacts:** The Jungle3 CloudFormation template is a key asset. It must create a baseline of `AWS::CloudWatch::Dashboard`, `AWS::Logs::QueryDefinition`, and `AWS::XRay::Group` resources, ensuring every customer has a useful observability setup from day one.
-3.  **Embrace Deep-Linking as an Escape Hatch:** Do not attempt to replicate the entirety of the AWS console. The Jungle3 UI should handle the 80% of common observability tasks, and use context-preserving deep-links (carrying trace IDs, time ranges, and filter parameters) to allow expert users to access the full fidelity of the native tools for the remaining 20% of tasks.
+1.  **Build for Business Context:** The Jungl3 UI should own the views that require business context that native tools lack, such as the 'Per-Entity Timeline' that connects technical traces to a specific business case ID.
+2.  **Pre-Provision Artifacts:** The Jungl3 CloudFormation template is a key asset. It must create a baseline of `AWS::CloudWatch::Dashboard`, `AWS::Logs::QueryDefinition`, and `AWS::XRay::Group` resources, ensuring every customer has a useful observability setup from day one.
+3.  **Embrace Deep-Linking as an Escape Hatch:** Do not attempt to replicate the entirety of the AWS console. The Jungl3 UI should handle the 80% of common observability tasks, and use context-preserving deep-links (carrying trace IDs, time ranges, and filter parameters) to allow expert users to access the full fidelity of the native tools for the remaining 20% of tasks.
 4.  **Secure Sharing:** For demos and support, avoid native CloudWatch dashboard sharing due to its broad permissions. Instead, use the `GetMetricWidgetImage` API to export static snapshots or pre-run queries and render static HTML reports.
 
 # Custom Admin Surface Analysis
 
-A custom observability and admin application is not a form of bloat for Jungle3; it is a necessary investment and a critical component of the core product offering. While there are valid concerns against building, the case in favor is overwhelmingly stronger and directly tied to the product's viability.
+A custom observability and admin application is not a form of bloat for Jungl3; it is a necessary investment and a critical component of the core product offering. While there are valid concerns against building, the case in favor is overwhelmingly stronger and directly tied to the product's viability.
 
 **Case Against Building (The Costs & Risks):**
 *   **Maintenance Cost:** Building a custom UI is a significant, perpetual cost. It requires dedicated engineering resources for development, bug fixes, and keeping pace with underlying AWS service changes. It needs its own CI/CD pipeline, testing suites, and operational support.
-*   **Version Drift:** The custom UI is tightly coupled to both the Jungle3 application and the AWS services it uses. As either evolves, the UI requires constant updates to prevent it from becoming outdated, buggy, and untrustworthy.
+*   **Version Drift:** The custom UI is tightly coupled to both the Jungl3 application and the AWS services it uses. As either evolves, the UI requires constant updates to prevent it from becoming outdated, buggy, and untrustworthy.
 *   **Security Implications:** A custom, internet-facing web application introduces a new attack surface. It requires significant investment in web application security, identity management (e.g., Cognito integration), and regular penetration testing. A vulnerability could expose the customer's entire application.
 
 **Case For Building (The Value & Justification):**
-*   **Product Differentiation & Value Proposition:** The core promise of Jungle3 is delivering a 'pre-built, integrated enterprise application'. Without a unified management and observability experience, the product feels like a mere CloudFormation template. A custom UI is what makes the product feel like a complete, managed solution, abstracting away the underlying infrastructure complexity that Jungle3 aims to solve.
+*   **Product Differentiation & Value Proposition:** The core promise of Jungl3 is delivering a 'pre-built, integrated enterprise application'. Without a unified management and observability experience, the product feels like a mere CloudFormation template. A custom UI is what makes the product feel like a complete, managed solution, abstracting away the underlying infrastructure complexity that Jungl3 aims to solve.
 *   **Enabling 'Must-Have' Views:** Generic tools like the AWS console cannot provide the business-context-aware views that builders need. A custom surface is the only way to deliver these high-value features. The investment is justified by the following 'must-have' views:
     1.  **Case Timeline:** A view that traces a single business entity (e.g., an insurance claim) across multiple microservices, queues, and asynchronous jobs. This is the most critical view for understanding the end-to-end business process.
     2.  **Failure Detail & Replay:** When a failure occurs, a custom UI can present a curated view with a structured context pack, a diff against a successful run, and, most importantly, a **one-click 'Replay' or 'Redrive' button**. This encapsulates complex recovery logic that is difficult and error-prone to perform manually in the AWS console.
@@ -245,16 +245,16 @@ The ideal dashboard for an engineer is 'The Cockpit,' a high-density, multi-colu
 
 # Prior Art Observability Patterns
 
-A synthesis of prior art from tools like LocalStack, Temporal, Camunda, Datadog, and Honeycomb reveals several key UI/UX patterns that are highly transferable to Jungle3's synthetic enterprise environment.
+A synthesis of prior art from tools like LocalStack, Temporal, Camunda, Datadog, and Honeycomb reveals several key UI/UX patterns that are highly transferable to Jungl3's synthetic enterprise environment.
 
 **1. Navigation and Causality Visualization:**
-*   **Marketplace-Aware Service Map:** Adopt Datadog's Service Map paradigm but adapt it for Jungle3's context. The map should be the primary navigation hub, visualizing each marketplace listing as a primary node, showing version and ownership. It must be filterable by facets (e.g., team, application) and provide direct click-to-trace and click-to-jobs flows, revealing causality.
+*   **Marketplace-Aware Service Map:** Adopt Datadog's Service Map paradigm but adapt it for Jungl3's context. The map should be the primary navigation hub, visualizing each marketplace listing as a primary node, showing version and ownership. It must be filterable by facets (e.g., team, application) and provide direct click-to-trace and click-to-jobs flows, revealing causality.
 *   **Business-Centric Timelines:** Emulate the workflow history views of Temporal and Camunda. For any given business entity (e.g., a case), provide a detailed timeline showing the sequence of events, state transitions, and even diffs of variables between steps. Offer multiple views: a compact, logical grouping; a detailed event-by-event timeline; and a raw JSON view for deep debugging.
 *   **Integrated Trace Visualization:** For technical debugging, the best practice from Honeycomb and Datadog is a waterfall diagram for distributed traces. This view is essential for visualizing latency, parallelism (fan-out/fan-in), and retries. Navigation must be seamless from the high-level service map or business timeline directly to the specific trace that executed a step.
 
 **2. Best Practices for Specific Views:**
 *   **Job/Queue Views:** A dedicated console, inspired by Temporal Web and Celery Flower, is crucial. It must display canonical metrics (backlog depth, age of oldest message, throughput, DLQ count) and provide a preview of job payloads. Crucially, it must offer single-click actions like 'retry job' or 'move to DLQ'.
-*   **High-Cardinality Exploration:** A key pattern from Honeycomb is the ability to 'slice and dice' telemetry on any arbitrary, high-cardinality field (like `user_id` or `case_id`). Jungle3 should integrate this concept, allowing builders to group, filter, and pivot on custom business attributes within their trace and log data to find patterns.
+*   **High-Cardinality Exploration:** A key pattern from Honeycomb is the ability to 'slice and dice' telemetry on any arbitrary, high-cardinality field (like `user_id` or `case_id`). Jungl3 should integrate this concept, allowing builders to group, filter, and pivot on custom business attributes within their trace and log data to find patterns.
 
 **3. Guardrails Around Destructive Actions:**
 This is a critical area where best practices must be strictly followed.
@@ -282,7 +282,7 @@ To ensure generated data is internally consistent and logical, a set of cross-en
 
 ## Realism Detection
 
-Jungle3 should include built-in mechanisms to self-diagnose and flag obviously fake or unrealistic patterns in the generated data. This involves using statistical heuristics and detectors. Distributional checks, like the Kolmogorov-Smirnov (KS) test, can compare generated data distributions against target baselines. Temporal checks, such as calculating the coefficient of variation (CV) of interarrival times (a CV near 0 indicates overly uniform arrivals) and autocorrelation (ACF), can detect non-random patterns. Trace coherence checks should verify that child spans are within parent spans and flag traces with zero-variance or identical durations. Text and categorical checks can analyze n-gram entropy to detect low variability in generated text. The results of these checks should be exposed in the UI as a 'Realism Score,' broken down by contributing factors with guidance for remediation, such as 'Low Diversity in Notes — add text variability.'.
+Jungl3 should include built-in mechanisms to self-diagnose and flag obviously fake or unrealistic patterns in the generated data. This involves using statistical heuristics and detectors. Distributional checks, like the Kolmogorov-Smirnov (KS) test, can compare generated data distributions against target baselines. Temporal checks, such as calculating the coefficient of variation (CV) of interarrival times (a CV near 0 indicates overly uniform arrivals) and autocorrelation (ACF), can detect non-random patterns. Trace coherence checks should verify that child spans are within parent spans and flag traces with zero-variance or identical durations. Text and categorical checks can analyze n-gram entropy to detect low variability in generated text. The results of these checks should be exposed in the UI as a 'Realism Score,' broken down by contributing factors with guidance for remediation, such as 'Low Diversity in Notes — add text variability.'.
 
 
 # V1 Observability Stack Recommendation
@@ -305,7 +305,7 @@ The recommended v1 stack is a hybrid model centered around the AWS Distro for Op
 
 The instrumentation strategy is standardized on OpenTelemetry to ensure vendor neutrality at the code level.
 
-*   **SDKs and Libraries:** Provide language-specific starter kits (Node.js, Java, Python, Go) that bundle the OpenTelemetry SDKs and a Jungle3 helper library. This library will enforce conventions and simplify setup. Auto-instrumentation for common frameworks (Express, Spring Boot) and database clients will be used to minimize manual effort.
+*   **SDKs and Libraries:** Provide language-specific starter kits (Node.js, Java, Python, Go) that bundle the OpenTelemetry SDKs and a Jungl3 helper library. This library will enforce conventions and simplify setup. Auto-instrumentation for common frameworks (Express, Spring Boot) and database clients will be used to minimize manual effort.
 *   **Correlation and Propagation:**
     *   **Trace Context:** The W3C Trace Context (`traceparent` header) will be the canonical standard for propagating trace information across all HTTP requests and service calls.
     *   **Correlation ID:** A separate, lightweight UUID-based `correlation_id` will be generated for each request and propagated in logs and message attributes. This serves as a fallback for correlating events when a request is not traced.
@@ -316,7 +316,7 @@ The instrumentation strategy is standardized on OpenTelemetry to ensure vendor n
 
 ## Deployment Model
 
-The observability stack will be provisioned using a CloudFormation template provided as part of the Jungle3 AWS Marketplace listing. This ensures a consistent and automated setup within the customer's AWS account.
+The observability stack will be provisioned using a CloudFormation template provided as part of the Jungl3 AWS Marketplace listing. This ensures a consistent and automated setup within the customer's AWS account.
 
 *   **ECS/Fargate Pattern:** The primary deployment model involves including the ADOT Collector as a sidecar container within the application's ECS task definition. The CloudFormation template will manage the task definition, IAM roles, and collector configuration.
 *   **Lambda Pattern:** For Lambda functions, the default approach will be to enable AWS X-Ray active tracing via a simple CloudFormation flag. For customers needing full OpenTelemetry features, an optional configuration will be provided to use the OpenTelemetry Lambda Layer, which can send telemetry to the ADOT collector or another OTLP endpoint.
@@ -340,7 +340,7 @@ To ensure developers have a productive and consistent experience, a local observ
 
 ## Access Control Model
 
-The recommended access control model is centered on a least-privilege IAM role, `Jungle3ServiceRole`, created in the customer's account. This role must not be accessed with long-lived keys. Instead, the Jungle3 backend assumes this role using AWS STS `AssumeRole`. The role's trust policy must be secured with a unique `ExternalId` to prevent the 'confused deputy' vulnerability. To propagate identity and context for fine-grained control, the `sts:TagSession` permission is used to pass application-level session tags (e.g., `approval_status`, `source_identity`) into the temporary AWS session. These tags are then used in IAM policy `Condition` blocks (e.g., `aws:PrincipalTag/approved`) to enforce access rules. Furthermore, a permission boundary policy must be attached to the role to act as a ceiling on its maximum possible privileges, ensuring it cannot be escalated beyond a predefined scope.
+The recommended access control model is centered on a least-privilege IAM role, `Jungl3ServiceRole`, created in the customer's account. This role must not be accessed with long-lived keys. Instead, the Jungl3 backend assumes this role using AWS STS `AssumeRole`. The role's trust policy must be secured with a unique `ExternalId` to prevent the 'confused deputy' vulnerability. To propagate identity and context for fine-grained control, the `sts:TagSession` permission is used to pass application-level session tags (e.g., `approval_status`, `source_identity`) into the temporary AWS session. These tags are then used in IAM policy `Condition` blocks (e.g., `aws:PrincipalTag/approved`) to enforce access rules. Furthermore, a permission boundary policy must be attached to the role to act as a ceiling on its maximum possible privileges, ensuring it cannot be escalated beyond a predefined scope.
 
 ## Risky Action Gating
 
@@ -362,7 +362,7 @@ To provide a complete and immutable audit trail, a multi-layered approach is req
 A hybrid, tiered strategy using CloudWatch Logs classes will be implemented by default to manage log ingestion costs. This involves routing logs based on their purpose and access frequency.
 
 *   **High-Priority Logs (CloudWatch Standard Class):** Logs that are essential for real-time monitoring, alarming, and dashboarding (e.g., application errors, key business transaction events, security events) will be routed to the 'Standard' log class. This class supports metric filters, which are necessary for creating CloudWatch Metrics and Alarms from log data.
-*   **Low-Priority Logs (CloudWatch Infrequent Access Class):** Verbose diagnostic logs, debug logs, and audit trails that are primarily used for ad-hoc forensic analysis and are accessed less frequently will be routed to the 'Infrequent Access' (IA) log class. The IA class offers a 50% lower per-GB ingestion cost compared to the Standard class, providing significant savings at scale. This routing will be configured in the application's logging setup provided by Jungle3.
+*   **Low-Priority Logs (CloudWatch Infrequent Access Class):** Verbose diagnostic logs, debug logs, and audit trails that are primarily used for ad-hoc forensic analysis and are accessed less frequently will be routed to the 'Infrequent Access' (IA) log class. The IA class offers a 50% lower per-GB ingestion cost compared to the Standard class, providing significant savings at scale. This routing will be configured in the application's logging setup provided by Jungl3.
 
 ## Trace Sampling Strategy
 
@@ -380,13 +380,13 @@ A default tiered data retention policy will be established to balance accessibil
 
 *   **Hot Tier (30 Days):** Logs in the CloudWatch Logs Standard class, used for real-time monitoring, will be retained for 30 days by default. This provides immediate access for recent operational issues.
 *   **Warm Tier (90 Days):** Logs in the CloudWatch Logs Infrequent Access class, used for ad-hoc debugging, will be retained for 90 days by default. This allows for a reasonable window for forensic analysis of less recent events at a lower cost.
-*   **Cold Tier (Long-Term Archival):** An automated, optional configuration will be provided to export all logs from CloudWatch to an Amazon S3 bucket. From S3, standard lifecycle policies can be applied to transition the data to lower-cost storage tiers like S3 Glacier or S3 Glacier Deep Archive for long-term compliance and archival. This configuration will be part of the Jungle3 CloudFormation template.
+*   **Cold Tier (Long-Term Archival):** An automated, optional configuration will be provided to export all logs from CloudWatch to an Amazon S3 bucket. From S3, standard lifecycle policies can be applied to transition the data to lower-cost storage tiers like S3 Glacier or S3 Glacier Deep Archive for long-term compliance and archival. This configuration will be part of the Jungl3 CloudFormation template.
 
 ## Proactive Cost Controls
 
-To protect customers from unexpected costs and ensure predictable billing, Jungle3 will ship with proactive cost management tools configured by default in the customer's AWS account.
+To protect customers from unexpected costs and ensure predictable billing, Jungl3 will ship with proactive cost management tools configured by default in the customer's AWS account.
 
-*   **Default AWS Budget:** The Jungle3 CloudFormation template will include an `AWS::Budgets::Budget` resource. This will create a default monthly budget with a sensible, pre-defined threshold (which can be customized by the customer). The budget will be scoped to the services and resources deployed by Jungle3.
+*   **Default AWS Budget:** The Jungl3 CloudFormation template will include an `AWS::Budgets::Budget` resource. This will create a default monthly budget with a sensible, pre-defined threshold (which can be customized by the customer). The budget will be scoped to the services and resources deployed by Jungl3.
 *   **Default Cost Alerts:** The budget will be configured with notification triggers. By default, it will send an alert to a customer-provided SNS topic or email address when actual or forecasted spending reaches specific thresholds (e.g., 80% and 100% of the budgeted amount). This provides customers with early warnings, allowing them to take action before costs escalate unexpectedly.
 
 
@@ -404,8 +404,8 @@ To provide a centralized, single-pane-of-glass view of the application's health 
 
 The dashboard will be provisioned with an opinionated set of widgets designed to provide immediate, actionable insights.
 
-*   **Naming Convention:** `Jungle3-<AppName>-<Environment>-Overview` (e.g., `Jungle3-ClaimsProcessing-Prod-Overview`).
-*   **Tagging Strategy:** All dashboards will be tagged with `jungle3:created-by: Jungle3Marketplace`, `Application: <AppName>`, and `Environment: <Environment>` for cost allocation and resource management.
+*   **Naming Convention:** `Jungl3-<AppName>-<Environment>-Overview` (e.g., `Jungl3-ClaimsProcessing-Prod-Overview`).
+*   **Tagging Strategy:** All dashboards will be tagged with `jungle3:created-by: Jungl3Marketplace`, `Application: <AppName>`, and `Environment: <Environment>` for cost allocation and resource management.
 *   **Default Widgets:**
     1.  **Alarm Status:** A widget displaying the current state of all critical CloudWatch Alarms associated with the application.
     2.  **Key Performance Indicators (KPIs):** A set of number widgets showing real-time values for Availability (success rate %), Throughput (requests/min), and Latency (p95 and p99 in ms).
@@ -418,7 +418,7 @@ The dashboard will be provisioned with an opinionated set of widgets designed to
 
 # Local Development Observability Parity
 
-To provide a meaningful local observability experience for builders and ensure parity with the deployed AWS environment, Jungle3 will ship a pre-configured, containerized local development stack using Docker Compose. This stack can be started with a single command and provides a complete, self-contained environment for observing and debugging applications locally.
+To provide a meaningful local observability experience for builders and ensure parity with the deployed AWS environment, Jungl3 will ship a pre-configured, containerized local development stack using Docker Compose. This stack can be started with a single command and provides a complete, self-contained environment for observing and debugging applications locally.
 
 **Components of the Local Stack:**
 1.  **LocalStack:** Emulates AWS services like SQS, Lambda, and S3, allowing the application to run locally without needing a real AWS account.
@@ -454,31 +454,31 @@ The application and UI must be instrumented to capture a session-level journey o
 
 ## Target Benchmark
 
-Based on industry data from sources like the DORA Report and observability vendors, diagnosis with traditional tools can take between 30 and 90 minutes. For Jungle3, a practical target for the first 6-12 months is to achieve a **median Time to Diagnosis (TTD) of 10-30 minutes** for common incidents. A p90 target should be set at under 2 hours.
+Based on industry data from sources like the DORA Report and observability vendors, diagnosis with traditional tools can take between 30 and 90 minutes. For Jungl3, a practical target for the first 6-12 months is to achieve a **median Time to Diagnosis (TTD) of 10-30 minutes** for common incidents. A p90 target should be set at under 2 hours.
 
 
 # Marketplace Deployment Constraints
 
 ## Iam And Permissions Model
 
-The core constraint is that the Jungle3 CloudFormation template cannot create or manage long-lived IAM access keys for the vendor. All permissions must be granted through IAM roles that reside within the buyer's account. The recommended pattern for vendor access is for the buyer to provision a dedicated, least-privilege IAM role. The vendor (Jungle3's backend) can then temporarily assume this role using `sts:AssumeRole`. To secure this cross-account access, the role's trust policy must include a `Condition` that requires a unique `ExternalId` (a secret shared between the buyer and vendor) to prevent confused deputy attacks. All actions taken by the vendor using this assumed role are logged in the buyer's CloudTrail, ensuring full auditability.
+The core constraint is that the Jungl3 CloudFormation template cannot create or manage long-lived IAM access keys for the vendor. All permissions must be granted through IAM roles that reside within the buyer's account. The recommended pattern for vendor access is for the buyer to provision a dedicated, least-privilege IAM role. The vendor (Jungl3's backend) can then temporarily assume this role using `sts:AssumeRole`. To secure this cross-account access, the role's trust policy must include a `Condition` that requires a unique `ExternalId` (a secret shared between the buyer and vendor) to prevent confused deputy attacks. All actions taken by the vendor using this assumed role are logged in the buyer's CloudTrail, ensuring full auditability.
 
 ## Data Privacy And Telemetry
 
-A fundamental constraint for enterprise customers is data sovereignty. Therefore, any 'phoning home' or sharing of telemetry data with the vendor must be 'default-off' and require explicit, granular, and revocable opt-in from the buyer. The Jungle3 installer must not enable any outbound data flows by default. If a buyer chooses to share telemetry for enhanced support or product improvement, it should be implemented through secure, buyer-controlled mechanisms. Recommended patterns include using CloudWatch cross-account observability (OAM), where the buyer creates a 'sink' and links specific data types (logs, metrics, traces) to the vendor's monitoring account, or configuring a CloudWatch Logs subscription filter to forward sanitized logs to a vendor endpoint via Kinesis Data Firehose. The buyer must always retain control over what is shared.
+A fundamental constraint for enterprise customers is data sovereignty. Therefore, any 'phoning home' or sharing of telemetry data with the vendor must be 'default-off' and require explicit, granular, and revocable opt-in from the buyer. The Jungl3 installer must not enable any outbound data flows by default. If a buyer chooses to share telemetry for enhanced support or product improvement, it should be implemented through secure, buyer-controlled mechanisms. Recommended patterns include using CloudWatch cross-account observability (OAM), where the buyer creates a 'sink' and links specific data types (logs, metrics, traces) to the vendor's monitoring account, or configuring a CloudWatch Logs subscription filter to forward sanitized logs to a vendor endpoint via Kinesis Data Firehose. The buyer must always retain control over what is shared.
 
 ## Support And Log Sharing Workflows
 
-Providing vendor support without persistent access requires secure and auditable workflows. The primary recommended pattern is for the buyer to grant temporary, on-demand access using the `assume-role` with `ExternalId` model, allowing a support engineer to troubleshoot live issues within a defined time window. All actions are auditable. A second, complementary pattern is a 'support-bundle' workflow. Jungle3 should ship with a tool that the buyer can run within their account. This tool collects, sanitizes (to remove PII), and packages relevant logs and configuration into a bundle. The bundle is saved to a buyer-owned S3 bucket, and the buyer can then share it with the vendor by generating a time-limited, pre-signed S3 URL. This puts the buyer in full control of what data is shared.
+Providing vendor support without persistent access requires secure and auditable workflows. The primary recommended pattern is for the buyer to grant temporary, on-demand access using the `assume-role` with `ExternalId` model, allowing a support engineer to troubleshoot live issues within a defined time window. All actions are auditable. A second, complementary pattern is a 'support-bundle' workflow. Jungl3 should ship with a tool that the buyer can run within their account. This tool collects, sanitizes (to remove PII), and packages relevant logs and configuration into a bundle. The bundle is saved to a buyer-owned S3 bucket, and the buyer can then share it with the vendor by generating a time-limited, pre-signed S3 URL. This puts the buyer in full control of what data is shared.
 
 ## Compliance Expectations
 
-Enterprise buyers have stringent compliance expectations that the deployment model must address. Key expectations include: 1) Data must remain within the buyer's AWS account by default. Any data export requires explicit opt-in and must be covered by contractual agreements like a SOC 2 report or a HIPAA Business Associate Agreement (BAA). 2) Robust security controls must be in place, including encryption in transit (TLS) and at rest (using customer-managed KMS keys), along with configurable data retention policies. 3) There must be a complete and immutable audit trail for all vendor access, and the buyer must have the ability to revoke this access immediately and unilaterally. The Jungle3 offering must include comprehensive documentation (data flow diagrams, security checklists) to help buyers complete their security and compliance reviews efficiently.
+Enterprise buyers have stringent compliance expectations that the deployment model must address. Key expectations include: 1) Data must remain within the buyer's AWS account by default. Any data export requires explicit opt-in and must be covered by contractual agreements like a SOC 2 report or a HIPAA Business Associate Agreement (BAA). 2) Robust security controls must be in place, including encryption in transit (TLS) and at rest (using customer-managed KMS keys), along with configurable data retention policies. 3) There must be a complete and immutable audit trail for all vendor access, and the buyer must have the ability to revoke this access immediately and unilaterally. The Jungl3 offering must include comprehensive documentation (data flow diagrams, security checklists) to help buyers complete their security and compliance reviews efficiently.
 
 
 # Biggest Risk Analysis
 
-The single biggest risk to Jungle3 if the topic of observability UX is ignored is the immediate and catastrophic 'plausibility collapse', which directly erodes the product's core 'time to real' value proposition. Without a custom, opinionated admin surface, a builder's first interaction with the operational side of their 'living, working system' would be the raw, complex, and context-free AWS Management Console. This experience would instantly shatter the illusion of a real, integrated enterprise application and expose Jungle3 as a mere 'DIY kit' or a sophisticated CloudFormation template. Instead of subtracting and reshaping a believable system, the builder is immediately forced into low-level infrastructure debugging, fighting with CloudWatch query syntax and manually correlating disparate logs and metrics. This is the exact friction Jungle3 promises to remove. This failure transforms the product from a high-value, integrated solution into a commoditized infrastructure package, weakening its market differentiation, making it nearly impossible to demo effectively to business stakeholders, and creating a frustrating builder experience that leads to high support costs and customer churn.
+The single biggest risk to Jungl3 if the topic of observability UX is ignored is the immediate and catastrophic 'plausibility collapse', which directly erodes the product's core 'time to real' value proposition. Without a custom, opinionated admin surface, a builder's first interaction with the operational side of their 'living, working system' would be the raw, complex, and context-free AWS Management Console. This experience would instantly shatter the illusion of a real, integrated enterprise application and expose Jungl3 as a mere 'DIY kit' or a sophisticated CloudFormation template. Instead of subtracting and reshaping a believable system, the builder is immediately forced into low-level infrastructure debugging, fighting with CloudWatch query syntax and manually correlating disparate logs and metrics. This is the exact friction Jungl3 promises to remove. This failure transforms the product from a high-value, integrated solution into a commoditized infrastructure package, weakening its market differentiation, making it nearly impossible to demo effectively to business stakeholders, and creating a frustrating builder experience that leads to high support costs and customer churn.
 
 # Decision Ready Recommendations
 
@@ -501,7 +501,7 @@ The single biggest risk to Jungle3 if the topic of observability UX is ignored i
 
 ## Single Biggest Risk
 
-The single biggest risk is **plausibility collapse and the erosion of the core 'time to real' value proposition**. Ignoring the need for a custom observability UX makes Jungle3 feel like a complex infrastructure kit, not a ready-to-use application. This leads to a frustrating builder experience, a weak market differentiator, and undermines the entire product thesis.
+The single biggest risk is **plausibility collapse and the erosion of the core 'time to real' value proposition**. Ignoring the need for a custom observability UX makes Jungl3 feel like a complex infrastructure kit, not a ready-to-use application. This leads to a frustrating builder experience, a weak market differentiator, and undermines the entire product thesis.
 
 ## Cross Topic Links
 

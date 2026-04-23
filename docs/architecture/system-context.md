@@ -1,6 +1,6 @@
 # System Context
 
-The layer model for Jungle3. This is the diagram everything else references.
+The layer model for Jungl3. This is the diagram everything else references.
 
 For term definitions see [`../glossary.md`](../glossary.md).
 
@@ -28,11 +28,11 @@ flowchart LR
   DMZ -->|promotes to| CAN
 ```
 
-All of the above lives inside a single customer's AWS account, installed from the Jungle3 AWS Marketplace listing. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md). The DMZ/Canopy split is pinned in [ADR 0011](../decisions/0011-canopy-and-ai-first-dmz.md).
+All of the above lives inside a single customer's AWS account, installed from the Jungl3 AWS Marketplace listing. See [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md). The DMZ/Canopy split is pinned in [ADR 0011](../decisions/0011-canopy-and-ai-first-dmz.md).
 
 ## Reading the diagram
 
-- **Control Plane** sits outside any Jungle. It is the orchestration brain; it *vends* Jungles, DMZs, and Canopies on demand. It runs inside the customer's AWS account, not as a Jungle3-hosted service.
+- **Control Plane** sits outside any Jungle. It is the orchestration brain; it *vends* Jungles, DMZs, and Canopies on demand. It runs inside the customer's AWS account, not as a Jungl3-hosted service.
 - **Substrate** is the AWS primitives layer the whole install sits on — networking, identity, storage, compute, observability. Vended implicitly by the CloudFormation install, not per-Jungle. Named here because procurement cares: Substrate is *what the customer's platform team operates*.
 - A **Jungle** is a composite: an [Understory](../glossary.md#understory) that runs on top of a Synthetic Runtime, with an Agent Layer operating within it. These three are not separate deployables — they are layers of one environment. The Jungle as a whole sits on the Substrate.
 - The **DMZ** is the AI evaluation surface. A prototype built in a Jungle *deploys to* its DMZ first. Inside the DMZ, AI agents (personas, pressure testers, chaos monkeys, focus-group facsimiles) exercise the prototype. Humans do not enter the DMZ. See [`./dmz.md`](./dmz.md).
@@ -45,7 +45,7 @@ All of the above lives inside a single customer's AWS account, installed from th
 - **AWS topology** (accounts, VPCs, ECS, ALB, WAF). Deployment topology is a separate concern and gets its own doc when we commit to it. See `CLAUDE.md` §11 for what's still undecided there.
 - **Agent specialists** (Data, API, Event, Auth, etc.). The Agent Layer is shown as a single block. A dedicated agent-architecture diagram earns its place the first time we implement a sub-agent.
 - **Synthetic Runtime internals** (generators, emitters, stubs). Same reasoning — diagram when we build, not before.
-- **Understory service decomposition.** The `Understory` block in the diagram is a single layer; what the Understory is *made of* (services, modules, tables) is a separate concern. [`../research/research2-v1-service-build-plan.md`](../research/research2-v1-service-build-plan.md) proposes one such decomposition (ten services anchored on a Work Item / Case). Whether Jungle3 adopts that decomposition is open — see [`../../CLAUDE.md`](../../CLAUDE.md) §11.
+- **Understory service decomposition.** The `Understory` block in the diagram is a single layer; what the Understory is *made of* (services, modules, tables) is a separate concern. [`../research/research2-v1-service-build-plan.md`](../research/research2-v1-service-build-plan.md) proposes one such decomposition (ten services anchored on a Work Item / Case). Whether Jungl3 adopts that decomposition is open — see [`../../CLAUDE.md`](../../CLAUDE.md) §11.
 - **Substrate internals.** Substrate is shown as a single block; which AWS services it comprises (VPC shape, compute choice, storage, identity) is deliberately undecided here. See [`../../CLAUDE.md`](../../CLAUDE.md) §11.
 
 Splitting those concerns into their own focused diagrams is the point. One crowded diagram is worse than five small ones.

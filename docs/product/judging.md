@@ -1,12 +1,12 @@
 # Judging as interaction
 
-How judging works in a Jungle3 event. Product framing, not architecture. For the Canopy's role in this see [`../architecture/canopy.md`](../architecture/canopy.md); for terms see [`../glossary.md`](../glossary.md).
+How judging works in a Jungl3 event. Product framing, not architecture. For the Canopy's role in this see [`../architecture/canopy.md`](../architecture/canopy.md); for terms see [`../glossary.md`](../glossary.md).
 
 ## The shift
 
 In most innovation events, judges watch presentations. Teams perform a demo; judges grade the performance. The prototype is secondary to the pitch.
 
-Jungle3 inverts that. Prototypes are already deployed in their Canopies, already accessible, already alive. A judge does not watch the prototype; a judge *uses* it.
+Jungl3 inverts that. Prototypes are already deployed in their Canopies, already accessible, already alive. A judge does not watch the prototype; a judge *uses* it.
 
 ## How it works
 

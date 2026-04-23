@@ -59,7 +59,7 @@ Every Step Functions execution carries the `case_id` and `trace_id` ([ADR 0005](
 ## Alternatives considered
 
 - **Event-chain architecture (Lambdas wired by SQS/EventBridge).** Cheapest first-line-of-code. Rejected — implicit workflow, no artifact to review, maker-checker unenforceable at the right layer, admin-agent tool becomes archaeology. The research cluster was uncontested on this.
-- **A custom DynamoDB-based workflow engine.** More control, no Step Functions dependency. Rejected — reinventing an AWS-native primitive, and the engine itself becomes a service Jungle3 owns forever.
+- **A custom DynamoDB-based workflow engine.** More control, no Step Functions dependency. Rejected — reinventing an AWS-native primitive, and the engine itself becomes a service Jungl3 owns forever.
 - **AWS SWF (Simple Workflow Service).** Older AWS workflow service. Rejected — deprecated in practice, poorer tooling, no modern reason to prefer over Step Functions.
 - **Temporal or other third-party orchestrators.** Richer workflow semantics, often better DX. Rejected for v1 — adds a non-AWS dependency to an AWS-native install model ([ADR 0003](./0003-installable-via-aws-marketplace.md)), adds cost, and Step Functions is sufficient for the v1 workload. Revisit if v1's workflows grow beyond what Step Functions serves well.
 - **Step Functions only for long-running workflows, event chains for short ones.** Hybrid. Rejected — the distinction is fuzzy, and the argument for artifact-based workflows applies equally to short ones. Uniform rule is easier to enforce and easier to teach.

@@ -10,7 +10,7 @@ Specifically:
 
 1. **Cues that matter most.** Which of the following are the highest-signal "realness" cues, and why: message queues with visible backlog, approval workflows, stale or aging data, retries and dead-letter queues, cross-team handoffs, audit trails, role and permission boundaries, notifications, exception paths, manual-review loops, reprocessing, scheduled/batch jobs, webhook callbacks, escalations, outage/degraded-service states, multi-region/timezone behavior, email/pdf artifacts, legacy integrations with odd semantics? Rank them by signal strength.
 
-2. **Cues that are theater.** Which commonly-included cues in "demo environments" are mostly ceremony, add noise without adding plausibility, and should be skipped in v1 of a product like Jungle3?
+2. **Cues that are theater.** Which commonly-included cues in "demo environments" are mostly ceremony, add noise without adding plausibility, and should be skipped in v1 of a product like Jungl3?
 
 3. **Threshold of believability.** How much operational clutter is enough before it stops improving perceived realism and starts actively hurting comprehension, installability, and cost? Cite concrete thresholds where possible (e.g., "more than N microservices before a new engineer gives up mapping them").
 
@@ -20,6 +20,6 @@ Specifically:
 
 6. **Anti-patterns.** What patterns are known to instantly break the illusion? (Obvious fake names like "John Doe," uniformly distributed timestamps, synchronous-only flows, empty error logs, placeholder text in UI, perfectly clean reference data.)
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

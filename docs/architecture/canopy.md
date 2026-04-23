@@ -2,7 +2,7 @@
 
 The human exposure surface. For the term itself see [`../glossary.md#canopy`](../glossary.md#canopy); for where it fits in the platform see [`./system-context.md`](./system-context.md); for the AI-evaluation surface that precedes it see [`./dmz.md`](./dmz.md). The split between the two is pinned in [ADR 0011](../decisions/0011-canopy-and-ai-first-dmz.md).
 
-The Canopy is the **human-facing exposure surface** of a Jungle3 install. It is the environment where judges, beta customers, stakeholders, and other invited outsiders find, try, and judge prototypes. The Canopy is what the outside world sees of the install.
+The Canopy is the **human-facing exposure surface** of a Jungl3 install. It is the environment where judges, beta customers, stakeholders, and other invited outsiders find, try, and judge prototypes. The Canopy is what the outside world sees of the install.
 
 ## The split: build surface, evaluation surface, exposure surface
 

@@ -22,6 +22,6 @@ See `00-context.md` for product framing. [ADR 0007](../../decisions/0007-v1-cost
 
 9. **Validation harness.** What does a real cost-estimation validation harness look like? Replay historical calls, compare estimates against actuals, report error distribution. What should the v1 gate be — the estimator must predict within ±N% on M% of calls?
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

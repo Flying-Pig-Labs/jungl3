@@ -138,7 +138,7 @@ An event in CloudEvents v1.0 looks like:
 
 - AWS EventBridge has native CloudEvents support — you don't have to translate in and out.
 - Every library you'd use (AWS SDKs, OpenTelemetry, most log aggregators) recognizes the shape.
-- Customers auditing the system can search "CloudEvents v1.0" and know what they're looking at, rather than learning a Jungle3-specific schema.
+- Customers auditing the system can search "CloudEvents v1.0" and know what they're looking at, rather than learning a Jungl3-specific schema.
 - The alternative is NIH syndrome: invent your own envelope, spend engineering effort on a problem that was already solved, and make every downstream consumer have to learn it.
 
 **The reverse-DNS typing convention.** Event types follow the pattern `<reverse-dns-namespace>.<domain>.<entity>.<verb_past_tense>`:
@@ -167,7 +167,7 @@ The anti-pattern the reports repeatedly warn against is *event-chain architectur
 
 ### 5.4 Maker-checker (four-eyes) is the single highest-signal regulated cue
 
-Report 11 is emphatic about this, and reports 01 and 10 echo it. If Jungle3 needs one thing to make the environment *feel* like a real regulated enterprise, it's maker-checker. This is the concept you said you wanted taught; here it is from zero.
+Report 11 is emphatic about this, and reports 01 and 10 echo it. If Jungl3 needs one thing to make the environment *feel* like a real regulated enterprise, it's maker-checker. This is the concept you said you wanted taught; here it is from zero.
 
 **What maker-checker is.**
 
@@ -184,7 +184,7 @@ A concrete insurance-claims example:
 
 **Why this is the highest-signal cue.** Every adjacent convention — audit trails, versioning, append-only logs, role-based access — can be faked superficially. Maker-checker can't, because it requires *two separate, seeded personas* to complete a workflow. When a reviewer walks through the system and sees that claim `CLM-...-002137` was proposed by Sarah Chen and approved by Marcus Rodriguez on separate timestamps with distinct authentication events, that's a concrete, verifiable piece of realism. It's the one thing in the regulated-feel toolkit that requires the system to have *actual* organizational depth to fake convincingly.
 
-**What Jungle3 will do.** At least one canonical workflow in the v1 pack has maker-checker enforced at the Step Functions state-machine level. The specific workflow (claim settlement approval, policy exception approval, or high-value payment issuance) depends on which canonical workflow comes out of the first design-partner conversation.
+**What Jungl3 will do.** At least one canonical workflow in the v1 pack has maker-checker enforced at the Step Functions state-machine level. The specific workflow (claim settlement approval, policy exception approval, or high-value payment issuance) depends on which canonical workflow comes out of the first design-partner conversation.
 
 **Status:** Accepted. Specific workflow TBD.
 
@@ -204,7 +204,7 @@ Report 03 gives the floor. Below these numbers the system feels like a demo; at 
 | Distinct UIs | **2–3** | 03 |
 | Seeded data domains / tables | **10–15** | 03 |
 
-Report 10 layers a *recommended* persona number on top of the *floor*: **8 personas** specifically, with seeded history, owned workloads, and activity rhythms — not just name/role tuples. The number 8 comes from role coverage (primary operator × 2 seniority levels, reviewer, approver, admin, auditor, external counterparty, subject-matter expert). Jungle3 v1 targets 8.
+Report 10 layers a *recommended* persona number on top of the *floor*: **8 personas** specifically, with seeded history, owned workloads, and activity rhythms — not just name/role tuples. The number 8 comes from role coverage (primary operator × 2 seniority levels, reviewer, approver, admin, auditor, external counterparty, subject-matter expert). Jungl3 v1 targets 8.
 
 **Status:** Accepted. Concrete v1 counts are in §6.5.
 
@@ -371,7 +371,7 @@ Both stubs are labeled as stubs in every interface — report 06 is adamant that
 
 ### The user-facing model
 
-Every Jungle3 install has an **LLM budget** (default: $50/month), visible in the admin UI and in the AWS Console as a CloudWatch custom metric. The budget resets on the first of each month (UTC).
+Every Jungl3 install has an **LLM budget** (default: $50/month), visible in the admin UI and in the AWS Console as a CloudWatch custom metric. The budget resets on the first of each month (UTC).
 
 Every LLM invocation has a **pre-estimated cost** computed before the call is made, based on:
 
@@ -390,7 +390,7 @@ After the call completes, the *actual* cost (from the Claude API response) recon
 - **Budget DynamoDB table** — single-record-per-install, atomic-update semantics. The gateway uses conditional writes to debit the budget before the Claude call.
 - **Cost estimation library** — `estimate_cost(model, input_tokens, max_output_tokens, tools_count)`. Calibrated against [Claude API pricing](https://docs.claude.com/en/docs/about-claude/pricing).
 - **Reconciliation hook** — after a call, the gateway reads the actual `input_tokens` and `output_tokens` from the Claude response and refunds or debits the delta.
-- **CloudWatch custom metric** — `Jungle3/LLM/BudgetRemaining`, emitted on every call. Customer can set their own CloudWatch alarms on it.
+- **CloudWatch custom metric** — `Jungl3/LLM/BudgetRemaining`, emitted on every call. Customer can set their own CloudWatch alarms on it.
 
 ### Graceful degradation
 

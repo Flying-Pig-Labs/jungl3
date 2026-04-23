@@ -5,7 +5,7 @@
 
 ## Context
 
-Jungle3's v1 [Understory](../glossary.md#understory) has to be a specific domain. "A generic Frankenstein enterprise app" is not a thing you can seed, personas, stub, or demo — every realism cue is downstream of the domain choice.
+Jungl3's v1 [Understory](../glossary.md#understory) has to be a specific domain. "A generic Frankenstein enterprise app" is not a thing you can seed, personas, stub, or demo — every realism cue is downstream of the domain choice.
 
 The 2026-04-21 deep-research cluster left two candidates on the table ([findings.md §6.1](../research/findings.md#6.1-domain-anchor--resolved-insurance-claims-processing-claims-only)):
 

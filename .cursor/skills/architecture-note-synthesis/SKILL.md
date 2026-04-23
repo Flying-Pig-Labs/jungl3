@@ -1,11 +1,11 @@
 ---
 name: architecture-note-synthesis
-description: Turn a rough architecture fragment, transcript excerpt, or voice-note idea about Jungle3 into the right file(s) under docs/ — routed per CLAUDE.md §7, linked to the glossary, and without inventing detail. Use when the user drops in raw architectural thinking (a paragraph, a transcript, a research memo excerpt, a whiteboard-style idea) and it needs to land somewhere durable rather than stay in chat.
+description: Turn a rough architecture fragment, transcript excerpt, or voice-note idea about Jungl3 into the right file(s) under docs/ — routed per CLAUDE.md §7, linked to the glossary, and without inventing detail. Use when the user drops in raw architectural thinking (a paragraph, a transcript, a research memo excerpt, a whiteboard-style idea) and it needs to land somewhere durable rather than stay in chat.
 ---
 
 # architecture-note-synthesis
 
-Synthesis pattern for taking raw Jungle3 architectural material and landing it in `docs/` without drift, duplication, or invention.
+Synthesis pattern for taking raw Jungl3 architectural material and landing it in `docs/` without drift, duplication, or invention.
 
 This skill exists because we've done this four times already: the positioning doc, the agent-layer doc, the DMZ doc + judging doc split, and the delivery-model capture that became ADR 0003. Each pass re-derived the same routing logic. Writing it down.
 
@@ -13,7 +13,7 @@ This skill exists because we've done this four times already: the positioning do
 
 The user has given you:
 
-- A transcript fragment or voice-note paragraph describing how some part of Jungle3 should work.
+- A transcript fragment or voice-note paragraph describing how some part of Jungl3 should work.
 - A third-party research memo or analyst note (candidate for `docs/research/`).
 - A half-formed architectural idea in chat that is actually load-bearing.
 - An expansion of something that already lives in `doc.md` / `doc2.md` and is now ready to be refined.
@@ -120,7 +120,7 @@ Examples from existing docs:
 While synthesizing, you'll notice drift. Fix it in the same pass, and tell the user:
 
 - Terminology the glossary doesn't cover → add it.
-- A stale reference to *Marketplace* (the Jungle3-concept sense), *Gallery*, or *Frankenstein app* → fix it per [ADR 0003](../../../docs/decisions/0003-installable-via-aws-marketplace.md) and [ADR 0004](../../../docs/decisions/0004-canonical-platform-vocabulary.md). Current canonical names: [DMZ](../../../docs/glossary.md#dmz) (exposure surface, absorbs former Gallery) and [Understory](../../../docs/glossary.md#understory) (baseline app, formerly Frankenstein).
+- A stale reference to *Marketplace* (the Jungl3-concept sense), *Gallery*, or *Frankenstein app* → fix it per [ADR 0003](../../../docs/decisions/0003-installable-via-aws-marketplace.md) and [ADR 0004](../../../docs/decisions/0004-canonical-platform-vocabulary.md). Current canonical names: [DMZ](../../../docs/glossary.md#dmz) (exposure surface, absorbs former Gallery) and [Understory](../../../docs/glossary.md#understory) (baseline app, formerly Frankenstein).
 - A concept defined in two places → collapse to one + links.
 - An open question in `CLAUDE.md` §11 that your fragment just resolved → promote to an ADR (hand off to `adr-author`) or remove if the answer is already present in a doc.
 

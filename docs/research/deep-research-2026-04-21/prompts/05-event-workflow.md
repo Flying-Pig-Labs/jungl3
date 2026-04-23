@@ -37,6 +37,6 @@ Research:
 
 6. **Cost profile of "alive."** What does each pattern cost in idle (e.g., EventBridge rules firing every minute, Step Functions waiting, Lambda cold starts, SQS long-polling)? See Topic 8 but surface headline figures here.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

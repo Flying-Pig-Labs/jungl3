@@ -1,8 +1,8 @@
 # docs/
 
-Navigator for Jungle3 documentation.
+Navigator for Jungl3 documentation.
 
-Jungle3 is in the **concept-to-architecture phase**. These docs are living artifacts, not a finished manual. Their job is to reduce ambiguity in system design and give future contributors (human and agent) a place to land a new idea without it getting lost.
+Jungl3 is in the **concept-to-architecture phase**. These docs are living artifacts, not a finished manual. Their job is to reduce ambiguity in system design and give future contributors (human and agent) a place to land a new idea without it getting lost.
 
 ## Layout
 
@@ -18,6 +18,7 @@ docs/
   product/                     # product framing (what it is, who it's for, why)
     positioning.md
     judging.md
+    where-we-are.md            # short read-in for new readers
   decisions/                   # what we've actually decided, and why
     README.md
     0001-lovable-owns-repo-root.md
@@ -33,7 +34,7 @@ The tree is intentionally thin. New files are created when there is real materia
 
 | Kind of information | Destination |
 | --- | --- |
-| What a Jungle3 concept *means* (a term, a noun) | `glossary.md` |
+| What a Jungl3 concept *means* (a term, a noun) | `glossary.md` |
 | How the system is structured (layers, boundaries, interactions) | `architecture/<topic>.md` |
 | How the product is framed (positioning, audience, principle) | `product/<topic>.md` |
 | A decision we have made and will not casually revisit | `decisions/NNNN-slug.md` |

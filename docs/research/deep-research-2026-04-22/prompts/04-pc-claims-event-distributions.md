@@ -20,6 +20,6 @@ See `00-context.md` for product framing. [findings.md §5.7](../findings.md) com
 
 8. **Event-per-claim distribution.** How many audit-trail-worthy events does a typical claim accumulate from submission to close? Separate median from long-tail. This is a sizing input for the audit-service hash-chain load and the [ADR 0007](../../decisions/0007-v1-cost-profile-and-llm-metering.md) cost model.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

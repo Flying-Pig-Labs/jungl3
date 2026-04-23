@@ -1,6 +1,6 @@
 # Executive Summary
 
-Research across 17 distinct analyses concludes that a 'living' synthetic environment is achieved through curated depth, not excessive breadth. The feeling of a real, breathing system comes from implementing a few high-fidelity, multi-step workflows, continuous background activity from scheduled jobs, and consistent, stateful seed data. Piling on more services without this depth leads to 'plausibility collapse'—the moment a user detects fake behavior, destroying trust. For v1, Jungle3 should target a 'sweet spot' of 4-7 microservices. This configuration is complex enough to demonstrate realistic enterprise patterns but remains comprehensible, installable, and cost-effective. The primary risk of ignoring this research is building a wide but shallow system that feels like a collection of hollow stubs, immediately failing the 'time to real' product thesis.
+Research across 17 distinct analyses concludes that a 'living' synthetic environment is achieved through curated depth, not excessive breadth. The feeling of a real, breathing system comes from implementing a few high-fidelity, multi-step workflows, continuous background activity from scheduled jobs, and consistent, stateful seed data. Piling on more services without this depth leads to 'plausibility collapse'—the moment a user detects fake behavior, destroying trust. For v1, Jungl3 should target a 'sweet spot' of 4-7 microservices. This configuration is complex enough to demonstrate realistic enterprise patterns but remains comprehensible, installable, and cost-effective. The primary risk of ignoring this research is building a wide but shallow system that feels like a collection of hollow stubs, immediately failing the 'time to real' product thesis.
 
 # Minimum Viable Configuration
 
@@ -192,7 +192,7 @@ Allow developers to test payment flows, asynchronous events (webhooks), and fail
 
 Provides a dedicated test mode, special test card numbers, and a CLI tool (`stripe trigger`) to fire specific webhook events on demand.
 
-## Key Takeaway For Jungle3
+## Key Takeaway For Jungl3
 
 Provide a CLI or admin tool to deterministically trigger specific asynchronous events (like webhook callbacks). This gives developers precise control for testing.
 
@@ -212,7 +212,7 @@ Demonstrate durable workflow patterns like retries, heartbeating, long-running t
 
 Sample client applications initiate workflows, and many samples include cron-like triggers for recurring, scheduled background activity.
 
-## Key Takeaway For Jungle3
+## Key Takeaway For Jungl3
 
 Incorporate scheduled (cron-like) workflows as a core mechanism for generating continuous, non-user-driven background activity to make the system feel 'alive'.
 
@@ -232,7 +232,7 @@ Provide a realistic, 10+ microservice application to teach cloud-native technolo
 
 A dedicated `loadgenerator` service (built with Locust) continuously runs synthetic user shopping flows against the frontend, creating constant traffic.
 
-## Key Takeaway For Jungle3
+## Key Takeaway For Jungl3
 
 Ship a dedicated, always-on 'load generator' or 'activity generator' service as part of the default stack to ensure the system is never idle.
 
@@ -252,7 +252,7 @@ Provide a compact, 4-service application specifically to demonstrate service mes
 
 Relies on simple, external shell scripts or manual user traffic to generate load for demos.
 
-## Key Takeaway For Jungle3
+## Key Takeaway For Jungl3
 
 A small, coherent set of just 4 services is sufficient to demonstrate complex distributed system patterns, proving that breadth is not required for realism.
 
@@ -272,7 +272,7 @@ Allow developers to test banking and transaction data aggregation flows without 
 
 Provides dedicated sandbox-only API endpoints (e.g., `/sandbox/item/fire_webhook`) that allow developers to trigger specific asynchronous events.
 
-## Key Takeaway For Jungle3
+## Key Takeaway For Jungl3
 
 Expose admin-only API endpoints that allow users to simulate and trigger specific asynchronous callbacks and failure modes, making the system's behavior testable.
 
@@ -292,7 +292,7 @@ N/A (Full application shell)
 
 Data is populated via scripted commands (`sfdx force:data:tree:import`) that load data from local JSON files, allowing for deterministic and repeatable state.
 
-## Key Takeaway For Jungle3
+## Key Takeaway For Jungl3
 
 The initial state of the system should be populated by a deterministic, script-driven seed data loader that runs during the bootstrap process.
 
@@ -307,7 +307,7 @@ Continuous, Low-Rate Background Activity
 
 A dedicated, low-QPS background process or traffic generator continuously creates events, ensuring the system is never idle. This is the most common pattern for making a system feel 'alive'.
 
-## Implementation For Jungle3
+## Implementation For Jungl3
 
 Include a scheduled AWS Lambda function or a Kubernetes CronJob in the CloudFormation stack that runs every few minutes with jitter, creating new cases or triggering state transitions.
 
@@ -319,7 +319,7 @@ Deterministic Seed Data with Light Procedural Augmentation
 
 Start with a reproducible base dataset (e.g., from JSON/CSV files) to ensure a consistent starting state, then apply light, seeded randomization to avoid obvious repetition.
 
-## Implementation For Jungle3
+## Implementation For Jungl3
 
 Create a first-boot ECS Task or Lambda function that is triggered by the CloudFormation template. This task ingests seed data from a bundled S3 asset and populates the database(s).
 
@@ -331,7 +331,7 @@ Local Test-Mode Stubs
 
 Default to safe, in-process, or locally-hosted mocks for all external integrations (payment, email, SMS). This makes the environment self-contained and avoids dependencies on external test systems.
 
-## Implementation For Jungle3
+## Implementation For Jungl3
 
 Bundle mock services (e.g., a 'mock-payment-service' container) as part of the main CloudFormation stack. These stubs should expose realistic APIs but have no external dependencies.
 
@@ -343,7 +343,7 @@ Event/Webhook-First Surface with Replay Tools
 
 Provide administrative tools (CLI or API endpoints) that allow developers to trigger and replay asynchronous events deterministically, mimicking tools like the Stripe CLI.
 
-## Implementation For Jungle3
+## Implementation For Jungl3
 
 Package a containerized admin CLI or a simple admin UI with endpoints that can publish specific messages to SQS/SNS to trigger workflows on demand for testing and demonstration.
 
@@ -355,7 +355,7 @@ Minimal but Useful Out-of-the-Box Observability
 
 Expose key system health signals (metrics, error rates, traces) through low-friction, managed services to allow users to 'watch the system breathe'.
 
-## Implementation For Jungle3
+## Implementation For Jungl3
 
 Instrument all services with OpenTelemetry and configure the stack to export data to AWS CloudWatch (Metrics, Logs) and AWS X-Ray by default. Provide a pre-built CloudWatch Dashboard.
 
@@ -367,7 +367,7 @@ Small, Coherent Topology
 
 Use a small number of services (typically 4-8) with clear, well-named responsibilities, anchored by a primary UI. This provides enough surface area to feel real without being overwhelming.
 
-## Implementation For Jungle3
+## Implementation For Jungl3
 
 Define the v1 product as a single CloudFormation stack that deploys a 4-7 service architecture (e.g., Fargate/EKS services), a database (RDS/DynamoDB), and a frontend (S3/CloudFront).
 
@@ -403,7 +403,7 @@ The strategy is to minimize required parameters to create a near 'one-click' lau
 
 ## Iam Pattern
 
-A 'frictionless least privilege' pattern is recommended. The CloudFormation template must create all necessary IAM roles for its resources (e.g., ECS Task Roles, Lambda Execution Roles) with fine-grained permissions. To build trust, Jungle3 should provide customers with a pre-written, minimal IAM policy that the launching user needs, avoiding the requirement for `AdministratorAccess`. For enterprise customers, the stack should support an optional `PermissionsBoundaryArn` parameter, which will be attached to all created roles to ensure they cannot perform actions beyond what the customer's central security governance allows.
+A 'frictionless least privilege' pattern is recommended. The CloudFormation template must create all necessary IAM roles for its resources (e.g., ECS Task Roles, Lambda Execution Roles) with fine-grained permissions. To build trust, Jungl3 should provide customers with a pre-written, minimal IAM policy that the launching user needs, avoiding the requirement for `AdministratorAccess`. For enterprise customers, the stack should support an optional `PermissionsBoundaryArn` parameter, which will be attached to all created roles to ensure they cannot perform actions beyond what the customer's central security governance allows.
 
 ## Bootstrap Sequence
 
@@ -559,7 +559,7 @@ Seeing the same user names (e.g., 'John Doe'), company names, or transaction IDs
 
 ## Recommended Guardrail
 
-Runtime data entropy monitor. This involves deploying a lightweight agent (e.g., a Lambda function) as part of the Jungle3 stack that periodically queries the synthetic databases to measure the cardinality and entropy of key fields. If the ratio of unique values to total records in a field like 'user_full_name' drops below a predefined threshold, the monitor triggers a 'Plausibility Alert' in the admin UI, signaling that the data generator is producing repetitive, unrealistic content.
+Runtime data entropy monitor. This involves deploying a lightweight agent (e.g., a Lambda function) as part of the Jungl3 stack that periodically queries the synthetic databases to measure the cardinality and entropy of key fields. If the ratio of unique values to total records in a field like 'user_full_name' drops below a predefined threshold, the monitor triggers a 'Plausibility Alert' in the admin UI, signaling that the data generator is producing repetitive, unrealistic content.
 
 
 # Measurement And Telemetry Strategy
@@ -574,7 +574,7 @@ Background-Event-Rate
 
 ## Instrumentation Plan Summary
 
-The plan is founded on using OpenTelemetry (OTel) as the standard, with the AWS Distro for OpenTelemetry (ADOT) collector to standardize data collection. By default, all telemetry (metrics, logs, traces) is exported to the customer's local AWS account (CloudWatch, X-Ray) to ensure data remains within their security boundary. An optional, opt-in 'phone-home' mechanism is provided, allowing pseudonymized, aggregated metrics to be sent to Jungle3's central account via a cross-account IAM role, which must be explicitly enabled by the customer via a CloudFormation parameter. A deployment-scoped `environment_id` is added to all telemetry for correlation.
+The plan is founded on using OpenTelemetry (OTel) as the standard, with the AWS Distro for OpenTelemetry (ADOT) collector to standardize data collection. By default, all telemetry (metrics, logs, traces) is exported to the customer's local AWS account (CloudWatch, X-Ray) to ensure data remains within their security boundary. An optional, opt-in 'phone-home' mechanism is provided, allowing pseudonymized, aggregated metrics to be sent to Jungl3's central account via a cross-account IAM role, which must be explicitly enabled by the customer via a CloudFormation parameter. A deployment-scoped `environment_id` is added to all telemetry for correlation.
 
 ## Ab Test Design Summary
 
@@ -604,7 +604,7 @@ A 3-arm A/B test is proposed to measure the effect of system complexity on user 
 
 ## Biggest Risk
 
-The single biggest risk is **Plausibility Collapse**. This occurs when the user detects obviously fake or simplistic behavior (e.g., a system that is static until clicked, perfectly consistent API latencies, repetitive data), which shatters their trust in the environment. This is most likely to happen if Jungle3 under-invests in the asynchronous, background, and failure-simulation components that are essential for creating a 'living' system.
+The single biggest risk is **Plausibility Collapse**. This occurs when the user detects obviously fake or simplistic behavior (e.g., a system that is static until clicked, perfectly consistent API latencies, repetitive data), which shatters their trust in the environment. This is most likely to happen if Jungl3 under-invests in the asynchronous, background, and failure-simulation components that are essential for creating a 'living' system.
 
 ## Cross Links
 

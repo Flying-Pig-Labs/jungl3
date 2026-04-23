@@ -1,6 +1,6 @@
 # Deep-research cluster 2026-04-22
 
-Second Parallel.ai deep-research cluster for Jungle3. Companion to `deep-research-2026-04-21/`.
+Second Parallel.ai deep-research cluster for Jungl3. Companion to `deep-research-2026-04-21/`.
 
 ## Why this cluster exists
 

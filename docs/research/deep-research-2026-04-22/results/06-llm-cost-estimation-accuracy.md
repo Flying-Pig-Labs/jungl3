@@ -1,10 +1,10 @@
-# Hitting ±10%: Making Claude Cost Pre‑Estimation Buildable for Jungle3
+# Hitting ±10%: Making Claude Cost Pre‑Estimation Buildable for Jungl3
 
 ## Executive Summary
 
-To enforce ADR 0007's $50/month hard-cutoff LLM budget, Jungle3's `llm-gateway` must accurately pre-estimate Claude API costs before executing calls. Our research into Anthropic's 2026-04-22 billing semantics reveals that Claude’s token accounting is additive and auditable: total input tokens equal the sum of cache reads, cache writes, and uncached inputs [1] [2]. Tool use injects a predictable "tax" (e.g., +346 tokens for the system prompt, +700 for text_editor) that must be statically added to estimates [3] [4]. 
+To enforce ADR 0007's $50/month hard-cutoff LLM budget, Jungl3's `llm-gateway` must accurately pre-estimate Claude API costs before executing calls. Our research into Anthropic's 2026-04-22 billing semantics reveals that Claude’s token accounting is additive and auditable: total input tokens equal the sum of cache reads, cache writes, and uncached inputs [1] [2]. Tool use injects a predictable "tax" (e.g., +346 tokens for the system prompt, +700 for text_editor) that must be statically added to estimates [3] [4]. 
 
-By combining Anthropic's Token Counting API for structured inputs, documented per-tool overhead tables, and per-call `max_tokens` bounds, Jungle3 can achieve a median absolute error of ≤±10% on pre-estimates. To prevent runaway agentic loops in Step Functions (ADR 0008), we must implement a per-turn cost envelope that pre-authorizes the maximum possible spend for a planned sequence of calls. Reconciliation must follow a strict FinOps ledger pattern in DynamoDB, writing immutable audit trails to `jungle3-audit` (ADR 0009) [5].
+By combining Anthropic's Token Counting API for structured inputs, documented per-tool overhead tables, and per-call `max_tokens` bounds, Jungl3 can achieve a median absolute error of ≤±10% on pre-estimates. To prevent runaway agentic loops in Step Functions (ADR 0008), we must implement a per-turn cost envelope that pre-authorizes the maximum possible spend for a planned sequence of calls. Reconciliation must follow a strict FinOps ledger pattern in DynamoDB, writing immutable audit trails to `jungle3-audit` (ADR 0009) [5].
 
 ## 1) Ground-truth cost model for Claude Sonnet/Haiku
 
@@ -42,7 +42,7 @@ Prompt caching reduces costs, but only if the cache is hit. The default Time-To-
 | 5-minute | 1.25x | 0.1x | 1 | Multi-turn chats, fast agent loops | Slow user response times |
 | 1-hour | 2.0x | 0.1x | 2 | Stable system prompts, RAG docs | High schema churn, low traffic |
 
-*Key Takeaway: For Jungle3's v1, default to the 5-minute TTL for agentic loops. The pre-estimator must assume 0 cache hits (charging the base or write price) to ensure safety, refunding the difference during post-call reconciliation if a cache hit occurs.* [7] [2]
+*Key Takeaway: For Jungl3's v1, default to the 5-minute TTL for agentic loops. The pre-estimator must assume 0 cache hits (charging the base or write price) to ensure safety, refunding the difference during post-call reconciliation if a cache hit occurs.* [7] [2]
 
 ## 4) Turn-level cost envelopes for Step Functions
 
@@ -106,11 +106,11 @@ While ADR 0007 specifies a per-install budget, enterprise customers will eventua
 
 * **v1 (Current)**: Single DynamoDB item per install (`PK=INSTALL#123`, `monthly_quota=50.00`, `consumed=12.50`).
 * **v2 (Future)**: Hierarchical model (`INSTALL -> FEATURE -> OPERATOR`).
-* **Top-up UX**: When a customer hits the $50 limit, they must be able to top-up via the Jungle3 Admin Console or CLI. The update to DynamoDB must be atomic, and the `llm-gateway` must recognize the new funds in <5 seconds to resume in-flight Step Function loops.
+* **Top-up UX**: When a customer hits the $50 limit, they must be able to top-up via the Jungl3 Admin Console or CLI. The update to DynamoDB must be atomic, and the `llm-gateway` must recognize the new funds in <5 seconds to resume in-flight Step Function loops.
 
 ## 9) Validation harness and readiness gates
 
-Before v1 GA, the estimator must be proven. We will build a replay harness that feeds anonymized historical Jungle3 requests through the Token Counting API and compares them against live Messages API `usage` fields.
+Before v1 GA, the estimator must be proven. We will build a replay harness that feeds anonymized historical Jungl3 requests through the Token Counting API and compares them against live Messages API `usage` fields.
 
 * **Metrics**: Mean Absolute Error (MAE), Mean Absolute Percentage Error (MAPE), P50, P90, P95.
 * **v1 Gate**: Median absolute percentage error must be ≤±10% on ≥90% of calls. There must be zero systemic underestimation on tool-heavy requests.
@@ -127,20 +127,20 @@ Before v1 GA, the estimator must be proven. We will build a replay harness that 
 
 Production AI systems utilize strict guardrails to prevent cost explosions.
 
-| Mechanism | Industry Example | Jungle3 Applicability |
+| Mechanism | Industry Example | Jungl3 Applicability |
 | :--- | :--- | :--- |
 | Per-turn token ceilings | Cursor, Zed | High. Enforce via Step Functions envelope. |
 | Mid-stream cancellation | Codeium | High. Abort if envelope hits 90%. |
 | Cache-aware routing | Perplexity | Medium. Defer to v2; stick to Sonnet/Haiku static routing for v1. |
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 * **Implement the exact Anthropic cost formula** in the `llm-gateway`, utilizing the Token Counting API for inputs, adding static tool taxes (e.g., +346 for system, +700 for text_editor), and bounding outputs via `max_tokens`.
 * **Enforce a pessimistic pre-debit model**: Assume zero prompt-cache hits during pre-estimation to guarantee the budget is never overdrawn, and refund the savings during post-call reconciliation.
 * **Require Step Functions planners to declare a call budget** (N calls, max_tokens per call) to reserve a full turn-level envelope upfront.
 * **Store pricing and tool overheads in AWS SSM**, backed by a nightly calibration job that alerts if estimation error drifts above 5% median or 15% P95.
 * **Explicitly defer hierarchical (per-user/per-feature) budgets to v2**, maintaining the ADR 0007 per-install budget for v1, but ensure the DynamoDB ledger logs `trace_id` and `case_id` to support future chargeback migrations.
-* **The single biggest risk** if Jungle3 ignores this is a non-terminating agent loop exhausting the $50 monthly budget in minutes due to un-capped tool-use roundtrips.
+* **The single biggest risk** if Jungl3 ignores this is a non-terminating agent loop exhausting the $50 monthly budget in minutes due to un-capped tool-use roundtrips.
 * **Cross-link**: This directly impacts ADR 0008 (Step Functions) by requiring state machines to handle `InsufficientFunds` abort signals gracefully without causing plausibility collapse.
 
 ## References

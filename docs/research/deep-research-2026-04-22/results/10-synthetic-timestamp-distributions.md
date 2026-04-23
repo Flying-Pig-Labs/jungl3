@@ -2,9 +2,9 @@
 
 ## Executive Summary
 
-Jungle3's core value proposition relies on "time to real"—delivering a believable enterprise environment instantly. However, fresh-seed installs are trivially timestamp-fingerprinted by AWS control-plane metadata. CloudWatch and DynamoDB expose "minutes-old" creation times that cannot be backdated. Attempting to fake 18 months of CloudWatch logs is impossible due to hard API caps (14-day lookback limit). 
+Jungl3's core value proposition relies on "time to real"—delivering a believable enterprise environment instantly. However, fresh-seed installs are trivially timestamp-fingerprinted by AWS control-plane metadata. CloudWatch and DynamoDB expose "minutes-old" creation times that cannot be backdated. Attempting to fake 18 months of CloudWatch logs is impossible due to hard API caps (14-day lookback limit). 
 
-The winning strategy is to **own what you can't hide**. Accept the install recency at the infrastructure layer, but redirect realism to the domain-layer timelines and in-flight state. By using Inhomogeneous Poisson Processes (NHPP) for realistic arrival times, heavy-tailed distributions for lifecycle stages, and a cryptographically sound write-time hash chain for the audit log, Jungle3 can survive forensic inspection by its target audiences while staying well under the $100/month ADR 0007 budget.
+The winning strategy is to **own what you can't hide**. Accept the install recency at the infrastructure layer, but redirect realism to the domain-layer timelines and in-flight state. By using Inhomogeneous Poisson Processes (NHPP) for realistic arrival times, heavy-tailed distributions for lifecycle stages, and a cryptographically sound write-time hash chain for the audit log, Jungl3 can survive forensic inspection by its target audiences while staying well under the $100/month ADR 0007 budget.
 
 ## 1) Forensic Tells You Cannot Hide: Treat install-age metadata as visible truth
 
@@ -22,7 +22,7 @@ The blast radius of these immutable timestamps is absolute. An inspector can inf
 
 ### Playbook: Acknowledge recency, simulate history
 
-Because infrastructure age cannot be spoofed, Jungle3 must explicitly acknowledge it in documentation and UX. The narrative must be: "This is a freshly provisioned environment pre-loaded with a synthetic historical backstory."
+Because infrastructure age cannot be spoofed, Jungl3 must explicitly acknowledge it in documentation and UX. The narrative must be: "This is a freshly provisioned environment pre-loaded with a synthetic historical backstory."
 
 | Service | API/Query | High-Signal Fields | Strength of Tell | Mitigation Strategy |
 | :--- | :--- | :--- | :--- | :--- |
@@ -40,7 +40,7 @@ An inhomogeneous Poisson process (NHPP) with workday, weekend, and holiday terms
 
 ### Modeling arrival rates with diurnal and weekly terms
 
-Real-world insurance claims do not arrive at a flat rate. They follow diurnal cycles (peaks during business hours), drop off on weekends, and pause on holidays. To model this, Jungle3 should use an Inhomogeneous Poisson Process where the rate parameter λ(t) varies over time. Fourier terms can effectively model these seasonal patterns by capturing cyclical behaviors through their oscillatory nature [8]. 
+Real-world insurance claims do not arrive at a flat rate. They follow diurnal cycles (peaks during business hours), drop off on weekends, and pause on holidays. To model this, Jungl3 should use an Inhomogeneous Poisson Process where the rate parameter λ(t) varies over time. Fourier terms can effectively model these seasonal patterns by capturing cyclical behaviors through their oscillatory nature [8]. 
 
 ### Implementation via thinning algorithms
 
@@ -48,7 +48,7 @@ To generate these timestamps programmatically, the "thinning" algorithm is the s
 
 ### Quality checks using time-rescaling
 
-To validate the generated timestamps, the time-rescaling theorem can be applied. This theorem states that any point process with an integrable conditional intensity function may be transformed into a Poisson process with a unit rate [10]. By applying this transformation, Jungle3 can use standard Kolmogorov-Smirnov (K-S) tests to ensure the synthetic arrivals statistically match the target distribution [11].
+To validate the generated timestamps, the time-rescaling theorem can be applied. This theorem states that any point process with an integrable conditional intensity function may be transformed into a Poisson process with a unit rate [10]. By applying this transformation, Jungl3 can use standard Kolmogorov-Smirnov (K-S) tests to ensure the synthetic arrivals statistically match the target distribution [11].
 
 ## 3) Lifecycle Timing Without Tells: Heavy tails and copulas
 
@@ -60,7 +60,7 @@ Stage durations in claims processing (e.g., intake to assessment) are rarely nor
 
 ### Correlations across workflow stages
 
-A claim that takes unusually long to assess is also likely to take longer to approve. To model this without creating mechanical, fixed-minute gaps, Jungle3 should use Copulas. A copula is a multivariate cumulative distribution function that allows for modeling the dependence between random variables independently of their marginal distributions [13]. The Gaussian copula can be used to stitch together arbitrary marginals (like our Weibull durations) to achieve the desired correlation [14].
+A claim that takes unusually long to assess is also likely to take longer to approve. To model this without creating mechanical, fixed-minute gaps, Jungl3 should use Copulas. A copula is a multivariate cumulative distribution function that allows for modeling the dependence between random variables independently of their marginal distributions [13]. The Gaussian copula can be used to stitch together arbitrary marginals (like our Weibull durations) to achieve the desired correlation [14].
 
 ### Enforcing precedence with micro-jitter
 
@@ -76,7 +76,7 @@ AWS strictly limits historical log insertion. The `PutLogEvents` API rejects eve
 
 ### Patterns that maximize plausibility within limits
 
-Because 18 months of logs cannot be backfilled, Jungle3 should only pre-warm the last 7 to 14 days of logs. This creates enough "background noise" for a demo or initial inspection. CloudWatch Logs Insights automatically discovers fields like `@timestamp` (the event time) and `@ingestionTime` (when CloudWatch received it) [16]. Reviewers will see that `@ingestionTime` is clustered at install, which must be accepted as a known limitation.
+Because 18 months of logs cannot be backfilled, Jungl3 should only pre-warm the last 7 to 14 days of logs. This creates enough "background noise" for a demo or initial inspection. CloudWatch Logs Insights automatically discovers fields like `@timestamp` (the event time) and `@ingestionTime` (when CloudWatch received it) [16]. Reviewers will see that `@ingestionTime` is clustered at install, which must be accepted as a known limitation.
 
 | Approach | Max Lookback | Pros | Cons | Recommendation |
 | :--- | :--- | :--- | :--- | :--- |
@@ -92,7 +92,7 @@ Use write-time sequence for `prev_hash`; include `event_time` inside the hash pa
 
 ### Schema and hash material design
 
-A hash chain is the successive application of a cryptographic hash function to a piece of data, used to produce a tamper-evident log [18]. Because Jungle3 backfills historical domain events at install time, the audit trail must chain based on the *write order* (when the seeder inserts them), not the *event time* (the simulated historical date). The hash payload must include `prev_hash`, `event_id`, `event_time`, `write_time`, and `payload_digest`.
+A hash chain is the successive application of a cryptographic hash function to a piece of data, used to produce a tamper-evident log [18]. Because Jungl3 backfills historical domain events at install time, the audit trail must chain based on the *write order* (when the seeder inserts them), not the *event time* (the simulated historical date). The hash payload must include `prev_hash`, `event_id`, `event_time`, `write_time`, and `payload_digest`.
 
 ### Ordering and late arrivals
 
@@ -124,7 +124,7 @@ Avoid static patterns; add small, protocol-correct churn.
 
 ### Quick wins from deception tech
 
-Honeypot research shows that attackers easily fingerprint systems using static banners, default configurations, and missing error handling [25]. Jungle3 must avoid "perfect" data. The generator should inject benign 4xx/5xx errors, simulate retries, and rotate actor personas. Chaos engineering principles (like those used by Gremlin or Chaos Mesh) demonstrate that injecting controlled faults (latency, minor network drops) increases the realism of the environment [26] [27].
+Honeypot research shows that attackers easily fingerprint systems using static banners, default configurations, and missing error handling [25]. Jungl3 must avoid "perfect" data. The generator should inject benign 4xx/5xx errors, simulate retries, and rotate actor personas. Chaos engineering principles (like those used by Gremlin or Chaos Mesh) demonstrate that injecting controlled faults (latency, minor network drops) increases the realism of the environment [26] [27].
 
 ## 9) Cost-Benefit Tiers & Default Posture: Realism within minutes
 
@@ -163,12 +163,12 @@ Automate NHPP/time-series and lifecycle tests; red-team with classifiers; ship o
 
 ### Metrics and thresholds
 
-Jungle3 must statistically verify its generators in CI. 
+Jungl3 must statistically verify its generators in CI. 
 * **Arrivals**: Use the Kolmogorov-Smirnov (K-S) test [11] on time-rescaled arrivals; fail the build if p < 0.05.
 * **Seasonality Drift**: Use the Population Stability Index (PSI). A PSI < 0.1 indicates stable distributions; PSI >= 0.25 indicates significant drift and should fail the build [31].
 * **Red-Team Classifiers**: Train a Classifier Two-Sample Test (C2ST) [32] to distinguish synthetic data from proxy datasets. If the classifier achieves an AUC > 0.7, the synthetic data is too easily distinguishable and needs tuning.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 * **Acknowledge the Install Age**: Make "install-age is visible" an explicit product posture. Add Reviewer Notes and an in-product banner stating: "This environment is freshly provisioned; data history is synthetic; logs are not backfilled beyond 14 days by AWS design."
 * **Implement NHPP and Copulas**: Use an NHPP-based arrival generator with diurnal/weekly/holiday factors (seeded RNG). Sample lifecycle durations using mixed heavy-tailed distributions conditioned on claim severity, tied together with a Gaussian copula.

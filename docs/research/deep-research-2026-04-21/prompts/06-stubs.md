@@ -4,7 +4,7 @@ See `00-context.md` for product framing.
 
 ## Research questions
 
-The stub/simulator layer — fake versions of external systems that the synthetic enterprise depends on (payment processors, identity providers, document OCR, notification services, partner APIs, core banking, etc.) — may become one of the most reused parts of Jungle3. Research what makes stubs genuinely useful for builders rather than decorative placeholders.
+The stub/simulator layer — fake versions of external systems that the synthetic enterprise depends on (payment processors, identity providers, document OCR, notification services, partner APIs, core banking, etc.) — may become one of the most reused parts of Jungl3. Research what makes stubs genuinely useful for builders rather than decorative placeholders.
 
 Investigate:
 
@@ -24,6 +24,6 @@ Investigate:
 
 8. **Known failure modes.** Why do stubs typically become either "trusted too much" (blocking switch to real) or "trusted too little" (ignored, worked around)? What makes stubs earn durable trust?
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

@@ -12,7 +12,7 @@ See `00-context.md` for product framing. [findings.md §6.4](../findings.md) and
 
 4. **Install-time cost.** Generating ~1,800 closed claims × (say) 3 claim notes per closed claim + 60 in-flight claims × more notes + emails to the claimant + adjuster narratives is a meaningful LLM workload at install time. What is the realistic token count and cost for a full seed run? Does it fit under the $50/month LLM budget from [ADR 0007](../../decisions/0007-v1-cost-profile-and-llm-metering.md), or does it need a separate one-time install budget?
 
-5. **Caching across installs.** Two customers install Jungle3 with the same default seed. Should the generated text be identical across installs (cacheable in a Jungle3-managed artifact) or uniquely regenerated (every install pays the cost)? Security and cost trade-offs of each.
+5. **Caching across installs.** Two customers install Jungl3 with the same default seed. Should the generated text be identical across installs (cacheable in a Jungl3-managed artifact) or uniquely regenerated (every install pays the cost)? Security and cost trade-offs of each.
 
 6. **Anti-patterns that give away the fake.** What are the LLM tells that make generated claim notes look generated to a practiced reader? Overly polished prose, absent-minded consistency, no abbreviations, no trailing thoughts, no jargon, no typos, no carriage-returns-in-weird-places. How do real adjuster notes actually read? Cite any available claim-notes corpora or published examples.
 
@@ -20,6 +20,6 @@ See `00-context.md` for product framing. [findings.md §6.4](../findings.md) and
 
 8. **Style drift across a long history.** A persona's writing style in a claim note from 18 months ago should be consistent with their notes from last week — but a real person's style does drift (new jargon, promotions, seasonal events). How is this modeled? Is the effort worth the plausibility gain?
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

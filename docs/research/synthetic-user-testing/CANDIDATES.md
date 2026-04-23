@@ -30,7 +30,7 @@ Two of the 7 (C6, C7) close existing §11 items outright if drafted. One (C1) in
 
 **One-line.** Decide where the persona-as-AI-agent *implementation* lives: a new top-level `synthetic-user-testing/` domain, or a specialist inside the existing [Agent Layer](../../architecture/agent-layer.md).
 
-> **Narrowed by [ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md).** ADR 0011 establishes that AI-agent probing happens *in the DMZ, by definition* — the DMZ is the hosting environment. What remains open is the implementation question: which Jungle3 subsystem owns the agent code, tool definitions, persona runtime, and trace capture. The "DMZ-side primitive" framing below predates ADR 0011 and is obsolete as stated — "DMZ-side" is now the environment, not an alternative to the Agent Layer.
+> **Narrowed by [ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md).** ADR 0011 establishes that AI-agent probing happens *in the DMZ, by definition* — the DMZ is the hosting environment. What remains open is the implementation question: which Jungl3 subsystem owns the agent code, tool definitions, persona runtime, and trace capture. The "DMZ-side primitive" framing below predates ADR 0011 and is obsolete as stated — "DMZ-side" is now the environment, not an alternative to the Agent Layer.
 
 **Source.** [`SYNTHESIS.md` §4 item 1](./SYNTHESIS.md), derived from [`04-build-it-yourself-claude-sdk.md` §2](./04-build-it-yourself-claude-sdk.md) and [`03-persona-simulation-methodology.md` §3.1](./03-persona-simulation-methodology.md).
 
@@ -46,7 +46,7 @@ Two of the 7 (C6, C7) close existing §11 items outright if drafted. One (C1) in
 
 **Related accepted ADRs.** [ADR 0002](../../decisions/0002-sub-agent-response-contract.md), [ADR 0004](../../decisions/0004-canonical-platform-vocabulary.md), [ADR 0011](../../decisions/0011-canopy-and-ai-first-dmz.md). Architecture: [`agent-layer.md`](../../architecture/agent-layer.md), [`dmz.md`](../../architecture/dmz.md).
 
-**Why I rate it Needs decision, not Ready.** The evidence is fully assembled but the choice is a scope call only you can make: is Jungle3 in the business of synthetic-persona testing, or not? A draft ADR can't pick that for you. (ADR 0011 answered *where it would run* if yes; it did not answer *should it exist in v1*.)
+**Why I rate it Needs decision, not Ready.** The evidence is fully assembled but the choice is a scope call only you can make: is Jungl3 in the business of synthetic-persona testing, or not? A draft ADR can't pick that for you. (ADR 0011 answered *where it would run* if yes; it did not answer *should it exist in v1*.)
 
 ---
 
@@ -73,7 +73,7 @@ Two of the 7 (C6, C7) close existing §11 items outright if drafted. One (C1) in
 
 ## C3 — Planner-Executor split for browser-capable agents
 
-**One-line.** Any Jungle3 browser-capable agent uses Claude Computer Use as Planner + Playwright MCP as Executor, bridged by a JSON action-plan contract. Credentials never reach the LLM.
+**One-line.** Any Jungl3 browser-capable agent uses Claude Computer Use as Planner + Playwright MCP as Executor, bridged by a JSON action-plan contract. Credentials never reach the LLM.
 
 **Source.** [`SYNTHESIS.md` §4 item 3](./SYNTHESIS.md), derived from [`04-build-it-yourself-claude-sdk.md` §1](./04-build-it-yourself-claude-sdk.md) (Planner-Executor framework) and [`02-ai-computer-use-tech.md` §2](./02-ai-computer-use-tech.md) (CDP bridge pattern).
 
@@ -82,7 +82,7 @@ Two of the 7 (C6, C7) close existing §11 items outright if drafted. One (C1) in
 - The JSON action-plan contract is a security boundary: credential placeholders get resolved after leaving the LLM. Without it, secrets flow to an LLM turn.
 - [`CLAUDE.md` §11 #11](../../../CLAUDE.md) (Control Plane runtime) is orthogonal — this constrains agent execution, not control-plane compute.
 
-**The decision you'd be making.** Accepting the split as the reference implementation whenever a Jungle3 agent touches a browser. Not "build one now"; just "if one exists, it's shaped like this."
+**The decision you'd be making.** Accepting the split as the reference implementation whenever a Jungl3 agent touches a browser. Not "build one now"; just "if one exists, it's shaped like this."
 
 **Dependencies.** Downstream of C1. Also relies on C5 (reasoning-trace handling) for a clean audit story.
 

@@ -114,7 +114,7 @@ One resolved (R-C2-1). Four attached to High-readiness candidates (R-C2-2, R-C2-
 
 ## R-C2-5 — First plausibility test finds no regulatory surface
 
-**What happens.** A Marketplace reviewer, insurance VP, or former DOI examiner opens the admin UI of a fresh Jungle3 install. They see a clean claims-intake screen, a maker-checker approval flow, and a case timeline. They look for the insurance-specific cues they actually expect. There's no jurisdiction field on claims. No reserve ledger. No SIU referral workflow. No state-specific SLA timer. The maker-checker is generic; the audit trail is generic; there's no large-loss reinsurance notification. They conclude — correctly — that it's a "claims-shaped app," not insurance.
+**What happens.** A Marketplace reviewer, insurance VP, or former DOI examiner opens the admin UI of a fresh Jungl3 install. They see a clean claims-intake screen, a maker-checker approval flow, and a case timeline. They look for the insurance-specific cues they actually expect. There's no jurisdiction field on claims. No reserve ledger. No SIU referral workflow. No state-specific SLA timer. The maker-checker is generic; the audit trail is generic; there's no large-loss reinsurance notification. They conclude — correctly — that it's a "claims-shaped app," not insurance.
 
 **Source.** [SYNTHESIS.md §6 risk #5](./SYNTHESIS.md), report 09.
 
@@ -185,7 +185,7 @@ One resolved (R-C2-1). Four attached to High-readiness candidates (R-C2-2, R-C2-
 
 **Source.** [SYNTHESIS.md §3.3](./SYNTHESIS.md), report 10.
 
-**Why this is a Jungle3-specific issue.** For most AWS workloads, install-age visibility is a non-issue — the install is a new deployment of a real system. For Jungle3, where the install is *claiming to host 18 months of history*, the metadata contradicts the story.
+**Why this is a Jungl3-specific issue.** For most AWS workloads, install-age visibility is a non-issue — the install is a new deployment of a real system. For Jungl3, where the install is *claiming to host 18 months of history*, the metadata contradicts the story.
 
 **Triggers.**
 

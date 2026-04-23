@@ -16,10 +16,10 @@ See `00-context.md` for product framing. [ADR 0006](../../decisions/0006-v1-doma
 
 6. **Compliance reports the system produces.** What reports does a claims system typically produce for regulators — closed-claim count by state, reserve-movement report, anti-fraud metrics, diversity/demographic reports for certain states? Do any of these have industry-standard formats that the admin agent could plausibly surface on request?
 
-7. **Notes that matter.** What do "claims notes" look like in a regulated system? Timestamped, signed, often immutable. Do they live in a separate store from the operational claim record? How does the Jungle3 audit trail shape ([ADR 0009](../../decisions/0009-audit-trail-is-append-only-hash-chained.md)) align with real claim-notes immutability requirements?
+7. **Notes that matter.** What do "claims notes" look like in a regulated system? Timestamped, signed, often immutable. Do they live in a separate store from the operational claim record? How does the Jungl3 audit trail shape ([ADR 0009](../../decisions/0009-audit-trail-is-append-only-hash-chained.md)) align with real claim-notes immutability requirements?
 
-8. **What a hostile domain-expert reviewer would test first.** If an insurance-industry VP sits down with the Jungle3 demo for 15 minutes, what are the five specific questions they'd ask to test plausibility? ("What state DOI is this simulating?" "Show me the diary system." "Where's the reserve history?" "What's the fraud-referral workflow?") Cite real examples of domain-expert evaluations of insurance-tech demos if any are published.
+8. **What a hostile domain-expert reviewer would test first.** If an insurance-industry VP sits down with the Jungl3 demo for 15 minutes, what are the five specific questions they'd ask to test plausibility? ("What state DOI is this simulating?" "Show me the diary system." "Where's the reserve history?" "What's the fraud-referral workflow?") Cite real examples of domain-expert evaluations of insurance-tech demos if any are published.
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.

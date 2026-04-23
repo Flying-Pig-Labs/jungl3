@@ -20,6 +20,6 @@ See `00-context.md` for product framing. [findings.md §8](../findings.md) commi
 
 8. **Teardown time budget.** Under <5 minutes, with no orphans. Is this achievable for the stack shape above? What is the realistic lower bound, and what trade-offs shorten it (pre-built AMIs, fewer VPC-attached Lambdas, skipping Fargate)?
 
-## Decision-ready recommendations for Jungle3
+## Decision-ready recommendations for Jungl3
 
 End with the required decision-ready section from `00-context.md`.
