@@ -6,7 +6,6 @@ type NavProps = {
 
 const LINKS = [
   { to: "/", label: "Overview" },
-  { to: "/investors", label: "Investors" },
 ] as const;
 
 export function Nav({ onRequestAccess }: NavProps) {
