@@ -1,3 +1,5 @@
+import { DemoVideo } from "@/components/sections/DemoVideo";
+
 export function CTASection({
   onRequestAccess,
 }: {
@@ -22,6 +24,9 @@ export function CTASection({
             See it running.
           </span>
         </h2>
+        <div className="mt-10">
+          <DemoVideo />
+        </div>
         <p className="mx-auto mt-6 max-w-md text-sm text-muted-foreground">
           Tell us who you are and what you're trying to do. We'll get back to
           you.
