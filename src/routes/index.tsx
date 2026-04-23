@@ -45,9 +45,9 @@ function Index() {
       <Nav onRequestAccess={openRequest} />
       <main className="relative z-10">
         <Hero onRequestAccess={openRequest} />
-        <DemoVideo />
         <ConceptSection />
         <SystemModules />
+        <DemoVideo />
         <CTASection onRequestAccess={openRequest} />
         <Footer onRequestAccess={openRequest} />
       </main>
