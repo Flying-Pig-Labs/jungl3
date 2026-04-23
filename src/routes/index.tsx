@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Hero } from "@/components/sections/Hero";
-import { DemoVideo } from "@/components/sections/DemoVideo";
+// DemoVideo is now embedded inside CTASection
 import { ConceptSection } from "@/components/sections/Concept";
 import { SystemModules } from "@/components/sections/SystemModules";
 import { CTASection } from "@/components/sections/CTA";
