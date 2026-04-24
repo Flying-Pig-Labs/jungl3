@@ -32,7 +32,7 @@ Three of six resolved (A, C, F). Three open (B, D partially, E).
 
 **Status: Resolved by [ADR 0006](../../decisions/0006-v1-domain-anchor-insurance-claims.md)** — mid-sized regional P&C insurance claims processing.
 
-**Original frame.** Pick the v1 domain anchor from six candidates in [`../research2-v1-service-build-plan.md`](../research2-v1-service-build-plan.md) §8. The sharpest cluster-1 tension was report 02's chargebacks recommendation versus reports 10 and 11's insurance-native assumptions.
+**Original frame.** Pick the v1 domain anchor from six candidates in [`research2-v1-service-build-plan.md`](../../research-archive/first-generation/research2-v1-service-build-plan.md) §8. The sharpest cluster-1 tension was report 02's chargebacks recommendation versus reports 10 and 11's insurance-native assumptions.
 
 **How it resolved.** ADR 0006 chose insurance-claims-only (claims, not underwriting), seven services, two stubs. The chargebacks alternative was rejected.
 

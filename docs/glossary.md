@@ -89,7 +89,7 @@ A **pre-configured variant** of the Understory with domain-native UI, data model
 
 Domain Starters share the same underlying platform primitives — Synthetic Runtime, Agent Layer, auth, storage — but diverge in the surface a team sees on day one. Their purpose is to get teams to "interesting" faster. See [`architecture/canopy.md`](./architecture/canopy.md).
 
-An alternative candidate list — framed around realism-per-unit-of-complexity rather than UI shape — is proposed in [`research/research2-v1-service-build-plan.md`](./research/research2-v1-service-build-plan.md) (insurance-like case operations, service request processing, benefits enrollment, order exception handling, loan/application review, permit/compliance workflow). Which anchor ships first is open — see [`../CLAUDE.md`](../CLAUDE.md) §11.
+An alternative candidate list — framed around realism-per-unit-of-complexity rather than UI shape — is proposed in [`research2-v1-service-build-plan.md` (archived)](./research-archive/first-generation/research2-v1-service-build-plan.md) (insurance-like case operations, service request processing, benefits enrollment, order exception handling, loan/application review, permit/compliance workflow). Which anchor ships first is open — see [`../CLAUDE.md`](../CLAUDE.md) §11.
 
 ## Agent Layer
 

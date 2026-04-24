@@ -6,13 +6,13 @@ Captured third-party analysis, market research, and external memos that inform J
 
 - [What lives here](#what-lives-here)
 - [How to read anything in here](#how-to-read-anything-in-here)
+- [Archive convention](#archive-convention) — what moved to `docs/research-archive/` on 2026-04-24 and why
 - [Tree layout](#tree-layout)
 - [Topic index](#topic-index) — search by subject
-- [First-generation captures](#first-generation-captures) — `researchN-*.md`
-- [Cluster 1: `deep-research-2026-04-21/`](#cluster-1-deep-research-2026-04-21) — 12 reports + synthesis + findings
-- [Cluster 2: `deep-research-2026-04-22/`](#cluster-2-deep-research-2026-04-22) — 10 reports + synthesis, ADR-targeted
-- [Cluster 3: `sideband-2026-04-22/`](#cluster-3-sideband-2026-04-22) — 7 adjacent-market reports + synthesis
-- [Cluster 4: `synthetic-user-testing/`](#cluster-4-synthetic-user-testing) — 5 reports + synthesis, implementation-relevant
+- [Cluster 1: `deep-research-2026-04-21/`](#cluster-1-deep-research-2026-04-21) — synthesis layer (raw reports in archive)
+- [Cluster 2: `deep-research-2026-04-22/`](#cluster-2-deep-research-2026-04-22) — synthesis layer (raw reports in archive)
+- [Cluster 3: `sideband-2026-04-22/`](#cluster-3-sideband-2026-04-22) — synthesis (raw reports in archive)
+- [Cluster 4: `synthetic-user-testing/`](#cluster-4-synthetic-user-testing) — 5 reports + synthesis, implementation-relevant (not archived)
 - [Synthesis layer at a glance](#synthesis-layer-at-a-glance)
 - [Filename conventions](#filename-conventions)
 - [Related](#related)
@@ -38,34 +38,41 @@ This is the paper trail behind ADRs, not a substitute for them.
 
 ---
 
+## Archive convention
+
+On 2026-04-24 this tree was split. Everything here is still pointed at from ADRs and `CLAUDE.md`, so nothing was deleted — but **raw inputs** (Parallel.ai `prompts/`, `runs/`, `logs/`, `results/`; first-generation captures `research1/2/3.md`; sideband raw reports `01..07-*.md`; the 2026-04-24 user memos) moved to [`../research-archive/`](../research-archive/).
+
+The **synthesis layer stays here**: `findings.md`, every cluster's `SYNTHESIS.md` / `CANDIDATES.md` / `RISKS.md` / `DECISIONS.md` / `EXECUTIVE_SUMMARIES.md`, the cluster `README.md`s, and the still-load-bearing `synthetic-user-testing/` cluster in full.
+
+Inside each archived-raw cluster, the synthesis documents reference `./results/...` and `./prompts/...` paths. Those paths still resolve — the active cluster directories carry symlinks to their archived siblings so synthesis → raw report links work unchanged. See [`../research-archive/README.md`](../research-archive/README.md) for the archive's own index.
+
+Motivation: the research inputs have been absorbed into ADRs 0001–0012 and `CLAUDE.md §11`. Reading them again to re-derive what's already pinned is the "very well-organized `docs/` tree" failure mode the [2026-04-24 viability review](../reviews/2026-04-24-viability-review.md) and [research-sufficiency note](../reviews/2026-04-24-research-sufficiency.md) name. This tree is now the *working surface*: synthesis + digested candidates + decision-ready risks.
+
+---
+
 ## Tree layout
 
 ```
-docs/research/
+docs/research/                                 # the working surface — synthesis layer
 ├── README.md                                  # this file
 ├── findings.md                                # cluster-1 narrative read + v1 direction (cited from ADRs 0005–0010)
-├── research1-aws-installable-shape.md         # installable-vs-hosted analyst memo (cited from ADR 0003)
-├── research2-v1-service-build-plan.md         # 10-service v1 proposal (cited from ADRs 0003/0004, architecture, glossary)
-├── research3.md                               # 12-topic question set that produced cluster 1
-├── deep-research-2026-04-21/                  # Cluster 1
-│   ├── README (this is in-tree, see below)
+├── deep-research-2026-04-21/                  # Cluster 1 — synthesis only; raw reports symlinked from archive
 │   ├── SYNTHESIS.md                           # cross-report synthesis + 6 candidate ADRs
 │   ├── EXECUTIVE_SUMMARIES.md                 # one-paragraph distillations per report
 │   ├── DECISIONS.md                           # flat backlog of ~60 open decisions surfaced by cluster 1
 │   ├── CANDIDATES.md                          # decision-ready: 6 candidate ADRs (A–F), 3 of them resolved
 │   ├── RISKS.md                               # decision-ready: 7 named risks
-│   ├── prompts/ runs/ logs/ results/          # Parallel.ai submission + response artifacts
-├── deep-research-2026-04-22/                  # Cluster 2 — ADR-targeted
+│   └── results/ prompts/ runs/ logs/          # → symlinks to ../../research-archive/deep-research-2026-04-21/
+├── deep-research-2026-04-22/                  # Cluster 2 — synthesis only; raw reports symlinked from archive
 │   ├── README.md
 │   ├── SYNTHESIS.md                           # 10-report synthesis, 7 candidate follow-on ADRs, 5 risks
 │   ├── CANDIDATES.md                          # decision-ready: 7 candidate ADRs (A–G), 1 resolved
 │   ├── RISKS.md                               # decision-ready: 8 named risks
-│   ├── prompts/ runs/ logs/ results/
-│   └── run.py .gitignore
+│   └── results/ prompts/ runs/ logs/          # → symlinks to ../../research-archive/deep-research-2026-04-22/
 ├── sideband-2026-04-22/                       # Cluster 3 — adjacent-market landscape
 │   ├── SYNTHESIS.md                           # validates "novel category" positioning
-│   └── 01..07-*.md                            # 7 reports (report 07 is unrelated; see filename)
-└── synthetic-user-testing/                    # Cluster 4 — user-dropped, implementation-relevant
+│   └── 01..07-*.md                            # → symlinks to ../../research-archive/sideband-2026-04-22/ (raw reports)
+└── synthetic-user-testing/                    # Cluster 4 — still active, NOT archived; load-bearing for §11 #26 #28
     ├── SYNTHESIS.md                           # 5-report synthesis; 7 candidate ADRs; 3 risks
     ├── CANDIDATES.md                          # decision-ready: 7 candidate ADRs (C1–C7) individually pickable
     ├── RISKS.md                               # decision-ready: 5 named risks (R1–R5), triggers, mitigations
@@ -74,6 +81,25 @@ docs/research/
     ├── 03-persona-simulation-methodology.md   # fidelity gap, PII leakage, dual-loop personas
     ├── 04-build-it-yourself-claude-sdk.md     # Planner/Executor split, Playwright MCP, PersonaGym
     └── aws-marketplace-monetization-guide.md  # fees, Concurrent Agreements, CDK→CFN, CPPO
+
+docs/research-archive/                         # frozen — raw inputs, first-gen captures, absorbed memos
+├── README.md                                  # archive index
+├── first-generation/
+│   ├── research1-aws-installable-shape.md     # cited from ADR 0003, ADR 0004
+│   ├── research2-v1-service-build-plan.md     # cited from ADR 0003, ADR 0004, architecture docs
+│   └── research3.md                           # question set that produced Cluster 1
+├── deep-research-2026-04-21/
+│   └── prompts/ runs/ logs/ results/          # Parallel.ai submission + response artifacts
+├── deep-research-2026-04-22/
+│   ├── prompts/ runs/ logs/ results/
+│   └── run.py
+├── sideband-2026-04-22/
+│   └── 01..07-*.md                            # 7 raw reports
+└── user-memos-2026-04-24/
+    ├── aws-innovation-environment-design-report.md
+    ├── aws-marketplace-insurtech-deployment-proposal.md
+    ├── aws-marketplace-sales-strategy-report.md
+    └── innovation-sandbox-ai-driven-product-development.md
 ```
 
 ---
@@ -89,8 +115,10 @@ Search by subject. Each row lists the documents that discuss the topic meaningfu
 | **Agent: sandboxed execution, OIDC workload identity** | [sideband 04](./sideband-2026-04-22/04-ai-software-generation-multiagent.md) §5 |
 | **Agent: persistent Git-backed memory (OpenClaw pattern)** | [sideband 01](./sideband-2026-04-22/01-persistent-state-agents-and-openclaw.md), [sideband SYNTHESIS §4](./sideband-2026-04-22/SYNTHESIS.md) |
 | **Audit trail: append-only, hash-chained, tamper-evident** | [cluster 2 report 02](./deep-research-2026-04-22/results/02-dynamodb-hash-chained-audit.md), [cluster 1 report 11](./deep-research-2026-04-21/results/11-regulated-cues.md), [findings.md §5.4](./findings.md) → [ADR 0009](../decisions/0009-audit-trail-is-append-only-hash-chained.md) |
-| **AWS Marketplace: packaging, delivery, listing** | [research1-aws-installable-shape.md](./research1-aws-installable-shape.md), [cluster 1 report 07](./deep-research-2026-04-21/results/07-packaging.md) → [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md) |
-| **AWS Marketplace: pricing, metering, CPPO, Concurrent Agreements** | [synthetic-user-testing/aws-marketplace-monetization-guide.md](./synthetic-user-testing/aws-marketplace-monetization-guide.md), [synthetic-user-testing SYNTHESIS §2.5](./synthetic-user-testing/SYNTHESIS.md) |
+| **AWS Marketplace: packaging, delivery, listing** | [research1 (archived)](../research-archive/first-generation/research1-aws-installable-shape.md), [cluster 1 report 07](./deep-research-2026-04-21/results/07-packaging.md), [insurtech deployment proposal (archived)](../research-archive/user-memos-2026-04-24/aws-marketplace-insurtech-deployment-proposal.md) → [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md) |
+| **AWS Marketplace: pricing, metering, CPPO, Concurrent Agreements** | [synthetic-user-testing/aws-marketplace-monetization-guide.md](./synthetic-user-testing/aws-marketplace-monetization-guide.md), [synthetic-user-testing SYNTHESIS §2.5](./synthetic-user-testing/SYNTHESIS.md), [sales strategy report (archived)](../research-archive/user-memos-2026-04-24/aws-marketplace-sales-strategy-report.md), [insurtech deployment proposal (archived)](../research-archive/user-memos-2026-04-24/aws-marketplace-insurtech-deployment-proposal.md) |
+| **AWS Marketplace: seller go-to-market (FTR, Vendor Insights, ACE co-sell, MDF, listing SEO)** | [sales strategy report (archived)](../research-archive/user-memos-2026-04-24/aws-marketplace-sales-strategy-report.md) |
+| **AWS Marketplace: version lifecycle, Managed Entitlements, CloudFormation delivery** | [insurtech deployment proposal (archived)](../research-archive/user-memos-2026-04-24/aws-marketplace-insurtech-deployment-proposal.md), [synthetic-user-testing/aws-marketplace-monetization-guide.md](./synthetic-user-testing/aws-marketplace-monetization-guide.md) |
 | **AI-agent browser automation (Claude Computer Use, Playwright MCP, Stagehand)** | [synthetic-user-testing 02](./synthetic-user-testing/02-ai-computer-use-tech.md), [synthetic-user-testing 04](./synthetic-user-testing/04-build-it-yourself-claude-sdk.md) |
 | **Chaos engineering, fault injection, k6, Gremlin, Chaos Mesh** | [sideband 05](./sideband-2026-04-22/05-synthetic-data-and-chaos-engineering.md) |
 | **CloudFormation seeder/reaper patterns** | [cluster 2 report 07](./deep-research-2026-04-22/results/07-cloudformation-seeder-reaper.md), [findings.md §8](./findings.md) → [ADR 0010](../decisions/0010-seeder-and-reaper-patterns.md) |
@@ -106,15 +134,17 @@ Search by subject. Each row lists the documents that discuss the topic meaningfu
 | **Ideation bazaar, trend detection, scraping law** | [sideband 06](./sideband-2026-04-22/06-ideation-bazaar-and-trend-detection.md) |
 | **LLM cost: pre-estimation, metering, budget enforcement** | [cluster 2 report 06](./deep-research-2026-04-22/results/06-llm-cost-estimation-accuracy.md), [findings.md §6.3–6.4](./findings.md) → [ADR 0007](../decisions/0007-v1-cost-profile-and-llm-metering.md) |
 | **Maker-checker, four-eyes, approval workflows** | [cluster 1 report 11](./deep-research-2026-04-21/results/11-regulated-cues.md), [cluster 2 report 03](./deep-research-2026-04-22/results/03-claims-settlement-maker-checker.md), [findings.md §5.4](./findings.md) |
-| **Minimum viable realism: entity counts, role counts** | [cluster 1 report 03](./deep-research-2026-04-21/results/03-mvr-threshold.md), [research1](./research1-aws-installable-shape.md) |
-| **Novel category positioning, no-single-vendor-bundle** | [sideband 02](./sideband-2026-04-22/02-innovation-sandbox-platform-landscape.md), [sideband SYNTHESIS §3](./sideband-2026-04-22/SYNTHESIS.md) |
+| **Minimum viable realism: entity counts, role counts** | [cluster 1 report 03](./deep-research-2026-04-21/results/03-mvr-threshold.md), [research1 (archived)](../research-archive/first-generation/research1-aws-installable-shape.md), [innovation env design report (archived)](../research-archive/user-memos-2026-04-24/aws-innovation-environment-design-report.md) |
+| **Insurance-domain AI workflows: IDP (Textract/Comprehend), Rekognition damage validation, Zero-Touch claims** | [insurtech deployment proposal (archived)](../research-archive/user-memos-2026-04-24/aws-marketplace-insurtech-deployment-proposal.md), [innovation env design report (archived)](../research-archive/user-memos-2026-04-24/aws-innovation-environment-design-report.md) |
+| **Novel category positioning, no-single-vendor-bundle** | [sideband 02](./sideband-2026-04-22/02-innovation-sandbox-platform-landscape.md), [sideband SYNTHESIS §3](./sideband-2026-04-22/SYNTHESIS.md), [innovation-sandbox memo (archived)](../research-archive/user-memos-2026-04-24/innovation-sandbox-ai-driven-product-development.md) |
+| **MCP Gateway / MCPJungle (naming collision — unrelated to Jungl3)** | [innovation-sandbox memo (archived)](../research-archive/user-memos-2026-04-24/innovation-sandbox-ai-driven-product-development.md) |
 | **Observability: CloudWatch, X-Ray, per-case inspection** | [cluster 1 report 09](./deep-research-2026-04-21/results/09-observability-ux.md), [findings.md §6.2](./findings.md) → [ADR 0007](../decisions/0007-v1-cost-profile-and-llm-metering.md) |
-| **Personas, role mix, writing style** | [cluster 1 report 10](./deep-research-2026-04-21/results/10-personas.md), [cluster 2 report 08](./deep-research-2026-04-22/results/08-persona-writing-style-generation.md), [research2](./research2-v1-service-build-plan.md) |
+| **Personas, role mix, writing style** | [cluster 1 report 10](./deep-research-2026-04-21/results/10-personas.md), [cluster 2 report 08](./deep-research-2026-04-22/results/08-persona-writing-style-generation.md), [research2 (archived)](../research-archive/first-generation/research2-v1-service-build-plan.md) |
 | **Persona simulation methodology (fidelity, PII, dual-loop, SUS "OK" bias)** | [synthetic-user-testing 03](./synthetic-user-testing/03-persona-simulation-methodology.md), [synthetic-user-testing SYNTHESIS §2.3/§3.2](./synthetic-user-testing/SYNTHESIS.md) |
 | **Prompt injection via untrusted UI / webpage content** | [synthetic-user-testing 02](./synthetic-user-testing/02-ai-computer-use-tech.md), [synthetic-user-testing 04](./synthetic-user-testing/04-build-it-yourself-claude-sdk.md) |
 | **Synthetic user testing: agentic execution vs AI-assisted analytics** | [synthetic-user-testing 01](./synthetic-user-testing/01-existing-platforms.md), [synthetic-user-testing SYNTHESIS](./synthetic-user-testing/SYNTHESIS.md) |
 | **Regulated cues beyond maker-checker** | [cluster 1 report 11](./deep-research-2026-04-21/results/11-regulated-cues.md), [cluster 2 report 09](./deep-research-2026-04-22/results/09-pc-regulated-cues-beyond-maker-checker.md) |
-| **Service decomposition (10 vs 7 services)** | [research2-v1-service-build-plan.md](./research2-v1-service-build-plan.md), [findings.md §6.5](./findings.md) → [ADR 0006](../decisions/0006-v1-domain-anchor-insurance-claims.md) |
+| **Service decomposition (10 vs 7 services)** | [research2 (archived)](../research-archive/first-generation/research2-v1-service-build-plan.md), [findings.md §6.5](./findings.md) → [ADR 0006](../decisions/0006-v1-domain-anchor-insurance-claims.md) |
 | **Step Functions state machines for regulated workflows** | [cluster 2 report 01](./deep-research-2026-04-22/results/01-step-functions-regulated-workflows.md) → [ADR 0008](../decisions/0008-workflows-are-state-machines.md) |
 | **Stubs and simulators** | [cluster 1 report 06](./deep-research-2026-04-21/results/06-stubs.md) |
 | **Synthetic data: high-fidelity, Gretel/Tonic/MOSTLY AI/YData** | [sideband 05](./sideband-2026-04-22/05-synthetic-data-and-chaos-engineering.md), [cluster 1 report 04](./deep-research-2026-04-21/results/04-synthetic-data.md) |
@@ -122,23 +152,17 @@ Search by subject. Each row lists the documents that discuss the topic meaningfu
 
 ---
 
-## First-generation captures
+## Findings — the v1 story
 
-Older convention, before the deep-research cluster format. Three files; all cited from repo policy docs, therefore **frozen** (see [ADR 0004](../decisions/0004-canonical-platform-vocabulary.md) §62).
+[`findings.md`](./findings.md) is the narrative read of Cluster 1 plus the adopted v1 direction. It sits at this level (not inside the cluster directory) because it is heavily cited from ADRs 0005–0010 and by `CLAUDE.md`, and moving it would break those citations. **Start here if you want the v1 story**: insurance-claims-only domain, LLM-agent-over-deterministic-tools admin, CloudWatch/X-Ray observability, $100 infra + $50 LLM metered ceiling, ephemeral-capable lifecycle.
 
-| # | Captured | Subject | Status |
-| --- | --- | --- | --- |
-| [research1-aws-installable-shape.md](./research1-aws-installable-shape.md) | 2026-04-21 | Analyst memo: installable-vs-hosted; proposed v1 AWS service set | Installable-vs-hosted accepted by [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md); other recommendations open in [`CLAUDE.md`](../../CLAUDE.md) §11. |
-| [research2-v1-service-build-plan.md](./research2-v1-service-build-plan.md) | 2026-04-21 | Service-by-service v1 build plan (10 services, Work Item anchor); derived from research1 | Partially routed into CLAUDE.md §11 (items 7, 11, 16–19) and into architecture docs. Service-set decomposition, Control Plane runtime, realism threshold, Admin-vs-Agent-Layer overlap, and Domain Starter anchor remain open. |
-| [research3.md](./research3.md) | 2026-04-21 | 12-topic question set that produced Cluster 1 | Question set only; answers live in [`deep-research-2026-04-21/`](./deep-research-2026-04-21/). |
-
-[`findings.md`](./findings.md) is the narrative read of Cluster 1 plus the v1 direction. It sits at this level (not inside the cluster directory) because it is heavily cited from ADRs 0005–0010 and by `CLAUDE.md`, and moving it would break those citations. **Start here if you want the v1 story**: insurance-claims-only domain, LLM-agent-over-deterministic-tools admin, CloudWatch/X-Ray observability, $100 infra + $50 LLM metered ceiling, ephemeral-capable lifecycle.
+First-generation captures (`research1-*.md`, `research2-*.md`, `research3.md`) were the input `findings.md` digested; they now live in [`../research-archive/first-generation/`](../research-archive/first-generation/). They are **frozen** per [ADR 0004](../decisions/0004-canonical-platform-vocabulary.md) §62.
 
 ---
 
 ## Cluster 1: `deep-research-2026-04-21/`
 
-**Twelve ultra4x Parallel.ai reports** commissioned by [`research3.md`](./research3.md). Covers what-makes-a-synthetic-enterprise-feel-real, the v1 domain anchor, minimum viable realism, synthetic data generation, event/workflow patterns, stubs and simulators, AWS Marketplace packaging, cost floor, observability UX, personas and workload realism, regulated-environment cues, and the extension model.
+**Twelve ultra4x Parallel.ai reports** commissioned by [`research3.md` (archived)](../research-archive/first-generation/research3.md). Covers what-makes-a-synthetic-enterprise-feel-real, the v1 domain anchor, minimum viable realism, synthetic data generation, event/workflow patterns, stubs and simulators, AWS Marketplace packaging, cost floor, observability UX, personas and workload realism, regulated-environment cues, and the extension model.
 
 **Synthesis layer (read in this order):**
 

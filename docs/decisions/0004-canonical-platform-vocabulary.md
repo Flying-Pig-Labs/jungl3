@@ -61,7 +61,7 @@ Tracked here so the sweep is discoverable:
 - `docs/architecture/agent-layer.md` — terminology sweep.
 - `docs/decisions/0003-installable-via-aws-marketplace.md` — add a header note that part of this ADR is superseded by 0004. Do not rewrite its body.
 - `CLAUDE.md` — §1 principle softening, §11 items that reference Frankenstein App or Gallery, any section introducing the canonical nouns.
-- Research captures (`docs/research/research1-aws-installable-shape.md`, `docs/research/research2-v1-service-build-plan.md`) — **not edited**. Captures are frozen. A reader should mentally substitute Understory for Frankenstein App and DMZ for Gallery per this ADR.
+- Research captures (`docs/research-archive/first-generation/research1-aws-installable-shape.md`, `docs/research-archive/first-generation/research2-v1-service-build-plan.md`) — **not edited**. Captures are frozen. A reader should mentally substitute Understory for Frankenstein App and DMZ for Gallery per this ADR.
 - `doc.md`, `doc2.md` — **not edited**. Historical transcripts. Already marked as pre-ADR-0003 in prior commits; the same mental substitution applies.
 - Website `src/` — separate commit, after the doc sweep lands. Section components currently reference "DMZ Gallery," "Marketplace," and "Frankenstein App"-adjacent copy in places. Terminology will sweep to Understory / Substrate / DMZ.
 

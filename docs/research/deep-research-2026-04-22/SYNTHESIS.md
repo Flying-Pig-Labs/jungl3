@@ -8,7 +8,7 @@
 
 This is the synthesis of the 2026-04-22 deep-research cluster — ten Parallel.ai `ultra4x` reports totaling ~1,260 lines, targeted at the concrete unknowns that opened up once [`findings.md`](../findings.md) was ratified and ADRs [0005](../../decisions/0005-event-envelope-and-correlation-identifiers.md), [0006](../../decisions/0006-v1-domain-anchor-insurance-claims.md), [0007](../../decisions/0007-v1-cost-profile-and-llm-metering.md), [0008](../../decisions/0008-workflows-are-state-machines.md), and [0009](../../decisions/0009-audit-trail-is-append-only-hash-chained.md) were written.
 
-Raw material: [`results/01-*.md`](./results/) through [`results/10-*.md`](./results/). Prompts: [`prompts/`](./prompts/). The three prior synthesis documents ([`findings.md`](../findings.md), [`SYNTHESIS.md`](../SYNTHESIS.md), [`DECISIONS.md`](../DECISIONS.md)) remain authoritative for the first cluster.
+Raw material: [`results/01-*.md`](./results/) through [`results/10-*.md`](./results/). Prompts: [`prompts/`](./prompts/). The three prior synthesis documents ([`findings.md`](../findings.md), [`SYNTHESIS.md`](../deep-research-2026-04-21/SYNTHESIS.md), [`DECISIONS.md`](../deep-research-2026-04-21/DECISIONS.md)) remain authoritative for the first cluster.
 
 I keep the same three voices from `findings.md`:
 

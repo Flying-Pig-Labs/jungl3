@@ -50,12 +50,56 @@ export function ConceptSection() {
             </span>
           </div>
           <div className="rounded-sm bg-background/40 p-4">
-            <img
-              src={shapingUrl}
-              alt="Two panels compared: starting from zero versus shaping a living thing"
-              className="mx-auto h-auto w-full max-w-4xl"
-              loading="lazy"
-            />
+            <div className="relative mx-auto w-full max-w-4xl">
+              <img
+                src={shapingUrl}
+                alt="Two panels compared: starting from zero versus shaping a living thing. An arrow indicates Jungl3 does the second, not the first."
+                className="block h-auto w-full"
+                loading="lazy"
+              />
+              {/* Overlaid "do this instead" arrow — composited in post per the style guide so the source PNG stays untouched. */}
+              <svg
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 h-full w-full"
+                viewBox="0 0 1536 1024"
+                preserveAspectRatio="none"
+              >
+                <defs>
+                  <marker
+                    id="shaping-arrow-tip"
+                    viewBox="0 0 10 10"
+                    refX="9"
+                    refY="5"
+                    markerWidth="5"
+                    markerHeight="5"
+                    orient="auto"
+                  >
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5F1E8" />
+                  </marker>
+                </defs>
+                <path
+                  d="M 470 520 Q 768 430 1010 520"
+                  stroke="#F5F1E8"
+                  strokeOpacity="0.9"
+                  strokeWidth="6"
+                  fill="none"
+                  strokeLinecap="round"
+                  markerEnd="url(#shaping-arrow-tip)"
+                />
+                <text
+                  x="768"
+                  y="405"
+                  textAnchor="middle"
+                  fill="#F5F1E8"
+                  fillOpacity="0.85"
+                  fontFamily='"Fira Code", monospace'
+                  fontSize="26"
+                  letterSpacing="6"
+                >
+                  INSTEAD
+                </text>
+              </svg>
+            </div>
           </div>
           <figcaption className="mx-auto mt-5 max-w-2xl text-center text-sm italic leading-relaxed text-muted-foreground">
             The difference is not speed of typing. It&apos;s what you start next

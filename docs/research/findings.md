@@ -10,7 +10,7 @@ This document does two things. First, it tells you what the 2026-04-21 twelve-re
 
 The underlying research files are unchanged and still authoritative as "what the external analysis claimed":
 
-- [`SYNTHESIS.md`](./SYNTHESIS.md), [`EXECUTIVE_SUMMARIES.md`](./EXECUTIVE_SUMMARIES.md), [`DECISIONS.md`](./DECISIONS.md) — the structured synthesis artifacts.
+- [`SYNTHESIS.md`](./deep-research-2026-04-21/SYNTHESIS.md), [`EXECUTIVE_SUMMARIES.md`](./deep-research-2026-04-21/EXECUTIVE_SUMMARIES.md), [`DECISIONS.md`](./deep-research-2026-04-21/DECISIONS.md) — the structured synthesis artifacts.
 - [`deep-research-2026-04-21/results/`](./deep-research-2026-04-21/results/) — the raw 7,200-line report cluster.
 
 This document is the bridge between those reads and action. It is **not** repo policy until the ADRs referenced in §9 are written and accepted. But it is further along than "research" — several things that were open yesterday are now direction, and the document distinguishes which is which at every turn.
@@ -508,18 +508,19 @@ Two ADRs that can wait for v1 to actually be in progress:
 - An ADR covering the MVR floors (§5.5) — worth having as an explicit gate so future scope arguments have something to measure against, but not blocking.
 - An ADR covering the extension-model core/pack boundary — not urgent until the second pack is being considered, but should not be deferred past v2 start.
 
-Everything else from [`DECISIONS.md`](./DECISIONS.md) is fine to resolve incrementally during implementation.
+Everything else from [`DECISIONS.md`](./deep-research-2026-04-21/DECISIONS.md) is fine to resolve incrementally during implementation.
 
 ---
 
 ## 11. Cross-references
 
 - **Source reports:** [`deep-research-2026-04-21/results/`](./deep-research-2026-04-21/results/). Twelve markdown files, ~7,200 lines total. Authoritative for what the external analysis claimed.
-- **Structured synthesis:** [`SYNTHESIS.md`](./SYNTHESIS.md). Same claims, more rigorously organized. Frozen as a "what the reports said" record; not updated with post-decision content.
-- **Per-report summaries:** [`EXECUTIVE_SUMMARIES.md`](./EXECUTIVE_SUMMARIES.md). Useful when a specific claim makes you suspicious and you want to check the source fast.
-- **Decision backlog:** [`DECISIONS.md`](./DECISIONS.md). ~60 items, most resolved implicitly by this document; the rest fine to handle incrementally.
-- **Original research brief:** [`research3.md`](./research3.md). The 12 questions that generated the cluster.
+- **Structured synthesis:** [`SYNTHESIS.md`](./deep-research-2026-04-21/SYNTHESIS.md). Same claims, more rigorously organized. Frozen as a "what the reports said" record; not updated with post-decision content.
+- **Per-report summaries:** [`EXECUTIVE_SUMMARIES.md`](./deep-research-2026-04-21/EXECUTIVE_SUMMARIES.md). Useful when a specific claim makes you suspicious and you want to check the source fast.
+- **Decision backlog:** [`DECISIONS.md`](./deep-research-2026-04-21/DECISIONS.md). ~60 items, most resolved implicitly by this document; the rest fine to handle incrementally.
+- **Original research brief:** [`research3.md`](../research-archive/first-generation/research3.md). The 12 questions that generated the cluster.
 - **Related existing ADRs:** [0003-installable-via-aws-marketplace](../decisions/0003-installable-via-aws-marketplace.md) (validated unanimously), [0004-canonical-platform-vocabulary](../decisions/0004-canonical-platform-vocabulary.md) (not from this cluster; touches naming conventions relevant to ADR 0005).
+- **Later corroborating memo:** [`aws-innovation-environment-design-report.md`](../research-archive/user-memos-2026-04-24/aws-innovation-environment-design-report.md) (captured 2026-04-24, now archived). Independent re-derivation of the insurance-claims v1 direction — same canonical entities, same event taxonomy shape, same synthetic-pulse pattern, same maker-checker framing. Its specific numbers are *larger* than §6.1's decided counts (it suggests 1,000+ customers / 5,000+ policies / 500+ claims vs. our 800 / 1,800 / 60); treat as corroboration of direction, not as a revision of the adopted counts. It also names AWS Service Catalog as a distribution mechanism — that is complementary to AWS Marketplace delivery per [ADR 0003](../decisions/0003-installable-via-aws-marketplace.md), not a competing channel.
 
 ---
 

@@ -144,7 +144,7 @@ Two of the 7 (C6, C7) close existing §11 items outright if drafted. One (C1) in
 **Forces.**
 - Marketplace fee tiers are economic: 3% under $1M TCV, 2% $1M–$10M, 1.5% above, flat 1.5% on renewals. Bigger deals = dramatically better take-rate. (Guide §1.1.)
 - Private Offers support installment plans, custom EULAs, negotiated pricing. They do *not* support BYOL. (Guide §1.2.)
-- Analyst memo on record ([`../research1-aws-installable-shape.md`](../research1-aws-installable-shape.md)) recommended free or low-cost subscription initially. The guide doesn't contradict that but sharpens the why.
+- Analyst memo on record ([`research1-aws-installable-shape.md`](../../research-archive/first-generation/research1-aws-installable-shape.md)) recommended free or low-cost subscription initially. The guide doesn't contradict that but sharpens the why.
 - There's no v1 customer yet (`CLAUDE.md` §11 #21), which constrains concrete pricing decisions.
 
 **The decision you'd be making.** Pick one of {free, subscription, private-offer-only, hybrid}. Each has downstream consequences for CI/CD, stack structure (C7), and go-to-market.

@@ -9,7 +9,7 @@
 
 Jungl3's delivery model was implicit in early repo material. `doc.md` describes a hosted shape: a Jungl3-operated AWS sandbox account under Control Tower, with teams vended into per-service stacks behind a Jungl3-owned ALB and DNS apex. Refined docs (`docs/glossary.md`, `docs/architecture/system-context.md`) inherited that framing without ever making it a decision.
 
-Third-party analysis ([`../research/research1-aws-installable-shape.md`](../research/research1-aws-installable-shape.md)) argued the delivery model should instead be an AWS Marketplace listing delivered via CloudFormation, installed into the customer's own AWS account. The two shapes have cascading, incompatible consequences for tenancy, control-plane location, DMZ topology, data-classification enforceability, and who the user of Jungl3 actually is. Leaving this implicit creates silent drift between docs.
+Third-party analysis ([`../research-archive/first-generation/research1-aws-installable-shape.md`](../research-archive/first-generation/research1-aws-installable-shape.md)) argued the delivery model should instead be an AWS Marketplace listing delivered via CloudFormation, installed into the customer's own AWS account. The two shapes have cascading, incompatible consequences for tenancy, control-plane location, DMZ topology, data-classification enforceability, and who the user of Jungl3 actually is. Leaving this implicit creates silent drift between docs.
 
 Hosted and installable are not small variants of the same product. They are different companies.
 

@@ -5,6 +5,16 @@ Read this **before** making changes. It encodes constraints that are not obvious
 
 ---
 
+## 0. Current phase
+
+**v0.1 skeleton build** (scoping in [`docs/reviews/2026-04-24-v0.1-plan.md`](./docs/reviews/2026-04-24-v0.1-plan.md)). Target: a vendable + reapable "promotable tiny claims Understory" running in a dev AWS account, proving the Control Plane / Understory / Integration Contract / install–teardown primitives on a minimal P&C surface. No LLM, no DMZ agents, no maker-checker, no Gallery, no Marketplace submission — those are v0.5/v1.
+
+**Research is frozen.** The absorbed paper trail is in [`docs/research-archive/`](./docs/research-archive/); the active synthesis layer is in [`docs/research/`](./docs/research/). Reasoning in the [research-sufficiency note](./docs/reviews/2026-04-24-research-sufficiency.md). Do not spelunk the archive for Phase 2 tasks unless a specific claim needs a citation.
+
+**Current ADRs through 0012** (0012 Proposed, others Accepted). ADRs 0013+ are build-driven, not research-driven.
+
+---
+
 ## 1. What jungl3 is
 
 jungl3 (pronounced "jungle three") is the working name for an **AI-native prototype platform** for time-boxed innovation sprints. The full concept lives in `doc.md` and `doc2.md`; the refined distillation lives in `docs/`.
@@ -231,52 +241,55 @@ Patterns to watch for. Each gets promoted to a real skill the second time we do 
 
 ## 11. Open decisions (unresolved, do not invent answers)
 
-Flag these when they become relevant to a task. Do **not** guess an answer; ask the user. When a question here is resolved, promote it to `docs/decisions/NNNN-slug.md` and remove it from this list.
+Flag when relevant to a task. Do **not** guess an answer; ask. When resolved, promote to `docs/decisions/NNNN-slug.md` and remove from this list. Each item is one line — the source (ADR / review / archived memo) is linked inline for detail when needed.
 
 ### AWS Marketplace listing & packaging
 
-1. **Pricing model.** Free, subscription, usage-based, private-offer-only contract. Analyst recommendation on record: free or low-cost subscription initially. Not decided.
-2. **Stack structure.** Single CloudFormation stack vs a root template that nests optional components (modular, parameterized, partial-install). Affects upgrade strategy.
-3. **Update/upgrade strategy.** How new listing versions ship to existing installs without destroying customer data or orphaning resources. This is the hard problem.
-4. **Minimum IAM permissions.** The permission set the install requires from the subscribing customer. Every additional permission is a security-team conversation; fewer is better.
-5. **Supported AWS regions at launch.** No region list decided.
-6. **Supported customer account scenarios.** Single-account customer? Mandatory Control Tower / multi-account? Both? Each scenario adds install-time branching.
-7. **IaC authoring tool.** The listing is CloudFormation at publish time; authoring can be CFN directly, CDK compiled to CFN, SAM, or Pulumi compiled. Not decided. (Both [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) and [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) implicitly assume CloudFormation via Marketplace without committing to an authoring tool.)
-8. **CI/CD for the listing itself.** GitHub Actions + OIDC into Jungl3's own build account to publish listing versions. Not yet set up.
-34. **Solo-support operating model for the Marketplace listing.** Opened by the [2026-04-24 viability review](./docs/reviews/2026-04-24-viability-review.md) §5. [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md) accepts that support extends into debugging customer AWS accounts; the review flags this as a solo-founder execution risk. The actual support commitment on the Marketplace listing (business-hours only, scope limits, escalation path, response-time SLA, paid-support tier shape) is undecided. Becomes concrete before listing publication.
+1. **Pricing model.** Free / subscription / usage-based / private-offer. Analyst recommendation on record: free or low-cost subscription initially.
+2. **Stack structure.** Single CloudFormation stack vs nested components. Affects upgrade strategy (#3).
+3. **Update/upgrade strategy.** How new listing versions ship to existing installs without destroying customer data. The hard problem.
+4. **Minimum IAM permissions.** The permission set the install requires. Every permission is a security-review conversation; fewer is better. Interacts with #36 (Vendor Insights).
+5. **Supported AWS regions at launch.**
+6. **Supported customer account scenarios.** Single-account vs Control Tower / multi-account. Each adds install-time branching.
+7. **IaC authoring tool.** CFN directly / CDK / SAM / Pulumi. Becomes concrete the moment `control-plane/` starts.
+8. **CI/CD for the listing itself.** GitHub Actions + OIDC into Jungl3's build account. Not yet set up.
+34. **Solo-support operating model.** Opened by the [2026-04-24 viability review](./docs/reviews/2026-04-24-viability-review.md) §5. Support commitment on the listing (SLA, scope limits, paid-support tier) undecided. Becomes concrete before publication.
+35. **FTR and "Deployed on AWS" designation posture.** Opened by the archived [sales strategy memo](./docs/research-archive/user-memos-2026-04-24/aws-marketplace-sales-strategy-report.md). Pursue on v1 listing, defer, or target a later milestone — undecided. Interacts with #34.
+36. **Vendor Insights adoption.** Opened by the archived [sales strategy memo](./docs/research-archive/user-memos-2026-04-24/aws-marketplace-sales-strategy-report.md). Publish at launch, defer until first enterprise prospect asks, or skip entirely — undecided.
+37. **Co-sell / ACE / MDF posture.** Opened by the archived [sales strategy memo](./docs/research-archive/user-memos-2026-04-24/aws-marketplace-sales-strategy-report.md). Blocked on #31 — no co-sell story without a reference customer.
 
 ### In-install operation (customer's AWS account)
 
-9. **Canopy authentication for external users.** Recommendation on record: magic link + password-guest access + seeded persona/test accounts + role-based access (judge, beta user, builder, admin). Not yet decided. See [`docs/architecture/canopy.md`](./docs/architecture/canopy.md). (Previously framed as "DMZ authentication"; re-homed by [ADR 0011](./docs/decisions/0011-canopy-and-ai-first-dmz.md).)
-10. **Canopy AWS topology within a customer account.** VPC shape, ALB/WAF pattern, per-team subdomain or path routing, DNS apex strategy (customer-provided vs install-generated). (Previously "DMZ AWS topology"; re-homed by [ADR 0011](./docs/decisions/0011-canopy-and-ai-first-dmz.md).)
-11. **Control Plane runtime.** Lambda vs ECS/Fargate vs other. `doc.md`'s ECS-Fargate recommendation was for a Jungl3-hosted shape; the installable's cost and idle-footprint profile is different. [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) argues ECS/Fargate for **packaging**; [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) implicitly proposes Lambda for **application compute**. These are easily conflated but not in conflict — a decision here must name both.
-12. **Canopy prototype lifespan.** Ephemeral by default per glossary; retention criteria, extension path, and teardown enforcement mechanism within a customer-installed deployment are TBD.
-13. **Required Canopy telemetry and feedback capture.** What every Canopy-deployed prototype must emit (session activity, feedback, task completion). Affects judging and cross-team comparison.
-14. **Data classification rules.** `doc.md` §8 says "synthetic, public, or scrubbed only." Under the installable model, Jungl3 advises; the customer enforces. Recommendation shape, exception-approval flow, and how they're expressed inside DMZ and Canopy data boundaries are TBD.
-15. **Cross-install discoverability.** Can a Canopy Gallery in Customer A's install surface prototypes from Customer B's install (for multi-company events)? Default under [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md) is no. A federated model would require a new design.
-16. **Canonical maker-checker workflow for v1.** Opened by [ADR 0006](./docs/decisions/0006-v1-domain-anchor-insurance-claims.md). The v1 domain (insurance claims) has multiple candidates for the maker-checker canonical example — settlement approval above a threshold, policy exception approval, high-value payment issuance, SIU investigation outcome. Default absent other input: settlement approval above a threshold. Final choice depends on the first design-partner conversation.
-17. **Realism threshold for a first Jungle.** [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) names a "minimum viable realism" floor (5–8 entities, 3–5 roles, 4–6 async event types, 2–4 stubs, scheduled background activity, observable queues/failures, basic authz/audit, flags, dashboards). [findings.md §5.5](./docs/research/findings.md#5.5-the-numbers-for-minimum-viable-realism-are-tighter-than-youd-guess) adopts tighter numbers implicitly. Whether to pin the floor in an ADR is undecided.
-18. **LLM budget enforcement mechanism details.** Opened by [ADR 0007](./docs/decisions/0007-v1-cost-profile-and-llm-metering.md). The ADR pins the $50/month default, hard cutoff, graceful degradation, and gateway-based enforcement. Still open: a real data model for the budget record (per-install, per-user?, per-purpose?), a pricing-calibration plan (LLM prices change; how does the estimator stay accurate?), a top-up UX, and a cost-estimate accuracy validation harness (does the estimator predict actual cost within, say, ±10%?). Becomes a design doc when the `llm-gateway` Lambda is implemented.
-22. **State-aware SLA timers vs. generic SLA with a `jurisdiction` field.** Surfaced by the 2026-04-22 research cluster ([SYNTHESIS.md §5](./docs/research/deep-research-2026-04-22/SYNTHESIS.md), [Report 09](./docs/research/deep-research-2026-04-22/results/09-pc-regulated-cues-beyond-maker-checker.md)). State insurance codes mandate distinct acknowledgment and decision timelines (CA 15 calendar days, TX 15 business days, FL 7 calendar days, NY 15 business days). v1 could ship state-specific Step Functions `Wait` states driven by a `jurisdiction` field, or ship a single generic SLA with the field present but inert. The former is materially more credible to a former DOI examiner; the latter is materially less work. Resolves during the Candidate E ("regulatory surface") ADR draft.
-23. **Mid-execution LLM budget exhaustion signaling.** Surfaced by the 2026-04-22 research cluster ([SYNTHESIS.md §5](./docs/research/deep-research-2026-04-22/SYNTHESIS.md), [Report 06](./docs/research/deep-research-2026-04-22/results/06-llm-cost-estimation-accuracy.md)). [ADR 0007](./docs/decisions/0007-v1-cost-profile-and-llm-metering.md) pins "hard cutoff with graceful degradation" but does not specify how the `llm-gateway` signals an `InsufficientFunds` event back to a Step Functions state machine that is mid-agent-loop, or how the state machine degrades without plausibility collapse. Becomes concrete when the `llm-gateway` and the first LLM-using state machine are designed together.
-24. **SME exemplar commission timing.** Surfaced by the 2026-04-22 research cluster ([SYNTHESIS.md §3.2](./docs/research/deep-research-2026-04-22/SYNTHESIS.md), [Report 08](./docs/research/deep-research-2026-04-22/results/08-persona-writing-style-generation.md)). Pre-generated seed data (the shape of Candidate B ADR) requires 24 SME-authored exemplars (8 personas × 3 each) under work-for-hire copyright assignment to steer persona writing styles. Whether v1 gates on that commission happening first, or ships with placeholder exemplars and swaps them in, is undecided.
+9. **Canopy authentication for external users.** See [`docs/architecture/canopy.md`](./docs/architecture/canopy.md). (Previously "DMZ authentication"; re-homed by [ADR 0011](./docs/decisions/0011-canopy-and-ai-first-dmz.md).)
+10. **Canopy AWS topology within a customer account.** VPC / ALB / WAF / DNS apex. (Previously "DMZ topology"; re-homed by [ADR 0011](./docs/decisions/0011-canopy-and-ai-first-dmz.md).)
+11. **Control Plane runtime.** Lambda vs ECS/Fargate vs other. A decision here must name runtime for both Control Plane and application compute.
+12. **Canopy prototype lifespan.** Retention criteria, extension path, teardown enforcement.
+13. **Required Canopy telemetry and feedback capture.** What every Canopy-deployed prototype must emit. Affects judging. Interacts with #25.
+14. **Data classification rules.** Jungl3 advises, customer enforces under the installable model. Recommendation shape and exception flow TBD.
+15. **Cross-install discoverability.** Default per [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md) is no. A federated model would require a new design.
+16. **Canonical maker-checker workflow for v1.** Opened by [ADR 0006](./docs/decisions/0006-v1-domain-anchor-insurance-claims.md). Default absent other input: settlement approval above a threshold. Resolves with first design-partner conversation.
+17. **Realism threshold for a first Jungle.** [`findings.md §5.5`](./docs/research/findings.md#5.5-the-numbers-for-minimum-viable-realism-are-tighter-than-youd-guess) adopts tighter numbers implicitly than the archived first-gen memos. Whether to pin in an ADR is undecided.
+18. **LLM budget enforcement mechanism details.** Opened by [ADR 0007](./docs/decisions/0007-v1-cost-profile-and-llm-metering.md). Budget-record data model, pricing-calibration plan, top-up UX, cost-estimate validation harness — all undecided. Becomes a design doc when the `llm-gateway` Lambda is implemented.
+22. **State-aware SLA timers vs generic SLA with a `jurisdiction` field.** Opened by [2026-04-22 SYNTHESIS.md §5](./docs/research/deep-research-2026-04-22/SYNTHESIS.md). Resolves during the Candidate E ("regulatory surface") ADR draft.
+23. **Mid-execution LLM budget exhaustion signaling.** Opened by [2026-04-22 SYNTHESIS.md §5](./docs/research/deep-research-2026-04-22/SYNTHESIS.md). How `llm-gateway` signals `InsufficientFunds` to a mid-loop Step Functions state machine, and how it degrades without plausibility collapse.
+24. **SME exemplar commission timing.** Opened by [2026-04-22 SYNTHESIS.md §3.2](./docs/research/deep-research-2026-04-22/SYNTHESIS.md). Whether v1 gates on 24 SME-authored exemplars first, or ships with placeholders and swaps in.
 
 ### DMZ / Canopy (opened by [ADR 0011](./docs/decisions/0011-canopy-and-ai-first-dmz.md))
 
-25. **DMZ → Canopy promotion gate shape.** The gate exists as a concept (ADR 0011); its mechanics are open. Options: explicit AI evaluation criteria (e.g. zero critical defects across N persona runs), required human approval, a hybrid. Interacts with #18 (observability surface) and #13 (telemetry requirements).
-26. **DMZ agent runtime choice.** Claude Computer Use, Playwright MCP, a custom runner, or a mix. The synthetic-user-testing research ([`docs/research/synthetic-user-testing/`](./docs/research/synthetic-user-testing/)) maps the landscape; no selection yet.
-27. **DMZ AWS topology within a customer account.** Network shape, compute, storage for the AI-evaluation surface. Distinct from #10 (Canopy topology) because the threat model is different — no external ingress, but tight tool-use scoping and agent-trace isolation.
-28. **Synthetic-user-tester placement.** UST-C1 candidate ([`docs/research/synthetic-user-testing/CANDIDATES.md`](./docs/research/synthetic-user-testing/CANDIDATES.md)). ADR 0011 establishes that AI-agent probing happens *in the DMZ, by definition*; the remaining question is whether the implementing capability lives as an [Agent Layer](./docs/architecture/agent-layer.md) specialist, as its own top-level domain (`synthetic-user-testing/`), or as a DMZ-side primitive. Leaning Agent Layer specialist.
-29. **Promotion criteria for the DMZ → Canopy gate.** Related to #25 but narrower: what does "passed" look like. Zero-critical-defects, coverage thresholds, persona-completion rates, human sign-off. Needs a first concrete evaluation run to resolve.
-30. **DMZ vs Canopy persona schema alignment.** The DMZ has AI-driven personas; the Canopy has human-facing seeded personas. Whether they share a schema (one source of persona truth, consumed differently) or diverge (two schemas, intentionally) is open.
+25. **DMZ → Canopy promotion gate shape.** AI criteria, human approval, or hybrid. Interacts with #13 and #29.
+26. **DMZ agent runtime choice.** Claude Computer Use / Playwright MCP / custom / mix. See [`docs/research/synthetic-user-testing/`](./docs/research/synthetic-user-testing/).
+27. **DMZ AWS topology within a customer account.** No external ingress; threat model differs from #10 (Canopy topology).
+28. **Synthetic-user-tester placement.** UST-C1 candidate ([`synthetic-user-testing/CANDIDATES.md`](./docs/research/synthetic-user-testing/CANDIDATES.md)). Agent Layer specialist vs own top-level domain vs DMZ primitive. Leaning Agent Layer specialist.
+29. **Promotion criteria for the DMZ → Canopy gate.** Narrower than #25: what "passed" looks like. Needs a first concrete evaluation run to resolve.
+30. **DMZ vs Canopy persona schema alignment.** One schema consumed differently, or two schemas intentionally.
 
 ### Other
 
-20. **Kiro CLI vs custom CLI.** `doc2.md` floats wiring in Kiro CLI/IDE for architecture + deploy. Undecided.
-21. **First-sponsor / first-customer context.** Docs are intentionally sponsor-agnostic. Specific first-customer context (who, sprint name, dates, domain-starter priorities) accumulates separately when relevant.
-31. **First design partner acquisition path.** Opened by the [2026-04-24 viability review](./docs/reviews/2026-04-24-viability-review.md) §7, which names this gap as "the single most concerning item in the repo." Options: (a) warm introduction to a P&C carrier innovation lead, (b) consulting-firm channel partner using Jungl3 as their sprint delivery tool, (c) hackathon organizer, (d) other. Interacts with #21. Becomes concrete when a named conversation is on the calendar.
-32. **v0.5 scope vs. v1 scope.** Opened by the [2026-04-24 viability review](./docs/reviews/2026-04-24-viability-review.md) §10. Whether Jungl3's first shipped form is the full v1 architecture or a deliberately reduced "v0.5 wedge" (single exposure surface, two inspection specialists, P&C only, no Gallery). Draft resolution in [ADR 0012](./docs/decisions/0012-v0.5-wedge-scope.md) (currently Proposed). Resolves when that ADR is accepted or rejected.
-33. **ICP narrowing in [`positioning.md`](./docs/product/positioning.md).** Opened by the [2026-04-24 viability review](./docs/reviews/2026-04-24-viability-review.md) §10. Current positioning lists six audience cohorts; the review argues for narrowing to "P&C insurance innovation labs" as primary, with others as secondary. Held pending a first design partner conversation — narrowing based on founder opinion is weaker than narrowing based on a named customer. Resolves when #31 shows concrete progress.
+20. **Kiro CLI vs custom CLI.**
+21. **First-sponsor / first-customer context.** Docs stay sponsor-agnostic; specific context accumulates separately when relevant.
+31. **First design partner acquisition path.** Opened by [2026-04-24 viability review](./docs/reviews/2026-04-24-viability-review.md) §7 — "the single most concerning item in the repo." See also [research-sufficiency note](./docs/reviews/2026-04-24-research-sufficiency.md). Resolves when a named conversation is on the calendar.
+32. **v0.5 scope vs v1 scope.** Draft resolution in [ADR 0012](./docs/decisions/0012-v0.5-wedge-scope.md) (Proposed). Resolves when that ADR is accepted or rejected.
+33. **ICP narrowing in [`positioning.md`](./docs/product/positioning.md).** Held pending #31 — narrowing on founder opinion is weaker than narrowing on a named customer.
 
 For **decided** things, see [`docs/decisions/`](./docs/decisions/).
 

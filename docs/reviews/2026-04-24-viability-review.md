@@ -243,6 +243,8 @@ Everything else — agent layer polish, DMZ/Canopy split, additional domains, CL
 
 ## Related
 
+- [`2026-04-24-research-sufficiency.md`](./2026-04-24-research-sufficiency.md) — same-day follow-up: repo is over-researched for its current build state; next moves are human action, not reading.
+- [`2026-04-24-v0.1-plan.md`](./2026-04-24-v0.1-plan.md) — same-day follow-up: concrete three-track plan (outreach / architecture-hardening / v0.1 skeleton build); defines "promotable tiny claims Understory" scope.
 - [`../product/positioning.md`](../product/positioning.md) — current product framing (broader than this review recommends)
 - [`../decisions/0003-installable-via-aws-marketplace.md`](../decisions/0003-installable-via-aws-marketplace.md)
 - [`../decisions/0006-v1-domain-anchor-insurance-claims.md`](../decisions/0006-v1-domain-anchor-insurance-claims.md)

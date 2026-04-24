@@ -33,7 +33,7 @@ Ratify concrete floor numbers (microservices, personas, background jobs, stubs) 
 - **Status:** open.
 
 ### A3. v1 service set and decomposition
-Whether v1 ships with the ten-service decomposition from [`research2-v1-service-build-plan.md`](../research2-v1-service-build-plan.md), a smaller set, or a domain-shaped set. Interacts with A1 and A2.
+Whether v1 ships with the ten-service decomposition from [`research2-v1-service-build-plan.md`](../../research-archive/first-generation/research2-v1-service-build-plan.md), a smaller set, or a domain-shaped set. Interacts with A1 and A2.
 - **Source:** 01, 02 (research2), 03.
 - **CLAUDE.md §11:** #16.
 - **Status:** open.
