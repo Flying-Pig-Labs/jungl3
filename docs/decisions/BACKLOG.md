@@ -14,10 +14,11 @@
 
 ## At a glance
 
-**Accepted ADRs:** 10 (0001–0010).
+**Accepted ADRs:** 11 (0001–0011).
+**Proposed ADRs:** 1 ([0012](./0012-v0.5-wedge-scope.md), not cluster-sourced — opened by the [2026-04-24 viability review](../reviews/2026-04-24-viability-review.md)).
 **Candidates across clusters:** 21 total — 4 resolved (promoted to accepted ADRs), 17 pending.
 **Pending breakdown by readiness:** 5 High / 6 Medium / 6 Low-or-scoping.
-**Open decisions tracked in [`../../CLAUDE.md`](../../CLAUDE.md) §11:** 22.
+**Open decisions tracked in [`../../CLAUDE.md`](../../CLAUDE.md) §11:** 26 (22 previously tracked, plus 4 opened by the viability review: #31, #32, #33, #34).
 
 ---
 

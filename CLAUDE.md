@@ -243,6 +243,7 @@ Flag these when they become relevant to a task. Do **not** guess an answer; ask 
 6. **Supported customer account scenarios.** Single-account customer? Mandatory Control Tower / multi-account? Both? Each scenario adds install-time branching.
 7. **IaC authoring tool.** The listing is CloudFormation at publish time; authoring can be CFN directly, CDK compiled to CFN, SAM, or Pulumi compiled. Not decided. (Both [`docs/research/research1-aws-installable-shape.md`](./docs/research/research1-aws-installable-shape.md) and [`docs/research/research2-v1-service-build-plan.md`](./docs/research/research2-v1-service-build-plan.md) implicitly assume CloudFormation via Marketplace without committing to an authoring tool.)
 8. **CI/CD for the listing itself.** GitHub Actions + OIDC into Jungl3's own build account to publish listing versions. Not yet set up.
+34. **Solo-support operating model for the Marketplace listing.** Opened by the [2026-04-24 viability review](./docs/reviews/2026-04-24-viability-review.md) §5. [ADR 0003](./docs/decisions/0003-installable-via-aws-marketplace.md) accepts that support extends into debugging customer AWS accounts; the review flags this as a solo-founder execution risk. The actual support commitment on the Marketplace listing (business-hours only, scope limits, escalation path, response-time SLA, paid-support tier shape) is undecided. Becomes concrete before listing publication.
 
 ### In-install operation (customer's AWS account)
 
@@ -273,6 +274,9 @@ Flag these when they become relevant to a task. Do **not** guess an answer; ask 
 
 20. **Kiro CLI vs custom CLI.** `doc2.md` floats wiring in Kiro CLI/IDE for architecture + deploy. Undecided.
 21. **First-sponsor / first-customer context.** Docs are intentionally sponsor-agnostic. Specific first-customer context (who, sprint name, dates, domain-starter priorities) accumulates separately when relevant.
+31. **First design partner acquisition path.** Opened by the [2026-04-24 viability review](./docs/reviews/2026-04-24-viability-review.md) §7, which names this gap as "the single most concerning item in the repo." Options: (a) warm introduction to a P&C carrier innovation lead, (b) consulting-firm channel partner using Jungl3 as their sprint delivery tool, (c) hackathon organizer, (d) other. Interacts with #21. Becomes concrete when a named conversation is on the calendar.
+32. **v0.5 scope vs. v1 scope.** Opened by the [2026-04-24 viability review](./docs/reviews/2026-04-24-viability-review.md) §10. Whether Jungl3's first shipped form is the full v1 architecture or a deliberately reduced "v0.5 wedge" (single exposure surface, two inspection specialists, P&C only, no Gallery). Draft resolution in [ADR 0012](./docs/decisions/0012-v0.5-wedge-scope.md) (currently Proposed). Resolves when that ADR is accepted or rejected.
+33. **ICP narrowing in [`positioning.md`](./docs/product/positioning.md).** Opened by the [2026-04-24 viability review](./docs/reviews/2026-04-24-viability-review.md) §10. Current positioning lists six audience cohorts; the review argues for narrowing to "P&C insurance innovation labs" as primary, with others as secondary. Held pending a first design partner conversation — narrowing based on founder opinion is weaker than narrowing based on a named customer. Resolves when #31 shows concrete progress.
 
 For **decided** things, see [`docs/decisions/`](./docs/decisions/).
 
