@@ -7,6 +7,8 @@ Read this **before** making changes. It encodes constraints that are not obvious
 
 ## 0. Current phase
 
+**End-to-end orientation:** [`docs/overview.md`](./docs/overview.md) — narrative map of what Jungl3 is, the shape it takes, how customers and teams use it, how we got here, and where everything lives. [`docs/roadmap.md`](./docs/roadmap.md) — phased action checklist from v0.1 through v1, every item linked to its canonical source. Read both (and `CLAUDE.md`) before acting on anything non-trivial.
+
 **v0.1 skeleton build** (scoping in [`docs/reviews/2026-04-24-v0.1-plan.md`](./docs/reviews/2026-04-24-v0.1-plan.md)). Target: a vendable + reapable "promotable tiny claims Understory" running in a dev AWS account, proving the Control Plane / Understory / Integration Contract / install–teardown primitives on a minimal P&C surface. No LLM, no DMZ agents, no maker-checker, no Gallery, no Marketplace submission — those are v0.5/v1.
 
 **Research is frozen.** The absorbed paper trail is in [`docs/research-archive/`](./docs/research-archive/); the active synthesis layer is in [`docs/research/`](./docs/research/). Reasoning in the [research-sufficiency note](./docs/reviews/2026-04-24-research-sufficiency.md). Do not spelunk the archive for Phase 2 tasks unless a specific claim needs a citation.
