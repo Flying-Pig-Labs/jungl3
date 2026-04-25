@@ -134,18 +134,15 @@ Three architectural shapes are coherent (none chosen here):
 - The runtime is explicitly **single-operator-by-design**; OpenClaw's own docs name shared multi-tenant use as "not a supported security boundary."
 - Lineage: Moltbot → Clawdbot → OpenClaw. OpenClaw and Moltbook came from the same project, which is why their vocabularies map cleanly onto each other.
 
-**Implication for Jungl3 (revised post-research).** "OpenClaw used throughout the platform" cannot mean "OpenClaw is the runtime substrate." Per [Q-I in §4](#4-new-questions-opened), the resolution is to adopt OpenClaw's **file conventions and patterns** (`SOUL.md`, `AGENTS.md`, `HEARTBEAT.md`, skills directory, explicit-consent tool model) as Agent Layer convention without adopting the OpenClaw gateway as a runtime.
+**Implication for Jungl3 (revised post-research, corrected post-founder-input 2026-04-25 PM).** OpenClaw's single-trusted-operator design fits the customer-install boundary exactly: **one OpenClaw instance per customer install**, run by the customer's install admin, on EC2, with Bedrock for inference. The customer-OpenClaw orchestrates per-team Substrate/Understory/DMZ/Canopy provisioning per templates, and continuously critiques every team's DMZ on behalf of the install's persona pool. There are no per-team OpenClaws and no shared multi-tenant OpenClaw — exactly the shape OpenClaw is designed to support.
 
-The original framing assumed OpenClaw could replace (or heavily overlap with):
+The founder is already running this configuration end-to-end (EC2 + Bedrock + Telegram), which validates the deployment shape.
 
-- The Agent Layer's [inspection specialists](../glossary.md#inspection-surface) — implemented as OpenClaw agents with tool registries pointed at inspection surfaces.
-- The orchestrator described in [`architecture/agent-layer.md`](../architecture/agent-layer.md) — would now coordinate OpenClaw agents rather than be its own runtime.
-- The [sub-agent response contract in ADR 0002](../decisions/0002-sub-agent-response-contract.md) — becomes a *prompt convention* enforced on OpenClaw, not an in-house runtime.
-- The [LLM gateway in ADR 0007](../decisions/0007-v1-cost-profile-and-llm-metering.md) — relationship to OpenClaw's own scheduling/cost layer is undefined.
+**Per-team Agent Layer collapses.** Because the customer-OpenClaw critiques every team's DMZ centrally, there is no need for a separate agent runtime *inside* each team's Jungle. ADR 0002's sub-agent response contract becomes a *prompt and behavior contract* the customer-OpenClaw enforces, not a per-Jungle runtime to be built. See [`docs/architecture/per-team-environments.md`](../architecture/per-team-environments.md).
 
-**Why this framing was rejected post-research.** OpenClaw's persistence layer (filesystem-only, no transactional guarantees), in-process cron scheduler (`setTimeout`, no durable execution), and lack of multi-tenant isolation make it unsuitable as a runtime for a platform vending isolated environments. Forking it to fix these would be multi-year work — see [`results/openclaw-deep-dive.md` §Required Engineering Investment](../research/deep-research-2026-04-25/results/openclaw-deep-dive.md). The runtime question becomes Q-E (Bedrock Agents vs. Claude Agent SDK + custom durable execution vs. another framework).
+**Earlier framing (now superseded).** An earlier draft of this revision assumed OpenClaw would be a per-Jungle runtime substrate, which the [ecosystem synthesis](../research/deep-research-2026-04-25/ecosystem-synthesis.md) initially read as requiring a multi-year fork to make multi-tenant-safe. Both readings are wrong. OpenClaw is not a per-Jungle runtime, and at one-per-customer-install scale it does not need a fork.
 
-**What survives, post-research.** The OpenClaw **vocabulary** maps cleanly onto our Agent Layer needs: `SOUL.md` / `AGENTS.md` / `HEARTBEAT.md` / skills directory / explicit-consent tool model. ADR 0002's sub-agent response contract is **not** superseded — it stands. We adopt the file conventions, keep our own contract, and choose a runtime in Q-E.
+**What survives.** The OpenClaw **vocabulary** is adopted as Agent Layer convention: `SOUL.md` / `AGENTS.md` / `HEARTBEAT.md` / `MEMORY.md` / `IDENTITY.md` / skill directory / explicit-consent tool model. The customer-OpenClaw is the runtime that consumes them. The runtime question (Q-E) **narrows but does not close**: any agent work outside the customer-OpenClaw's scope (e.g. `JungleBuilderAgent` workflows inside a team's Understory) still needs a runtime decision.
 
 ### Moltbook
 
@@ -169,7 +166,7 @@ What docs say today vs. what the inputs above describe.
 
 | Surface | Current docs (2026-04-24) | Revised hypothesis (2026-04-25) |
 | --- | --- | --- |
-| Agent runtime | Bespoke Agent Layer per [ADR 0002](../decisions/0002-sub-agent-response-contract.md) and [`architecture/agent-layer.md`](../architecture/agent-layer.md) | OpenClaw runtime; in-house code is prompts, tools, orchestration |
+| Agent runtime | Bespoke Agent Layer per [ADR 0002](../decisions/0002-sub-agent-response-contract.md) and [`architecture/agent-layer.md`](../architecture/agent-layer.md), drawn per-Jungle | One OpenClaw per customer install at the Substrate level; runs install orchestration + continuous DMZ critique. Per-team Agent Layer collapses. ADR 0002's contract becomes a prompt/behavior convention the customer-OpenClaw enforces. |
 | Cost model | Single LLM budget per install ([ADR 0007](../decisions/0007-v1-cost-profile-and-llm-metering.md)) | Two-tier: Guide (free-ish, read-only) + Builder (metered, read-write) |
 | Shaping | "Shape a living baseline" — freeform, role-agnostic ([`positioning.md`](../product/positioning.md)) | One baseline, role-gated subtraction skills (admin can subtract core, teams cannot) |
 | DMZ | Private AI evaluation surface, prototype *deploys to it* discretely ([ADR 0011](../decisions/0011-canopy-and-ai-first-dmz.md)) | Private AI evaluation **continuously running on every Jungle from t=0**, with a public-to-Moltbook gossip channel as feedback artifact |
@@ -177,7 +174,7 @@ What docs say today vs. what the inputs above describe.
 | Onboarding | Implicit (CLI, web) | Telegram/WhatsApp via Herzog (text-first; voice deferred) |
 | External integration | Silent on cross-account/cross-cloud | Real customer requirement; needs scoping |
 | Synthetic Runtime | "A layer" with generators, emitters, stubs ([`glossary.md#synthetic-runtime`](../glossary.md#synthetic-runtime)) | Fixed primitives + per-customer adaptive instructions; CDK is the customization canvas |
-| Platform character | Standalone | Platform-on-OpenClaw, with Moltbook as social layer |
+| Platform character | Standalone | Customer-OpenClaw at the Substrate level, **Crit** as per-install agent gossip surface (Moltbook *not* integrated) |
 
 The pattern: **the revised hypothesis describes a more opinionated product**, with an **external runtime dependency**, a **role-gated control model**, and an **always-on evaluation surface that gossips publicly.** It is not a refinement; it is a different product.
 
@@ -200,14 +197,16 @@ Each is `§11`-shaped. Listing here so they aren't lost when this doc gets route
 6. **Q-F: CDK as agent-authored canvas.** *Open.* `cdk synth` as feedback loop, type-checking + diff review + rollback for agent-authored infrastructure. Biases `§11 #7`.
 7. **Q-G: DMZ as continuous-evaluation surface vs. discrete environment.** *Open.* Possible successor to [ADR 0011](../decisions/0011-canopy-and-ai-first-dmz.md). Interacts with `§11 #25`, `§11 #29`.
 8. **Q-H: Onboarding domain.** *Open.* New top-level subdir (`onboarding/`), Herzog as a wedge product, text-first via Telegram/WhatsApp.
-9. **Q-I: OpenClaw lock-in.** *Resolved (2026-04-25): don't lock in.* Per the [ecosystem synthesis §4 — Q-I](../research/deep-research-2026-04-25/ecosystem-synthesis.md#q-i--openclaw-lock-in--resolved-dont-lock-in): OpenClaw is fundamentally designed for a single trusted operator (its own docs name shared multi-tenant use as "not a supported security boundary"); secure deployment for Jungl3 would require a deep fork (replacing the persistence layer, scheduler, and observability) and the engineering investment is multi-year. Adopt the **file conventions** (`SOUL.md`, `AGENTS.md`, `HEARTBEAT.md`, skills directory, explicit-consent tool model) as Agent Layer convention; do **not** adopt the runtime. The runtime decision rolls into Q-E.
+9. **Q-I: OpenClaw lock-in.** *Resolved (2026-04-25 PM, corrected): adopt one OpenClaw per customer install.* Per the [ecosystem synthesis §4 — Q-I](../research/deep-research-2026-04-25/ecosystem-synthesis.md#q-i--openclaw-lock-in--resolved-adopt-one-openclaw-per-customer-install): run **one OpenClaw instance per customer install**, on EC2, with Bedrock for inference, operated by the install admin (the trusted operator). The customer-OpenClaw orchestrates per-team Substrate/Understory/DMZ/Canopy provisioning and continuously critiques every team's DMZ. This fits OpenClaw's single-trusted-operator design exactly — no fork required. Adopt the **file conventions** (`SOUL.md`, `AGENTS.md`, `HEARTBEAT.md`, skills directory, explicit-consent tool model) as Agent Layer convention. Per-team Agent Layer collapses (see [`docs/architecture/per-team-environments.md`](../architecture/per-team-environments.md)). Q-E narrows: it now applies only to agent work outside the customer-OpenClaw's scope.
 10. **Q-J: Moltbook trust boundary.** *Resolved (2026-04-25): skip Moltbook entirely.* Per the [ecosystem synthesis §4 — Q-J/K/L](../research/deep-research-2026-04-25/ecosystem-synthesis.md#q-j--q-k--q-l--moltbook-trust-boundary-cross-install-gossip-public-egress--resolved-skip-moltbook-entirely-build-crit): Moltbook's ToS grants a perpetual sublicensable license to all content and metadata, contains a non-compete clause prohibiting commercial use, is public-by-default with no per-customer isolation, and was the subject of a January 2026 breach exposing ~1.5M agent API keys. None of write-only / read-with-allowlist / full-read-write is salvageable. Build a self-hosted, per-install, private-by-default agent gossip surface (working name **Crit**) inside each Canopy instead. Crit is a v1 commitment, above the v0.5 wedge ([ADR 0012](../decisions/0012-v0.5-wedge-scope.md)).
 11. **Q-K: Cross-install gossip on Moltbook.** *Resolved by Q-J: collapses.* Crit is per-install and private-by-default, so cross-install gossip is intentionally not a v1 feature. Interaction with `§11 #15` (cross-install discoverability) carries forward as part of Crit's design rather than as a Moltbook integration question.
 12. **Q-L: Public egress from customer install to Moltbook.** *Resolved by Q-J: collapses.* No Moltbook integration means no public-egress concern for this surface.
 
-**Net new question opened by the research:**
+**Net new questions opened by the research:**
 
 13. **Q-J': Crit MVP scope and timing.** Self-hosted Reddit-shape agent gossip surface inside each Canopy. Open: data-model scope (full submolt/post/comment/vote vs. narrower), build-vs-adopt-Discourse, agent identity model (must integrate with install IAM, not X/Twitter), v1.0 vs. v1.x ship, build-cost target. Replaces Q-J/K/L. See [ecosystem synthesis §6](../research/deep-research-2026-04-25/ecosystem-synthesis.md#6-open-questions-remaining-after-this-synthesis).
+14. **Q-M: Customer-OpenClaw cardinality.** *Open.* One OpenClaw instance per customer-install lifetime, or one per event (if a customer runs multiple consecutive hackathons)? Affects state isolation between events, reaping, and how install reuse works. Surfaced by the Q-I resolution.
+15. **Q-N: Persona-pool implementation.** *Open.* Inside the customer-OpenClaw, do we run one session that roleplays many personas, or many sub-agent sessions (one per persona)? Affects isolation between persona viewpoints, observability, and per-persona cost attribution. Surfaced by the Q-I resolution.
 
 ---
 
@@ -280,6 +279,7 @@ Things this review is *not* confident about:
 - [`2026-04-24-research-sufficiency.md`](./2026-04-24-research-sufficiency.md) — argued research was done. Holds against P&C-claims realism; does not hold against OpenClaw/Moltbook trust models, cross-cloud reach, or the agent-runtime decision.
 - [`2026-04-24-v0.1-plan.md`](./2026-04-24-v0.1-plan.md) — v0.1 plan. Survives. v0.1 is below the layer the revised hypothesis affects.
 - [`../research/deep-research-2026-04-25/ecosystem-synthesis.md`](../research/deep-research-2026-04-25/ecosystem-synthesis.md) — synthesis of OpenClaw + Moltbook research; resolves Q-I and Q-J/K/L; sharpens Q-E. The substrate for the §7 step 1 close-out.
+- [`../architecture/per-team-environments.md`](../architecture/per-team-environments.md) — per-team layout (Substrate shared, three envs per team), the layer where the customer-OpenClaw operates and the per-team Agent Layer collapses.
 - [`../product/positioning.md`](../product/positioning.md) — "shape a living baseline" framing; targeted for rewrite *after* the ADRs implied by this review land.
 - [`../glossary.md`](../glossary.md) — terminology source of truth; pending additions named in §7 step 4.
 - [`../decisions/STATUS.md`](../decisions/STATUS.md) — one-page decided/next/open view; will need an update once the new ADRs land.

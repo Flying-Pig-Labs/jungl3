@@ -24,20 +24,26 @@ The three sources **disagree** on:
 
 ## 2. Load-bearing findings
 
-### Finding 1 — OpenClaw is a *pattern*, not a runtime substrate
+### Finding 1 — OpenClaw is a single-operator runtime, which fits one-per-customer-install
 
 OpenClaw's architecture (single-host gateway daemon, file-system session state, in-process cron scheduler, local Markdown/JSONL persistence) is **explicitly designed for a single trusted operator on their own machine**. The OpenClaw documentation itself names "one shared gateway/agent used by mutually untrusted users" as **not a supported security boundary** ([`results/openclaw-deep-dive.md` §Multi-Tenancy → Single-Trusted-Operator-Interpretation](./results/openclaw-deep-dive.md)).
 
-For Jungl3's Marketplace shape ([ADR 0003](../../decisions/0003-installable-via-aws-marketplace.md)), the only secure deployment topology is **one OpenClaw gateway per customer install**, not per Jungle. Even that requires:
+**Architectural correction (2026-04-25, post-founder-input).** An earlier draft of this synthesis read the single-operator design as a blocker requiring a multi-year fork. That read was wrong. Per the founder's confirmed deployment experience, the correct topology is **one OpenClaw instance per customer install**, run by the customer's install admin (the trusted operator), on EC2, with Bedrock for inference. The customer-OpenClaw orchestrates per-team Substrate/Understory/DMZ/Canopy provisioning per the rules and templates, and continuously critiques every team's DMZ on behalf of the install's persona pool. There are no per-team OpenClaws; there is no shared multi-tenant OpenClaw — exactly the configuration OpenClaw is designed to support.
 
-- Replacing JSONL/Markdown persistence with a transactional database (DynamoDB or RDS).
-- Replacing the in-process `setTimeout` cron with a durable scheduler (EventBridge + SQS, or Step Functions).
-- Replacing the bearer-token-only auth model with IAM-anchored cross-account roles.
-- Adding immutable audit (S3 + Object Lock), distributed tracing (OpenTelemetry — partially supported but not connected end-to-end), and fleet-management control-plane logic.
+This sidesteps every concern the deep-dive raised about multi-tenant safety:
+- No mutually untrusted users share a gateway. The install admin is the only operator.
+- Filesystem persistence is fine at one-per-install scale; a single EC2 host with EBS persistence carries the volume of one hackathon's worth of provisioning + critique.
+- The in-process cron is sufficient for the heartbeat cadence the customer-OpenClaw needs.
+- Bedrock inference keeps LLM calls inside the customer's account, consistent with [ADR 0003](../../decisions/0003-installable-via-aws-marketplace.md).
 
-These are not plugins. They are a fork. Per [`results/openclaw-deep-dive.md` §Required Engineering Investment](./results/openclaw-deep-dive.md), this is "not a simple integration project but a major product development effort" — multi-year, on the order of $1M+ in engineering payroll.
+**The per-team Agent Layer collapses.** Because the customer-OpenClaw does the critique work centrally for all teams, no separate agent runtime needs to exist *inside* each team's Jungle. This shrinks [ADR 0002](../../decisions/0002-sub-agent-response-contract.md)'s Agent Layer scope materially: it becomes a *prompt and behavior contract* the customer-OpenClaw enforces, not a per-Jungle runtime to be built. See [`docs/architecture/per-team-environments.md`](../../architecture/per-team-environments.md) for the layout.
 
-**What survives:** the *vocabulary* and the *file conventions*. `SOUL.md` (agent constitution), `AGENTS.md` (operational SOPs — already a convention we use), `HEARTBEAT.md` (proactive checklist on cron), `MEMORY.md` (long-term journal), `IDENTITY.md` (public agent card), the skill directory structure, the explicit-consent tool model, the heartbeat loop. These are markdown conventions and a scheduling pattern. We can adopt them without running the OpenClaw gateway.
+**What survives the correction:** the *vocabulary* and the *file conventions* still get adopted as Agent Layer convention — `SOUL.md` (agent constitution), `AGENTS.md` (operational SOPs — already a convention we use), `HEARTBEAT.md` (proactive checklist on cron), `MEMORY.md` (long-term journal), `IDENTITY.md` (public agent card), the skill directory structure, the explicit-consent tool model. The customer-OpenClaw is the runtime that consumes them.
+
+**What stays open after the correction:**
+- **Q-M (new):** Customer-OpenClaw cardinality. One per customer-install lifetime, or one per event (if a customer runs multiple hackathons)? Affects state isolation and reaping.
+- **Q-N (new):** Persona-pool implementation. One OpenClaw session roleplaying many personas, or one OpenClaw spawning many sub-agent sessions (one per persona)? Affects isolation, observability, and cost.
+- The Agent Layer runtime decision (Q-E) **narrows but does not close**: for any agentic work that lives outside the customer-OpenClaw's scope (e.g. inside the cloned Understory app, or as part of `JungleBuilderAgent`), the Bedrock-Agents-vs-Claude-SDK-vs-other comparison still applies. The customer-OpenClaw does not subsume every agent need.
 
 ### Finding 2 — Moltbook is a *concept*, not an integration target
 
@@ -107,13 +113,17 @@ Inheriting != integrating. These are conventions, schemas, and patterns we can a
 
 The [2026-04-25 product hypothesis revision §4](../../reviews/2026-04-25-product-hypothesis-revision.md#4-new-questions-opened) listed twelve new questions (Q-A through Q-L). This synthesis lets us update the status of two and sharpen a third.
 
-### Q-I — OpenClaw lock-in → **Resolved: don't lock in**
+### Q-I — OpenClaw lock-in → **Resolved: adopt one OpenClaw per customer install**
 
-**Recommendation.** Don't adopt OpenClaw as a runtime substrate. Adopt the file conventions (`SOUL.md`, `AGENTS.md`, `HEARTBEAT.md`, skills) and reference its design where useful. The runtime decision becomes Q-E (Bedrock Agents vs. Claude Agent SDK + custom durable execution vs. a different framework like LangGraph/Mastra/Inngest).
+**Recommendation.** Run **one OpenClaw instance per customer install**, on EC2, with Bedrock for inference, operated by the customer's install admin. The customer-OpenClaw orchestrates Substrate/Understory/DMZ/Canopy provisioning per templates and continuously critiques every team's DMZ. Adopt the OpenClaw file conventions (`SOUL.md`, `AGENTS.md`, `HEARTBEAT.md`, skills directory, explicit-consent tool model) as the Agent Layer convention.
 
-**Confidence.** High. All three sources agree on the single-operator design; the cost-and-time analysis in the deep-dive is conservative-to-pessimistic but the direction is unambiguous.
+This fits OpenClaw's intended single-trusted-operator design exactly — no mutually untrusted users share a gateway, no fork is needed.
 
-**Updates needed.** The hypothesis revision §2 ("OpenClaw used throughout the platform" implies runtime substrate) is **not what we're going to do**. The revision should be amended to reflect "OpenClaw conventions, not OpenClaw runtime."
+**Q-E narrows but does not close.** The customer-OpenClaw covers install-level orchestration and DMZ critique. Any agent work outside that scope (e.g. `JungleBuilderAgent` workflows inside a team's Understory) still requires a runtime decision: Bedrock Agents vs. Claude Agent SDK + custom durable execution vs. another framework. See [Finding 1](#finding-1--openclaw-is-a-single-operator-runtime-which-fits-one-per-customer-install) for the corrected reading.
+
+**Confidence.** High. All three research sources agree on the single-operator design; the founder has a working customer-OpenClaw running on EC2 + Bedrock + Telegram, which validates the deployment shape end-to-end. An earlier draft of this synthesis read the single-operator constraint as a blocker; that read is corrected above.
+
+**Updates needed.** The hypothesis revision §2 should reflect "one OpenClaw per customer install, runs install-level orchestration and DMZ critique" and the per-team Agent Layer scope shrinks accordingly. See [`docs/architecture/per-team-environments.md`](../../architecture/per-team-environments.md).
 
 ### Q-J + Q-K + Q-L — Moltbook trust boundary, cross-install gossip, public egress → **Resolved: skip Moltbook entirely; build Crit**
 
@@ -149,7 +159,9 @@ This becomes a **scoped, separate research task**, not an open-ended question.
 
 Things this synthesis explicitly did not close:
 
-- **Q-E (sharpened)**: Bedrock Agents vs. Claude Agent SDK vs. other framework. Needs a separate first-hand evaluation, with budget plot.
+- **Q-E (sharpened)**: For agent work outside the customer-OpenClaw's scope (Builder workflows inside Understory, etc.), Bedrock Agents vs. Claude Agent SDK vs. other framework. Needs a separate first-hand evaluation, with budget plot.
+- **Q-M (new):** Customer-OpenClaw cardinality — one per customer-install lifetime, or one per event (if a customer runs multiple hackathons). Affects state isolation, reaping, and how install reuse works across consecutive sprints.
+- **Q-N (new):** Persona-pool implementation inside the customer-OpenClaw — one OpenClaw session roleplaying many personas vs. one OpenClaw spawning many sub-agent sessions (one per persona). Affects isolation between persona viewpoints, observability, and per-persona cost attribution.
 - **Crit MVP scope.** The Moltbook deep-dive proposes a microservices architecture; whether that's the right starting shape (vs. a Lambda-and-DynamoDB minimal version, vs. self-hosted Discourse with private categories per the alternatives table) is open.
 - **When Crit lands.** If v0.5 is "no Gallery, no Crit," does Crit ship in v1.0 or in a v1.x increment after first-customer feedback? Affects the v1 roadmap in [`docs/roadmap.md`](../../roadmap.md).
 - **Agent-to-agent identity model for Crit.** The Moltbook claim flow uses X/Twitter; Jungl3 should use IAM/install-issued identity. Specific schema and auth model are open.
