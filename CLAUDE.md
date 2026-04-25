@@ -11,7 +11,9 @@ Read this **before** making changes. It encodes constraints that are not obvious
 
 **v0.1 skeleton build** (scoping in [`docs/reviews/2026-04-24-v0.1-plan.md`](./docs/reviews/2026-04-24-v0.1-plan.md)). Target: a vendable + reapable "promotable tiny claims Understory" running in a dev AWS account, proving the Control Plane / Understory / Integration Contract / install–teardown primitives on a minimal P&C surface. No LLM, no DMZ agents, no maker-checker, no Gallery, no Marketplace submission — those are v0.5/v1.
 
-**Research is frozen.** The absorbed paper trail is in [`docs/research-archive/`](./docs/research-archive/); the active synthesis layer is in [`docs/research/`](./docs/research/). Reasoning in the [research-sufficiency note](./docs/reviews/2026-04-24-research-sufficiency.md). Do not spelunk the archive for Phase 2 tasks unless a specific claim needs a citation.
+**Research is frozen** *for the 2026-04-24 hypothesis*. The absorbed paper trail is in [`docs/research-archive/`](./docs/research-archive/); the active synthesis layer is in [`docs/research/`](./docs/research/). Reasoning in the [research-sufficiency note](./docs/reviews/2026-04-24-research-sufficiency.md). Do not spelunk the archive for Phase 2 tasks unless a specific claim needs a citation.
+
+**Hypothesis under revision** (2026-04-25). The [product-hypothesis-revision review](./docs/reviews/2026-04-25-product-hypothesis-revision.md) captures eight late-night inputs (OpenClaw, Moltbook, two-tier shaping, continuous DMZ evaluation, Herzog wedge, etc.) significant enough to require a second viability review and a small targeted research pass on OpenClaw + Moltbook before the new ADRs they imply can land. v0.1 plan survives intact; everything above v0.1 is provisional until that review finishes.
 
 **Current ADRs through 0012** (0012 Proposed, others Accepted). ADRs 0013+ are build-driven, not research-driven.
 

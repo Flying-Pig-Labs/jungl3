@@ -245,6 +245,7 @@ Everything else — agent layer polish, DMZ/Canopy split, additional domains, CL
 
 - [`2026-04-24-research-sufficiency.md`](./2026-04-24-research-sufficiency.md) — same-day follow-up: repo is over-researched for its current build state; next moves are human action, not reading.
 - [`2026-04-24-v0.1-plan.md`](./2026-04-24-v0.1-plan.md) — same-day follow-up: concrete three-track plan (outreach / architecture-hardening / v0.1 skeleton build); defines "promotable tiny claims Understory" scope.
+- [`2026-04-25-product-hypothesis-revision.md`](./2026-04-25-product-hypothesis-revision.md) — next-day follow-up: captures a hypothesis shift (OpenClaw, Moltbook, two-tier shaping, continuous DMZ evaluation, Herzog wedge) significant enough to require a second viability review against the revised product.
 - [`../product/positioning.md`](../product/positioning.md) — current product framing (broader than this review recommends)
 - [`../decisions/0003-installable-via-aws-marketplace.md`](../decisions/0003-installable-via-aws-marketplace.md)
 - [`../decisions/0006-v1-domain-anchor-insurance-claims.md`](../decisions/0006-v1-domain-anchor-insurance-claims.md)

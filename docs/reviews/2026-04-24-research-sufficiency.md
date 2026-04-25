@@ -61,6 +61,7 @@ Priority order. Items 1 and 2 run in parallel; item 3 waits on item 1.
 
 - [`2026-04-24-viability-review.md`](./2026-04-24-viability-review.md) — parent review; §7 names #31 as "the single most concerning item."
 - [`2026-04-24-v0.1-plan.md`](./2026-04-24-v0.1-plan.md) — same-day follow-up translating this note's recommendations into a three-track plan.
+- [`2026-04-25-product-hypothesis-revision.md`](./2026-04-25-product-hypothesis-revision.md) — next-day hypothesis shift; opens new research surface (OpenClaw, Moltbook, agent-runtime decision) that this note's "research is done" claim does **not** cover.
 - [`../research/README.md`](../research/README.md) — active synthesis surface.
 - [`../research-archive/README.md`](../research-archive/README.md) — frozen raw inputs (created as part of the 2026-04-24 archive move this note triggered).
 - [`../../CLAUDE.md`](../../CLAUDE.md) §0 (current phase) and §11 (open questions).
