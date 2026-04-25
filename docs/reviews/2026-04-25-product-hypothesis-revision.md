@@ -11,6 +11,7 @@ This review captures the inputs, the clarifications, and the contradictions with
 **Companion reviews.**
 
 - [`2026-04-24-viability-review.md`](./2026-04-24-viability-review.md) — judged the *current* product. The hypothesis revision below is enough to require a second pass against the revised product.
+- [`2026-04-25-viability-review.md`](./2026-04-25-viability-review.md) — that second pass; judges the revised hypothesis. The first review's load-bearing finding (no first design partner) carries; the wedge sharpens (Herzog as the on-ramp); execution risk goes up, not down.
 - [`2026-04-24-research-sufficiency.md`](./2026-04-24-research-sufficiency.md) — argued research was done. The new inputs **add new research surface** (Moltbook trust model, OpenClaw agent runtime evaluation, telephony/text agent landscape). Research-sufficiency holds against P&C-claims realism; it does not hold against the new surface.
 - [`2026-04-24-v0.1-plan.md`](./2026-04-24-v0.1-plan.md) — v0.1 plan. Survives largely intact; v0.1 is domain-neutral primitives, and the revised hypothesis mostly affects v0.5 and v1. See §11 below.
 

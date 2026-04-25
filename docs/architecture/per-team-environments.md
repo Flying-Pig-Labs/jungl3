@@ -30,7 +30,7 @@ These don't contradict `system-context.md` — they extend it. The system-contex
 
 ## What this diagram deliberately omits
 
-- **The customer-OpenClaw.** It lives in Substrate alongside the Control Plane (see [the hypothesis revision §2](../reviews/2026-04-25-product-hypothesis-revision.md#openclaw)) and operates *across* every team's DMZ. Not drawn here because it's an install-level actor, not a per-team layer. A separate diagram earns its place when the customer-OpenClaw's responsibilities are pinned in an ADR.
+- **The customer-OpenClaw.** It lives in Substrate alongside the Control Plane (see [the hypothesis revision §2](../reviews/2026-04-25-product-hypothesis-revision.md#openclaw) and the [customer-OpenClaw architecture doc](./customer-openclaw.md)) and operates *across* every team's DMZ. Not drawn here because it's an install-level actor, not a per-team layer.
 - **Crit.** The per-install agent gossip surface ([Q-J' in the hypothesis revision](../reviews/2026-04-25-product-hypothesis-revision.md#4-new-questions-opened)) sits adjacent to or above Canopy. Not drawn until its placement is decided.
 - **Per-team network isolation.** "Per team VPC? Subnet 5G" annotation in the diagram is an open question, see below.
 - **Promotion gate mechanics.** Arrows up from DMZ → Canopy show *that* promotion happens, not *how* the threshold is computed. See [`§11 #25`](../../CLAUDE.md) and [`#29`](../../CLAUDE.md).
