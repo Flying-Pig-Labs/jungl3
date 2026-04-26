@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Text } from 'ink';
 import figures from 'figures';
 import { Act3Glyph } from '../components/ActGlyph.js';
@@ -13,6 +13,83 @@ import { useEasedNumber } from '../hooks/useEasedNumber.js';
 import { act3Events } from '../fixtures/events.js';
 import { personas } from '../fixtures/personas.js';
 import { c } from '../theme.js';
+
+/**
+ * Promotion gate panel — appears once the payoff line lands. The four
+ * check rows reveal one at a time (~300ms each), then a PROMOTED stamp
+ * lands once all four have flipped to PASS. This is the visible artifact
+ * of the DMZ → Canopy gate from ADR 0011: zero criticals, full flow
+ * traversal, a11y threshold, non-bypassable maker-checker.
+ *
+ * Compact 6-row layout to fit the existing 14-line act area without
+ * displacing the persona rows above.
+ */
+function PromotionGate({ speedMultiplier }: { speedMultiplier: number }): React.ReactElement {
+  const [phase, setPhase] = useState<number>(0);
+  // Reveal one row per ~300ms (scaled). After the 4 rows, one more tick
+  // lands the PROMOTED stamp. Total ~1.5s at default speed.
+  useEffect(() => {
+    const ts: ReturnType<typeof setTimeout>[] = [];
+    const dwell = Math.max(20, Math.round(300 * speedMultiplier));
+    for (let i = 1; i <= 5; i++) {
+      ts.push(setTimeout(() => setPhase(i), dwell * i));
+    }
+    return () => ts.forEach(clearTimeout);
+  }, [speedMultiplier]);
+
+  const rows: Array<readonly [string, string]> = [
+    ['zero critical defects', '0/0'],
+    ['fnol flow · 100% traversal', '4/4'],
+    ['a11y score ≥ 95', '97'],
+    ['maker-checker · non-bypassable', 'ok'],
+  ];
+  const allDone = phase > rows.length;
+
+  return (
+    <Box flexDirection="column" marginTop={1}>
+      <Box flexDirection="row">
+        <Tracked color={c.label}>promotion gate</Tracked>
+        <Text color={c.dim}>{'  — must pass to reach canopy'}</Text>
+      </Box>
+      {rows.map(([label, metric], i) => {
+        const passed = phase > i;
+        return (
+          <Box key={i} flexDirection="row">
+            <Box width={3}>
+              <Text color={passed ? c.done : c.dim}>
+                {passed ? figures.tick : figures.circleDotted}
+              </Text>
+            </Box>
+            <Box width={34}>
+              <Text color={passed ? c.body : c.dim} dimColor={!passed}>
+                {label}
+              </Text>
+            </Box>
+            <Box width={8}>
+              <Text color={passed ? c.muted : c.dim}>{metric}</Text>
+            </Box>
+            <Box width={6}>
+              <Text color={passed ? c.done : c.dim} bold={passed}>
+                {passed ? 'PASS' : '—'}
+              </Text>
+            </Box>
+          </Box>
+        );
+      })}
+      {allDone ? (
+        <Box flexDirection="row" marginTop={0}>
+          <Text color={c.done} bold>
+            {' ◆ '}
+          </Text>
+          <Gradient>
+            <Tracked>promoted</Tracked>
+          </Gradient>
+          <Text color={c.dim}>{'  signed · jungl3-cp'}</Text>
+        </Box>
+      ) : null}
+    </Box>
+  );
+}
 
 type PersonaState = 'idle' | 'probing' | 'reporting' | 'done';
 
@@ -244,17 +321,20 @@ export function Act3RefineInDmz({
             ))}
           </Box>
 
-          <Box marginTop={2} flexDirection="column">
+          <Box marginTop={1} flexDirection="column">
             {showPayoff ? (
-              <Gradient>
-                <Typewriter
-                  text="DMZ gates: 2 of 2 passed · 6 defects · 0 critical."
-                  cps={26}
-                  jitterMs={20}
-                  speedMultiplier={speedMultiplier}
-                  bold
-                />
-              </Gradient>
+              <>
+                <Gradient>
+                  <Typewriter
+                    text="DMZ gates: 2 of 2 passed · 6 defects · 0 critical."
+                    cps={26}
+                    jitterMs={20}
+                    speedMultiplier={speedMultiplier}
+                    bold
+                  />
+                </Gradient>
+                <PromotionGate speedMultiplier={speedMultiplier} />
+              </>
             ) : (
               <Text color={c.dim}> </Text>
             )}

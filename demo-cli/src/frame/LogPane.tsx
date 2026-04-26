@@ -26,10 +26,10 @@ export function LogPane({ width }: { width: number }): React.ReactElement {
   const padded: (typeof tail[number] | null)[] = [...tail];
   while (padded.length < ROWS) padded.push(null);
 
-  // Inner text width: two columns of paddingX, two columns for timestamp gutter.
-  // Leave one extra column for the trailing caret so truncation doesn't
-  // eat the last character when we append '▋'.
-  const innerWidth = Math.max(20, width - 15);
+  // Inner text width: paddingX (4), timestamp gutter (10), prefix glyph (2),
+  // and one column for the trailing caret. Bumped from -15 to -17 to make
+  // room for the per-tone prefix column added in the v2 port.
+  const innerWidth = Math.max(20, width - 17);
 
   const [caretOn, setCaretOn] = useState<boolean>(true);
   useEffect(() => {
@@ -62,11 +62,33 @@ export function LogPane({ width }: { width: number }): React.ReactElement {
                 ? c.rare
                 : c.muted;
 
+          // v2 prefix glyph per tone: ▶ for highlight, ! for warn, two
+          // spaces for body. Same color as the line's tone color (the line
+          // body itself stays muted/neon/ember per existing rules), but
+          // bold so the prefix reads as a margin marker rather than text.
+          const prefix = !line
+            ? '  '
+            : line.tone === 'highlight'
+              ? '▶ '
+              : line.tone === 'warn'
+                ? '! '
+                : '  ';
+          const prefixColor = !line
+            ? c.dim
+            : line.tone === 'highlight'
+              ? c.done
+              : line.tone === 'warn'
+                ? c.rare
+                : c.dim;
+
           return (
             <Box key={i} flexDirection="row">
               <Box width={10}>
                 <Text color={c.dim}>{line ? line.ts : '        '}</Text>
               </Box>
+              <Text color={prefixColor} bold={line?.tone === 'highlight' || line?.tone === 'warn'}>
+                {prefix}
+              </Text>
               <Box>
                 <Text
                   color={toneColor}

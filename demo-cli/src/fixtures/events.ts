@@ -10,6 +10,22 @@
 export type LogTone = 'body' | 'highlight' | 'warn';
 export type LogFixture = readonly [string, LogTone];
 
+// Act 0 — Marketplace Install. The customer subscribes via AWS Marketplace,
+// CFN deploys the Control Plane stack into their account, the CP comes online.
+// {account} is interpolated to a fixed dummy ID at emit time.
+export const act0Events: readonly LogFixture[] = [
+  ['aws-marketplace: subscription confirmed · product=jungl3-control-plane', 'body'],
+  ['iam: creating cross-account role JungleControlPlaneRole', 'body'],
+  ['cfn: jungl3-cp stack CREATE_IN_PROGRESS', 'body'],
+  ['cfn: vpc + private subnets created', 'body'],
+  ['cfn: ecs cluster jungl3-cp online', 'body'],
+  ['cfn: api-gateway endpoint provisioned', 'body'],
+  ['cfn: rds postgres (cp-state) accepting connections', 'body'],
+  ['cfn: stack CREATE_COMPLETE · 4m 18s', 'body'],
+  ['control-plane: healthy · region us-east-1 · account {account}', 'body'],
+  ['control-plane: ready to vend jungles', 'highlight'],
+];
+
 export const act2Events: readonly LogFixture[] = [
   // remove
   ['shaper: evaluating removal set for intake/GenericForm', 'body'],
@@ -78,4 +94,21 @@ export const act1Events: readonly LogFixture[] = [
   ['auth: seeded 6 personas, 3 admin users', 'body'],
   ['operator-console: session opened for jungle-{team}', 'body'],
   ['jungle-{team}: alive', 'highlight'],
+];
+
+// Act 5 — Maker-Checker. A claim settlement crosses the $10k threshold and
+// requires a checker to approve before payment is queued. Demonstrates that
+// the maker-checker control is non-bypassable.
+export const act5Events: readonly LogFixture[] = [
+  ['intake: FNOL-2024-0917 received · auto total $7,420', 'body'],
+  ['policy-api: coverage verified · comprehensive · limit $25,000', 'body'],
+  ['adjuster: casey assigned · triage complete', 'body'],
+  ['adjuster: settlement proposed · $12,450 (parts + labor)', 'body'],
+  ['workflow: threshold $10,000 exceeded · checker required', 'highlight'],
+  ['iam: CheckerAboveThreshold evaluated for user casey → deny (maker)', 'body'],
+  ['notify: jordan paged as checker · 18s response', 'body'],
+  ['checker: jordan reviewing · parts quote validated', 'body'],
+  ['checker: approval granted · rationale logged', 'body'],
+  ['payments-api: disbursement queued · $12,450 to policyholder', 'body'],
+  ['claim FNOL-2024-0917 · settled under maker-checker · audit trail sealed', 'highlight'],
 ];

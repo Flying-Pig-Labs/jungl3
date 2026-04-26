@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jungl3 demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%;
+    background: #060f09;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  #root { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+
+  .terminal {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #F6F2E0;
+    background: #0d1a12;
+    width: min(920px, 98vw);
+    height: min(580px, 96vh);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #1d3a25;
+    box-shadow: 0 0 60px rgba(60,183,105,0.07), 0 0 0 1px #0a1a0e;
+  }
+
+  .topbar {
+    display: flex; align-items: center;
+    padding: 5px 14px;
+    background: #090f0b;
+    border-bottom: 1px solid #182a1e;
+    flex-shrink: 0; gap: 8px;
+    user-select: none;
+  }
+  .act-area {
+    flex: 0 0 auto;
+    padding: 8px 14px 4px;
+    overflow: hidden;
+  }
+  .log-pane {
+    flex: 1 1 auto;
+    border-top: 1px solid #182a1e;
+    padding: 5px 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 0;
+  }
+  .footer {
+    flex-shrink: 0;
+    padding: 4px 14px;
+    background: #090f0b;
+    border-top: 1px solid #182a1e;
+    display: flex; gap: 20px;
+    user-select: none;
+  }
+
+  .prompt-screen {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+
+  .grad {
+    background: linear-gradient(90deg, #D7B24A 0%, #52D07A 55%, #2B8A50 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  pre { font-family: inherit; white-space: pre; }
+
+  .log-line { white-space: pre; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+
+  .team-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #2B8A50;
+    color: #F6F2E0;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    width: 220px;
+    padding: 2px 6px;
+    caret-color: #52D07A;
+  }
+  .team-input::placeholder { color: #5A6A5E; }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .blink { animation: blink 1s step-end infinite; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+// ── Palette (from theme.ts) ───────────────────────────────────────────────
+const c = {
+  label: '#D7B24A',
+  body:  '#F6F2E0',
+  live:  '#3CB769',
+  done:  '#52D07A',
+  dim:   '#5A6A5E',
+  muted: '#A5B39A',
+  rare:  '#E8468E',
+  moss:  '#2B8A50',
+};
+
+// ── Fixtures ─────────────────────────────────────────────────────────────
+const act1Events = [
+  ['control-plane: vend request received (team={team})', 'body'],
+  ['substrate: allocating namespace jungle-{team}', 'body'],
+  ['substrate: vpc/private-subnet/route-table ready', 'body'],
+  ['understory: pulling baseline image sha256:8f4a…', 'body'],
+  ['understory: 14 services starting in dependency order', 'body'],
+  ['understory: postgres accepting connections', 'body'],
+  ['understory: redis accepting connections', 'body'],
+  ['understory: synthetic-runtime spinning up emitters', 'body'],
+  ['synthetic: seeding 2,400 fnol records across 30 days', 'body'],
+  ['synthetic: claim-events queue depth 148 and climbing', 'body'],
+  ['integrations: policy-api handshake timeout · retrying (1/3)', 'warn'],
+  ['integrations: policy-api stub online', 'body'],
+  ['integrations: payments-api stub online', 'body'],
+  ['integrations: document-store stub online', 'body'],
+  ['auth: seeded 6 personas, 3 admin users', 'body'],
+  ['operator-console: session opened for jungle-{team}', 'body'],
+  ['jungle-{team}: alive', 'highlight'],
+];
+const act2Events = [
+  ['shaper: evaluating removal set for intake/GenericForm', 'body'],
+  ['understory: unmounting 4 routes; 0 in-flight requests', 'body'],
+  ['hot-reload: understory reloaded in 412ms (1/3)', 'body'],
+  ['test-runner: 38 passed · 0 failed · 2 skipped', 'body'],
+  ['shaper: writing intake/FnolForm.tsx (6 fields)', 'body'],
+  ['schema-migrator: claim_events.v1 → claim_events.v2 (additive)', 'body'],
+  ['hot-reload: understory reloaded in 389ms (2/3)', 'body'],
+  ['test-runner: 41 passed · 0 failed · 2 skipped', 'body'],
+  ['shaper: generating state machine settlement-approval', 'body'],
+  ['iam: creating role CheckerAboveThreshold', 'body'],
+  ['hot-reload: understory reloaded in 451ms (3/3)', 'body'],
+  ['test-runner: 47 passed · 0 failed · 2 skipped', 'body'],
+  ['system stayed alive through 3 hot reloads', 'highlight'],
+];
+const act3Events = [
+  ['dmz: provisioning isolated evaluation environment', 'body'],
+  ['dmz: agent-runtime attached to 4 seeded personas', 'body'],
+  ['analyst: session 1 / exploring claim-intake workflow', 'body'],
+  ['analyst: defect surfaced · payment retry loop on duplicate FNOL', 'body'],
+  ['policyholder: session 1 / screen-reader traversal', 'body'],
+  ['policyholder: defect surfaced · skipped field group headers', 'body'],
+  ['auditor: session 1 / scanning approvals above threshold', 'body'],
+  ['auditor: defect surfaced · maker self-approval path', 'body'],
+  ['adjuster: session 1 / probing SIU fraud flag lifecycle', 'body'],
+  ['adjuster: defect surfaced · flag cleared without reason', 'body'],
+  ['dmz: session roll-up complete · 46 sessions · 6 defects', 'body'],
+  ['dmz: gates 2/2 passed · 0 critical', 'highlight'],
+];
+const act4Events = [
+  ['canopy: registering prototype under gallery namespace', 'body'],
+  ['canopy: dns + route53 record propagated', 'body'],
+  ['canopy: tile rendered in gallery · prototype discoverable', 'body'],
+  ['canopy: judge-a session opened · claim-intake flow', 'body'],
+  ['canopy: judge-a rated 4/5 · "fast, clear, missed one label"', 'body'],
+  ['canopy: beta-user-b session opened · adjustment workflow', 'body'],
+  ['canopy: beta-user-b rated 5/5 · "this already feels shipped"', 'body'],
+  ['canopy: stakeholder-c session opened · full end-to-end', 'body'],
+  ['canopy: stakeholder-c rated 3/5 · "needs more reporting"', 'body'],
+  ['sprint summary · 1 jungle · 3 moves · 1 dmz run · 3 visitors', 'highlight'],
+];
+const shapingMoves = [
+  { kind:'remove',     label:'Remove generic customer-intake form',       diff:['- 1 component','- 4 routes','- 2 fixtures'] },
+  { kind:'substitute', label:'Substitute claims-intake FNOL form',        diff:['+ 1 component','+ 6 fields','~ 1 event schema'] },
+  { kind:'extend',     label:'Extend with settlement-approval workflow',   diff:['+ 1 state machine','+ 3 states','+ 1 checker role'] },
+];
+const personas = [
+  { role:'analyst',      sessions:14, defects:2 },
+  { role:'policyholder', sessions:11, defects:1 },
+  { role:'auditor',      sessions:9,  defects:2 },
+  { role:'adjuster',     sessions:12, defects:1 },
+];
+const visitors = [
+  { role:'judge',       name:'judge-a',       sessionTime:'04:12', stars:4 },
+  { role:'beta user',   name:'beta-user-b',   sessionTime:'07:38', stars:5 },
+  { role:'stakeholder', name:'stakeholder-c', sessionTime:'02:54', stars:3 },
+];
+
+// ── Hooks ─────────────────────────────────────────────────────────────────
+function useInterval(fn, ms) {
+  const saved = useRef(fn);
+  useEffect(() => { saved.current = fn; });
+  useEffect(() => {
+    if (ms == null) return;
+    const id = setInterval(() => saved.current(), ms);
+    return () => clearInterval(id);
+  }, [ms]);
+}
+
+function usePulse(ms = 600) {
+  const [on, set] = useState(false);
+  useInterval(() => set(p => !p), ms);
+  return on;
+}
+
+function useTypewriter(text, cps, speedMul) {
+  const [idx, setIdx] = useState(0);
+  const delay = Math.max(16, Math.round(1000 / (cps * speedMul)));
+  useEffect(() => { setIdx(0); }, [text]);
+  useEffect(() => {
+    if (idx >= text.length) return;
+    const t = setTimeout(() => setIdx(i => Math.min(i + 1, text.length)), delay);
+    return () => clearTimeout(t);
+  }, [idx, text.length, delay]);
+  return text.slice(0, idx);
+}
+
+function useEasedNumber(target, durationMs) {
+  const [val, setVal] = useState(0);
+  const fromRef = useRef(0);
+  useEffect(() => {
+    const from = fromRef.current;
+    const start = Date.now();
+    let raf;
+    const tick = () => {
+      const t = Math.min(1, (Date.now() - start) / durationMs);
+      const e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+      setVal(Math.round(from + (target - from) * e));
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else fromRef.current = target;
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, durationMs]);
+  return val;
+}
+
+// Global runner handle — acts register themselves so keyboard shortcuts work
+const gRunner = { step: () => {}, ff: () => {} };
+
+function useActRunner(beats, { speedMul = 1, started = true, onComplete } = {}) {
+  const ref = useRef({ beats, speedMul, onComplete, idx: -1, timer: null, started });
+  useEffect(() => { ref.current.beats = beats; }, [beats]);
+  useEffect(() => { ref.current.speedMul = speedMul; }, [speedMul]);
+  useEffect(() => { ref.current.onComplete = onComplete; }, [onComplete]);
+
+  const advance = useCallback((idx) => {
+    const s = ref.current;
+    if (idx >= s.beats.length) {
+      ref.current.idx = s.beats.length;
+      s.onComplete?.();
+      return;
+    }
+    s.beats[idx]?.apply?.();
+    ref.current.idx = idx;
+    const delay = Math.max(16, Math.round((s.beats[idx]?.durationMs ?? 200) / s.speedMul));
+    clearTimeout(s.timer);
+    s.timer = setTimeout(() => advance(idx + 1), delay);
+  }, []);
+
+  useEffect(() => {
+    if (!started || beats.length === 0) return;
+    advance(0);
+    return () => clearTimeout(ref.current.timer);
+  }, [started, advance]);
+
+  const step = useCallback(() => {
+    clearTimeout(ref.current.timer);
+    advance(ref.current.idx + 1);
+  }, [advance]);
+
+  const ff = useCallback(() => {
+    clearTimeout(ref.current.timer);
+    const s = ref.current;
+    for (let i = s.idx + 1; i < s.beats.length; i++) s.beats[i]?.apply?.();
+    ref.current.idx = s.beats.length;
+    s.onComplete?.();
+  }, []);
+
+  useEffect(() => {
+    if (started) { gRunner.step = step; gRunner.ff = ff; }
+  }, [started, step, ff]);
+
+  return { step, ff };
+}
+
+// ── Small components ──────────────────────────────────────────────────────
+const SPIN_FRAMES = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
+function Spinner({ color }) {
+  const [i, setI] = useState(0);
+  useInterval(() => setI(n => (n+1) % SPIN_FRAMES.length), 80);
+  return <span style={{ color }}>{SPIN_FRAMES[i]}</span>;
+}
+
+function TW({ text, cps=26, speedMul=1, color, bold, grad }) {
+  const shown = useTypewriter(text, cps, speedMul);
+  if (grad) return <span className="grad" style={{ fontWeight: bold?700:400 }}>{shown}</span>;
+  return <span style={{ color: color||c.body, fontWeight: bold?700:400 }}>{shown}</span>;
+}
+
+function Grad({ children, bold }) {
+  return <span className="grad" style={{ fontWeight: bold?700:400 }}>{children}</span>;
+}
+
+function Tracked({ children, color }) {
+  return <span style={{ color: color||c.label }}><span style={{ color:c.dim }}>⬡ </span>{children}</span>;
+}
+
+function Tick() { return <span style={{ color:c.done }}>✓</span>; }
+function Dot()  { return <span style={{ color:c.dim }}>◌</span>; }
+function Stars({ n }) {
+  return <span style={{ color:c.label }}>{'★'.repeat(n)}{'☆'.repeat(Math.max(0,5-n))}</span>;
+}
+
+// ── Glyphs ────────────────────────────────────────────────────────────────
+function Act1Glyph() {
+  const pulse = usePulse();
+  const dot = pulse ? c.done : c.label;
+  return (
+    <pre style={{ lineHeight:1.4, fontSize:13 }}>
+      <span style={{color:c.dim}}>{'     '}</span><span style={{color:c.live}}>{'╭─────────────╮'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'    '}</span><span style={{color:c.live}}>{'╱ '}</span><span style={{color:c.done}}>{'╭─────────╮'}</span><span style={{color:c.live}}>{' ╲'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'   '}</span><span style={{color:c.live}}>{'│ '}</span><span style={{color:c.done}}>{'╱ '}</span><span style={{color:c.label}}>{'╭─────╮'}</span><span style={{color:c.done}}>{' ╲ '}</span><span style={{color:c.live}}>{'│'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'   '}</span><span style={{color:c.live}}>{'│ '}</span><span style={{color:c.done}}>{'│ '}</span><span style={{color:c.label}}>{'│  '}</span><span style={{color:dot}}>{'●'}</span><span style={{color:c.label}}>{'  │'}</span><span style={{color:c.done}}>{' │ '}</span><span style={{color:c.live}}>{'│'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'   '}</span><span style={{color:c.live}}>{'│ '}</span><span style={{color:c.done}}>{'╲ '}</span><span style={{color:c.label}}>{'╰─────╯'}</span><span style={{color:c.done}}>{' ╱ '}</span><span style={{color:c.live}}>{'│'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'    '}</span><span style={{color:c.live}}>{'╲ '}</span><span style={{color:c.done}}>{'╰─────────╯'}</span><span style={{color:c.live}}>{' ╱'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'     '}</span><span style={{color:c.live}}>{'╰─────────────╯'}</span>
+    </pre>
+  );
+}
+
+function Act2Glyph() {
+  const pulse = usePulse();
+  const band = pulse ? c.done : c.live;
+  return (
+    <pre style={{ lineHeight:1.55 }}>
+      <span style={{color:c.dim}}>{'  ╌╌╌╌╌╌╌╌╌╌╌╌╌'}</span>{'\n'}
+      <span style={{color:c.label}}>{'  ━━━━━━━━━━━━━'}</span>{'\n'}
+      <span style={{color:band}}>{'  ▓▓▓▓▓▓▓▓▓▓▓▓▓'}</span>{'\n'}
+      <span style={{color:c.live}}>{'  ▒▒▒▒▒▒▒▒▒▒▒▒▒'}</span>{'\n'}
+      <span style={{color:c.muted}}>{'  ░░░░░░░░░░░░░'}</span>
+    </pre>
+  );
+}
+
+function Act3Glyph({ active }) {
+  const pulse = usePulse();
+  const cc = (i) => {
+    if (i === active) return pulse ? c.done : c.label;
+    if (i < active) return c.done;
+    return c.dim;
+  };
+  const g = ['◆','●','▲','■'];
+  return (
+    <pre style={{ lineHeight:1.55 }}>
+      <span style={{color:cc(0)}}>{'   ╭─────╮'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(1)}}>{'╭─────╮'}</span>{'\n'}
+      <span style={{color:cc(0)}}>{'   │  '}{g[0]}{'  │'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(1)}}>{'│  '}{g[1]}{'  │'}</span>{'\n'}
+      <span style={{color:cc(0)}}>{'   ╰─────╯'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(1)}}>{'╰─────╯'}</span>{'\n'}
+      <span style={{color:cc(2)}}>{'   ╭─────╮'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(3)}}>{'╭─────╮'}</span>{'\n'}
+      <span style={{color:cc(2)}}>{'   │  '}{g[2]}{'  │'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(3)}}>{'│  '}{g[3]}{'  │'}</span>{'\n'}
+      <span style={{color:cc(2)}}>{'   ╰─────╯'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(3)}}>{'╰─────╯'}</span>
+    </pre>
+  );
+}
+
+// ── Logo (Act 1 phase 1) ──────────────────────────────────────────────────
+const LOGO = [
+  "      _                  _  _____  ",
+  "     (_)_   _ _ __  __ _| ||___ /  ",
+  "  _   | | | | | '_ \\/ _` | |  |_ \\ ",
+  " | |_| | |_| | | | | (_| | | ___) |",
+  "  \\___/ \\__,_|_| |_|\\__, |_||____/ ",
+  "                      |___/         ",
+];
+
+function Logo({ speedMul, onDone }) {
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    if (shown >= LOGO.length) {
+      const t = setTimeout(() => onDone?.(), Math.round(500 / speedMul));
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setShown(n => n+1), Math.round(110 / speedMul));
+    return () => clearTimeout(t);
+  }, [shown, speedMul, onDone]);
+  return (
+    <div style={{ textAlign:'center', padding:'12px 0' }}>
+      <pre style={{ display:'inline-block', textAlign:'left', lineHeight:1.55 }}>
+        {LOGO.slice(0, shown).map((line, i) =>
+          <Grad key={i} bold>{line}{'\n'}</Grad>
+        )}
+      </pre>
+      {shown < LOGO.length && <div style={{ color:c.dim, marginTop:4 }}><span className="blink">█</span></div>}
+    </div>
+  );
+}
+
+// ── Act 1 ─────────────────────────────────────────────────────────────────
+const INIT_TASKS = [
+  'Vending Jungle','Provisioning Substrate','Seeding Understory',
+  'Wiring integrations','Opening operator console',
+].map(label => ({ label, state:'pending' }));
+
+function Act1({ speedMul, onComplete, teamName, onLog }) {
+  const [phase, setPhase] = useState('logo');
+  const [tasks, setTasks] = useState(INIT_TASKS.map(t => ({...t})));
+  const [payoff, setPayoff] = useState(false);
+  const cur = useRef(0);
+
+  const emit = useCallback(() => {
+    const e = act1Events[cur.current]; if (!e) return;
+    cur.current++;
+    onLog(e[0].replaceAll('{team}', teamName), e[1]);
+  }, [teamName, onLog]);
+
+  const setT = (i, state) => setTasks(p => p.map((t,j) => j===i ? {...t,state} : t));
+
+  const beats = useMemo(() => [
+    {durationMs:200, apply:()=>setT(0,'active')},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:260, apply:()=>setT(0,'done')},
+    {durationMs:180, apply:()=>setT(1,'active')},
+    {durationMs:200, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:260, apply:()=>setT(1,'done')},
+    {durationMs:180, apply:()=>setT(2,'active')},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:240, apply:()=>emit()},
+    {durationMs:260, apply:()=>setT(2,'done')},
+    {durationMs:180, apply:()=>setT(3,'active')},
+    {durationMs:260, apply:()=>emit()}, // warn
+    {durationMs:540, apply:()=>{}},
+    {durationMs:200, apply:()=>emit()},
+    {durationMs:200, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:260, apply:()=>setT(3,'done')},
+    {durationMs:180, apply:()=>setT(4,'active')},
+    {durationMs:200, apply:()=>emit()},
+    {durationMs:200, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:240, apply:()=>emit()},
+    {durationMs:260, apply:()=>setT(4,'done')},
+    {durationMs:600, apply:()=>{}},
+    {durationMs:200, apply:()=>setPayoff(true)},
+    {durationMs:260, apply:()=>emit()},
+    {durationMs:1300,apply:()=>{}},
+    {durationMs:150, apply:()=>{}},
+  ], [emit]);
+
+  useActRunner(beats, { speedMul, started: phase === 'scene', onComplete: phase === 'scene' ? onComplete : undefined });
+
+  if (phase === 'logo') return <Logo speedMul={speedMul} onDone={() => setPhase('scene')} />;
+
+  return (
+    <div style={{ display:'flex', gap:16 }}>
+      <div style={{ width:130, flexShrink:0 }}><Act1Glyph /></div>
+      <div style={{ flex:1 }}>
+        <div style={{ marginBottom:6 }}>
+          <Tracked>{`vending jungle · team ${teamName}`}</Tracked>
+        </div>
+        {tasks.map((t,i) => (
+          <div key={i} style={{ display:'flex', alignItems:'center', gap:8, marginBottom:2 }}>
+            <span style={{ width:16 }}>
+              {t.state==='pending' && <Dot />}
+              {t.state==='active'  && <Spinner color={c.live} />}
+              {t.state==='done'    && <Tick />}
+            </span>
+            <span style={{ color: t.state==='pending' ? c.dim : t.state==='done' ? c.done : c.body }}>
+              {t.label}
+            </span>
+          </div>
+        ))}
+        <div style={{ marginTop:10 }}>
+          {payoff
+            ? <TW text={`Jungle ${teamName} is alive.`} cps={26} speedMul={speedMul} grad bold />
+            : <span style={{color:c.dim}}> </span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Act 2 ─────────────────────────────────────────────────────────────────
+const KIND_SYM = { remove:'−', substitute:'~', extend:'+' };
+const KIND_COL = { remove:c.rare, substitute:c.label, extend:c.done };
+
+function Act2({ speedMul, onComplete, onLog }) {
+  const [rows, setRows] = useState(shapingMoves.map(m => ({ move:m, state:'pending' })));
+  const [payoff, setPayoff] = useState(false);
+  const cur = useRef(0);
+  const emit = useCallback(() => {
+    const e = act2Events[cur.current]; if (!e) return;
+    cur.current++;
+    onLog(e[0], e[1]);
+  }, [onLog]);
+  const setR = (i, state) => setRows(p => p.map((r,j) => j===i ? {...r,state} : r));
+
+  const beats = useMemo(() => [
+    {durationMs:260,apply:()=>setR(0,'applying')},
+    {durationMs:260,apply:()=>emit()},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:260,apply:()=>setR(0,'applied')},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:360,apply:()=>emit()},
+    {durationMs:500,apply:()=>{}},
+    {durationMs:260,apply:()=>setR(1,'applying')},
+    {durationMs:260,apply:()=>emit()},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:260,apply:()=>setR(1,'applied')},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:360,apply:()=>emit()},
+    {durationMs:500,apply:()=>{}},
+    {durationMs:260,apply:()=>setR(2,'applying')},
+    {durationMs:260,apply:()=>emit()},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:260,apply:()=>setR(2,'applied')},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:360,apply:()=>emit()},
+    {durationMs:600,apply:()=>{}},
+    {durationMs:240,apply:()=>setPayoff(true)},
+    {durationMs:280,apply:()=>emit()},
+    {durationMs:1300,apply:()=>{}},
+    {durationMs:150,apply:()=>{}},
+  ], [emit]);
+
+  useActRunner(beats, { speedMul, onComplete });
+
+  return (
+    <div style={{ display:'flex', gap:16 }}>
+      <div style={{ width:100, flexShrink:0, paddingTop:8 }}><Act2Glyph /></div>
+      <div style={{ flex:1 }}>
+        <div style={{ marginBottom:8 }}><Tracked>shaping understory</Tracked></div>
+        {rows.map((row, i) => {
+          const { move, state } = row;
+          return (
+            <div key={i} style={{ marginBottom:7 }}>
+              <div style={{ display:'flex', gap:6, alignItems:'center' }}>
+                <span style={{ width:16 }}>
+                  {state==='pending'  && <Dot />}
+                  {state==='applying' && <Spinner color={c.live} />}
+                  {state==='applied'  && <Tick />}
+                </span>
+                <span style={{ color:KIND_COL[move.kind], fontWeight:700, width:16 }}>{KIND_SYM[move.kind]}</span>
+                <span style={{ color: state==='pending' ? c.dim : c.body }}>{move.label}</span>
+              </div>
+              {state==='applied' && (
+                <div style={{ paddingLeft:38, marginTop:2 }}>
+                  {move.diff.map((d,j) => {
+                    const col = d[0]==='+' ? c.done : d[0]==='-' ? c.rare : c.label;
+                    return <span key={j}><span style={{color:col}}>{d}</span>{j<move.diff.length-1 && <span style={{color:c.dim}}>  ·  </span>}</span>;
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+        <div style={{ marginTop:4 }}>
+          {payoff
+            ? <TW text="System stayed alive through 3 hot reloads." cps={26} speedMul={speedMul} grad bold />
+            : <span style={{color:c.dim}}> </span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Act 3 ─────────────────────────────────────────────────────────────────
+function PersonaLine({ persona, row, ember, speedMul }) {
+  const ms = Math.max(60, Math.round(600 * speedMul));
+  const sess = useEasedNumber(row.sessionsTarget, ms);
+  const defs = useEasedNumber(row.defectsTarget, ms);
+  const defCol = ember ? c.rare : defs > 0 ? c.label : c.dim;
+  const stateCols = { idle:c.dim, probing:c.live, reporting:c.label, done:c.done };
+  return (
+    <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:3 }}>
+      <span style={{ width:16 }}>
+        {row.state==='idle'      && <Dot />}
+        {row.state==='probing'   && <Spinner color={c.live} />}
+        {row.state==='reporting' && <span style={{color:c.label}}>›</span>}
+        {row.state==='done'      && <Tick />}
+      </span>
+      <span style={{ width:100, color: row.state==='idle' ? c.dim : c.body }}>{persona.role}</span>
+      <span style={{ width:80,  color: stateCols[row.state] }}>{row.state}</span>
+      <span style={{ width:62,  color: c.muted }}>{String(sess).padStart(2,' ')} sess</span>
+      <span style={{ color:defCol, fontWeight:ember?700:400 }}>{String(defs).padStart(2,' ')} defect{defs===1?'':'s'}</span>
+    </div>
+  );
+}
+
+function Act3({ speedMul, onComplete, onLog }) {
+  const [rows, setRows] = useState(personas.map(() => ({ state:'idle', sessionsTarget:0, defectsTarget:0 })));
+  const [active, setActive] = useState(-1);
+  const [ember, setEmber] = useState(-1);
+  const [payoff, setPayoff] = useState(false);
+  const cur = useRef(0);
+  const emit = useCallback(() => {
+    const e = act3Events[cur.current]; if (!e) return;
+    cur.current++;
+    onLog(e[0], e[1]);
+  }, [onLog]);
+  const setRow = (i, patch) => setRows(p => p.map((r,j) => j===i ? {...r,...patch} : r));
+
+  const beats = useMemo(() => {
+    const out = [];
+    out.push({durationMs:300,apply:()=>emit()});
+    out.push({durationMs:360,apply:()=>emit()});
+    out.push({durationMs:400,apply:()=>{}});
+    personas.forEach((p, i) => {
+      out.push({durationMs:280,apply:()=>{ setActive(i); setRow(i,{state:'probing',sessionsTarget:p.sessions}); }});
+      out.push({durationMs:340,apply:()=>emit()});
+      out.push({durationMs:600,apply:()=>{}});
+      out.push({durationMs:280,apply:()=>{ setRow(i,{state:'reporting',defectsTarget:p.defects}); if(i===0) setEmber(0); }});
+      out.push({durationMs:340,apply:()=>emit()});
+      out.push({durationMs:280,apply:()=>{ if(i===0) setEmber(-1); }});
+      out.push({durationMs:320,apply:()=>setRow(i,{state:'done'})});
+      out.push({durationMs:280,apply:()=>{}});
+    });
+    out.push({durationMs:360,apply:()=>{ setActive(-1); emit(); }});
+    out.push({durationMs:500,apply:()=>{}});
+    out.push({durationMs:240,apply:()=>setPayoff(true)});
+    out.push({durationMs:320,apply:()=>emit()});
+    out.push({durationMs:1300,apply:()=>{}});
+    out.push({durationMs:150,apply:()=>{}});
+    return out;
+  }, [emit]);
+
+  useActRunner(beats, { speedMul, onComplete });
+
+  return (
+    <div style={{ display:'flex', gap:16 }}>
+      <div style={{ width:120, flexShrink:0, paddingTop:4 }}><Act3Glyph active={active} /></div>
+      <div style={{ flex:1 }}>
+        <div style={{ marginBottom:8 }}><Tracked>dmz evaluation · 4 seeded personas</Tracked></div>
+        {rows.map((row, i) => (
+          <PersonaLine key={i} persona={personas[i]} row={row} ember={ember===i} speedMul={speedMul} />
+        ))}
+        <div style={{ marginTop:8 }}>
+          {payoff
+            ? <TW text="DMZ gates: 2 of 2 passed · 6 defects · 0 critical." cps={26} speedMul={speedMul} grad bold />
+            : <span style={{color:c.dim}}> </span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Act 4 ─────────────────────────────────────────────────────────────────
+function GalleryTile({ teamName }) {
+  const pulse = usePulse();
+  const star = pulse ? c.done : c.label;
+  const name = teamName.slice(0, 12).padEnd(12, ' ');
+  const W = 32;
+  const bar = '─'.repeat(W);
+  return (
+    <pre style={{ lineHeight:1.55, color:c.done }}>
+      {'╭'}{bar}{'╮'}{'\n'}
+      {'│ '}<span style={{color:c.body, fontWeight:700}}>{'Claims Intake · '}{name}</span>{'│'}{'\n'}
+      {'│ '}<span style={{color:c.muted}}>{'FNOL → settlement · 3 flows      '}</span>{'│'}{'\n'}
+      {'│ '}<span style={{color:c.label}}>{'healthy · 47 tests passing       '}</span>{'│'}{'\n'}
+      {'│ '}<span style={{color:c.muted}}>{'──────────────────────── '}</span><span style={{color:star}}>{'★'}</span>{'  │'}{'\n'}
+      {'╰'}{bar}{'╯'}
+    </pre>
+  );
+}
+
+function Counter({ value, durationMs }) {
+  const v = useEasedNumber(value, durationMs);
+  return <span style={{ color:c.done, fontWeight:700, fontSize:'1.1em' }}>{v}</span>;
+}
+
+function Act4({ speedMul, onComplete, teamName, onLog }) {
+  const [tileVisible, setTileVisible] = useState(false);
+  const [shownVisitors, setShownVisitors] = useState(0);
+  const [showSummary, setShowSummary] = useState(false);
+  const [showPayoff, setShowPayoff] = useState(false);
+  const cur = useRef(0);
+  const emit = useCallback(() => {
+    const e = act4Events[cur.current]; if (!e) return;
+    cur.current++;
+    onLog(e[0].replaceAll('{team}', teamName), e[1]);
+  }, [teamName, onLog]);
+
+  const beats = useMemo(() => {
+    const b = [];
+    b.push({durationMs:340,apply:()=>emit()});
+    b.push({durationMs:320,apply:()=>emit()});
+    b.push({durationMs:200,apply:()=>setTileVisible(true)});
+    b.push({durationMs:500,apply:()=>{}});
+    b.push({durationMs:280,apply:()=>emit()});
+    visitors.forEach((v, i) => {
+      b.push({durationMs:320,apply:()=>{ setShownVisitors(i+1); emit(); }});
+      b.push({durationMs:340,apply:()=>emit()});
+      b.push({durationMs:360,apply:()=>{}});
+    });
+    b.push({durationMs:400,apply:()=>setShowSummary(true)});
+    b.push({durationMs:800,apply:()=>{}});
+    b.push({durationMs:240,apply:()=>setShowPayoff(true)});
+    b.push({durationMs:320,apply:()=>emit()});
+    b.push({durationMs:1300,apply:()=>{}});
+    b.push({durationMs:150,apply:()=>{}});
+    return b;
+  }, [emit]);
+
+  useActRunner(beats, { speedMul, onComplete });
+
+  return (
+    <div style={{ display:'flex', gap:16, alignItems:'flex-start' }}>
+      <div style={{ flexShrink:0 }}>
+        <div style={{ marginBottom:4 }}><Tracked>canopy · gallery</Tracked></div>
+        {tileVisible
+          ? <GalleryTile teamName={teamName} />
+          : <div style={{ height:96 }} />}
+      </div>
+      <div style={{ flex:1 }}>
+        <div style={{ marginBottom:6 }}><Tracked>visitors</Tracked></div>
+        <div style={{ minHeight:62 }}>
+          {visitors.slice(0, shownVisitors).map((v, i) => (
+            <div key={i} style={{ display:'flex', gap:10, marginBottom:2 }}>
+              <span style={{ width:78, color:c.muted }}>{v.role}</span>
+              <span style={{ width:100,color:c.body }}>{v.name}</span>
+              <span style={{ width:44, color:c.muted }}>{v.sessionTime}</span>
+              <Stars n={v.stars} />
+            </div>
+          ))}
+        </div>
+        {showSummary && (
+          <div style={{ marginTop:6 }}>
+            <div><Grad><Tracked>sprint summary</Tracked></Grad></div>
+            <div style={{ display:'flex', gap:28, marginTop:4, marginBottom:4 }}>
+              {[['moves',3],['dmz',1],['visits',3]].map(([label, val]) => (
+                <div key={label}>
+                  <Counter value={val} durationMs={700} />
+                  <div style={{ color:c.dim }}>{label}</div>
+                </div>
+              ))}
+            </div>
+            {showPayoff && (
+              <TW text={`Jungle ${teamName} · sprint complete.`} cps={26} speedMul={speedMul} color={c.body} bold />
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Frame ─────────────────────────────────────────────────────────────────
+const ACT_TITLES = { 1:'Enter Jungle', 2:'Shape Understory', 3:'Refine in DMZ', 4:'Reach Canopy' };
+
+function TopBar({ act, elapsed }) {
+  const mm = String(Math.floor(elapsed/60)).padStart(2,'0');
+  const ss = String(elapsed%60).padStart(2,'0');
+  return (
+    <div className="topbar">
+      <span style={{color:c.label}}>jungl3</span>
+      <span style={{color:c.dim}}>·</span>
+      <span style={{color:c.done}}>act {act}</span>
+      <span style={{color:c.dim}}>·</span>
+      <span style={{color:c.body}}>{ACT_TITLES[act]}</span>
+      <span style={{flex:1}} />
+      <span style={{color:c.dim}}>{mm}:{ss}</span>
+    </div>
+  );
+}
+
+function LogPane({ logs }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (ref.current) ref.current.scrollTop = ref.current.scrollHeight;
+  }, [logs.length]);
+  const visible = logs.slice(-7);
+  return (
+    <div className="log-pane" ref={ref}>
+      {visible.map((entry, i) => {
+        const col  = entry.tone==='highlight' ? c.done : entry.tone==='warn' ? c.rare : c.muted;
+        const pre  = entry.tone==='highlight' ? '▶ '   : entry.tone==='warn' ? '! '   : '  ';
+        const preCol = entry.tone==='highlight' ? c.done : entry.tone==='warn' ? c.rare : c.dim;
+        return (
+          <div key={i} className="log-line" style={{color:col}}>
+            <span style={{color:preCol}}>{pre}</span>{entry.text}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function Footer() {
+  const keys = [['space','advance'],['→','fast-forward'],['←','replay act'],['r','restart'],['q','quit']];
+  return (
+    <div className="footer">
+      {keys.map(([k,l]) => (
+        <span key={k}>
+          <span style={{color:c.label,fontWeight:700}}>[{k}]</span>
+          <span style={{color:c.dim}}> {l}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// ── Team Name Prompt ──────────────────────────────────────────────────────
+const DEFAULT_TEAM = 'aurora';
+function sanitize(s) { return s.toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,24); }
+
+function TeamNamePrompt({ onSubmit }) {
+  const [val, setVal] = useState('');
+  const [done, setDone] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => { ref.current?.focus(); }, []);
+
+  const submit = (name) => {
+    const clean = sanitize(name) || DEFAULT_TEAM;
+    setDone(true);
+    setTimeout(() => onSubmit(clean), 350);
+  };
+
+  return (
+    <div className="prompt-screen">
+      <pre style={{ display:'inline-block', textAlign:'left', lineHeight:1.55, marginBottom:20 }}>
+        {LOGO.map((line, i) => <Grad key={i} bold>{line}{'\n'}</Grad>)}
+      </pre>
+      <div style={{ marginBottom:14 }}>
+        <span style={{color:c.label}}>ENTER JUNGLE</span>
+        <span style={{color:c.dim}}> · name your jungle</span>
+      </div>
+      <div style={{ display:'inline-flex', alignItems:'center', gap:8 }}>
+        <span style={{color:c.dim}}>›</span>
+        <input
+          ref={ref}
+          className="team-input"
+          value={val}
+          placeholder={DEFAULT_TEAM}
+          onChange={e => setVal(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter')  submit(val);
+            if (e.key === 'Escape') submit('');
+          }}
+        />
+      </div>
+      <div style={{ marginTop:14, color:c.dim, fontSize:'0.85em', lineHeight:2 }}>
+        <span style={{color:c.label}}>[enter]</span> confirm&nbsp;&nbsp;
+        <span style={{color:c.label}}>[esc]</span> use default ({DEFAULT_TEAM})
+      </div>
+      {done && <div style={{ marginTop:10, color:c.done }}>entering jungle…</div>}
+    </div>
+  );
+}
+
+// ── App ───────────────────────────────────────────────────────────────────
+function App() {
+  const [phase, setPhase] = useState('prompt');
+  const [teamName, setTeamName] = useState(DEFAULT_TEAM);
+  const [act, setAct]  = useState(1);
+  const [actKey, setActKey] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+  const [logs, setLogs] = useState([]);
+  const startRef = useRef(Date.now());
+
+  useInterval(() => {
+    if (phase === 'play') setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
+  }, 1000);
+
+  const handleLog = useCallback((text, tone) => {
+    setLogs(p => [...p, { text, tone }]);
+  }, []);
+
+  const handleActComplete = useCallback(() => {
+    setAct(prev => {
+      if (prev >= 4) return prev;
+      setActKey(k => k+1);
+      return prev + 1;
+    });
+  }, []);
+
+  const handleTeamSubmit = (name) => {
+    setTeamName(name);
+    startRef.current = Date.now();
+    setElapsed(0);
+    setPhase('play');
+  };
+
+  // Keyboard
+  useEffect(() => {
+    const down = (e) => {
+      if (phase === 'prompt') return;
+      if (e.key === ' ')          { e.preventDefault(); gRunner.step(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); gRunner.ff(); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); setActKey(k => k+1); }
+      if (e.key === 'r') { setLogs([]); startRef.current = Date.now(); setElapsed(0); setAct(1); setActKey(k => k+1); }
+    };
+    window.addEventListener('keydown', down);
+    return () => window.removeEventListener('keydown', down);
+  }, [phase]);
+
+  if (phase === 'prompt') {
+    return (
+      <div className="terminal">
+        <TeamNamePrompt onSubmit={handleTeamSubmit} />
+      </div>
+    );
+  }
+
+  const shared = { speedMul:1, onComplete:handleActComplete, teamName, onLog:handleLog };
+  const k = `${act}-${actKey}`;
+
+  return (
+    <div className="terminal">
+      <TopBar act={act} elapsed={elapsed} />
+      <div className="act-area">
+        {act === 1 && <Act1 key={k} {...shared} />}
+        {act === 2 && <Act2 key={k} {...shared} />}
+        {act === 3 && <Act3 key={k} {...shared} />}
+        {act === 4 && <Act4 key={k} {...shared} />}
+      </div>
+      <LogPane logs={logs} />
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

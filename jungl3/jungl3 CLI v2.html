@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jungl3 demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%;
+    background: #060f09;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  #root { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+
+  .terminal {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #F6F2E0;
+    background: #0d1a12;
+    width: min(920px, 98vw);
+    height: min(580px, 96vh);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #1d3a25;
+    box-shadow: 0 0 60px rgba(60,183,105,0.07), 0 0 0 1px #0a1a0e;
+  }
+
+  .topbar {
+    display: flex; align-items: center;
+    padding: 5px 14px;
+    background: #090f0b;
+    border-bottom: 1px solid #182a1e;
+    flex-shrink: 0; gap: 8px;
+    user-select: none;
+  }
+  .act-area {
+    flex: 0 0 auto;
+    padding: 8px 14px 4px;
+    overflow: hidden;
+  }
+  .log-pane {
+    flex: 1 1 auto;
+    border-top: 1px solid #182a1e;
+    padding: 5px 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 0;
+  }
+  .footer {
+    flex-shrink: 0;
+    padding: 4px 14px;
+    background: #090f0b;
+    border-top: 1px solid #182a1e;
+    display: flex; gap: 20px;
+    user-select: none;
+  }
+
+  .prompt-screen {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+
+  .grad {
+    background: linear-gradient(90deg, #D7B24A 0%, #52D07A 55%, #2B8A50 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  pre { font-family: inherit; white-space: pre; }
+
+  .log-line { white-space: pre; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+
+  .team-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #2B8A50;
+    color: #F6F2E0;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    width: 220px;
+    padding: 2px 6px;
+    caret-color: #52D07A;
+  }
+  .team-input::placeholder { color: #5A6A5E; }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .blink { animation: blink 1s step-end infinite; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+// ── Palette (from theme.ts) ───────────────────────────────────────────────
+const c = {
+  label: '#D7B24A',
+  body:  '#F6F2E0',
+  live:  '#3CB769',
+  done:  '#52D07A',
+  dim:   '#5A6A5E',
+  muted: '#A5B39A',
+  rare:  '#E8468E',
+  moss:  '#2B8A50',
+};
+
+// ── Fixtures ─────────────────────────────────────────────────────────────
+const act1Events = [
+  ['control-plane: vend request received (team={team})', 'body'],
+  ['substrate: allocating namespace jungle-{team}', 'body'],
+  ['substrate: vpc/private-subnet/route-table ready', 'body'],
+  ['understory: pulling baseline image sha256:8f4a…', 'body'],
+  ['understory: 14 services starting in dependency order', 'body'],
+  ['understory: postgres accepting connections', 'body'],
+  ['understory: redis accepting connections', 'body'],
+  ['understory: synthetic-runtime spinning up emitters', 'body'],
+  ['synthetic: seeding 2,400 fnol records across 30 days', 'body'],
+  ['synthetic: claim-events queue depth 148 and climbing', 'body'],
+  ['integrations: policy-api handshake timeout · retrying (1/3)', 'warn'],
+  ['integrations: policy-api stub online', 'body'],
+  ['integrations: payments-api stub online', 'body'],
+  ['integrations: document-store stub online', 'body'],
+  ['auth: seeded 6 personas, 3 admin users', 'body'],
+  ['operator-console: session opened for jungle-{team}', 'body'],
+  ['jungle-{team}: alive', 'highlight'],
+];
+const act2Events = [
+  ['shaper: evaluating removal set for intake/GenericForm', 'body'],
+  ['understory: unmounting 4 routes; 0 in-flight requests', 'body'],
+  ['hot-reload: understory reloaded in 412ms (1/3)', 'body'],
+  ['test-runner: 38 passed · 0 failed · 2 skipped', 'body'],
+  ['shaper: writing intake/FnolForm.tsx (6 fields)', 'body'],
+  ['schema-migrator: claim_events.v1 → claim_events.v2 (additive)', 'body'],
+  ['hot-reload: understory reloaded in 389ms (2/3)', 'body'],
+  ['test-runner: 41 passed · 0 failed · 2 skipped', 'body'],
+  ['shaper: generating state machine settlement-approval', 'body'],
+  ['iam: creating role CheckerAboveThreshold', 'body'],
+  ['hot-reload: understory reloaded in 451ms (3/3)', 'body'],
+  ['test-runner: 47 passed · 0 failed · 2 skipped', 'body'],
+  ['system stayed alive through 3 hot reloads', 'highlight'],
+];
+const act3Events = [
+  ['dmz: provisioning isolated evaluation environment', 'body'],
+  ['dmz: agent-runtime attached to 4 seeded personas', 'body'],
+  ['analyst: session 1 / exploring claim-intake workflow', 'body'],
+  ['analyst: defect surfaced · payment retry loop on duplicate FNOL', 'body'],
+  ['policyholder: session 1 / screen-reader traversal', 'body'],
+  ['policyholder: defect surfaced · skipped field group headers', 'body'],
+  ['auditor: session 1 / scanning approvals above threshold', 'body'],
+  ['auditor: defect surfaced · maker self-approval path', 'body'],
+  ['adjuster: session 1 / probing SIU fraud flag lifecycle', 'body'],
+  ['adjuster: defect surfaced · flag cleared without reason', 'body'],
+  ['dmz: session roll-up complete · 46 sessions · 6 defects', 'body'],
+  ['dmz: gates 2/2 passed · 0 critical', 'highlight'],
+];
+const act4Events = [
+  ['canopy: registering prototype under gallery namespace', 'body'],
+  ['canopy: dns + route53 record propagated', 'body'],
+  ['canopy: tile rendered in gallery · prototype discoverable', 'body'],
+  ['canopy: judge-a session opened · claim-intake flow', 'body'],
+  ['canopy: judge-a rated 4/5 · "fast, clear, missed one label"', 'body'],
+  ['canopy: beta-user-b session opened · adjustment workflow', 'body'],
+  ['canopy: beta-user-b rated 5/5 · "this already feels shipped"', 'body'],
+  ['canopy: stakeholder-c session opened · full end-to-end', 'body'],
+  ['canopy: stakeholder-c rated 3/5 · "needs more reporting"', 'body'],
+  ['sprint summary · 1 jungle · 3 moves · 1 dmz run · 3 visitors', 'highlight'],
+];
+const shapingMoves = [
+  { kind:'remove',     label:'Remove generic customer-intake form',       diff:['- 1 component','- 4 routes','- 2 fixtures'] },
+  { kind:'substitute', label:'Substitute claims-intake FNOL form',        diff:['+ 1 component','+ 6 fields','~ 1 event schema'] },
+  { kind:'extend',     label:'Extend with settlement-approval workflow',   diff:['+ 1 state machine','+ 3 states','+ 1 checker role'] },
+];
+const personas = [
+  { role:'analyst',      sessions:14, defects:2, severity:['minor','minor'],            trace:'label mismatch on FNOL step 3' },
+  { role:'policyholder', sessions:11, defects:1, severity:['minor'],                    trace:'VIN field accepts letter O'      },
+  { role:'auditor',      sessions:9,  defects:2, severity:['minor','minor'],            trace:'export CSV missing timezone'     },
+  { role:'adjuster',     sessions:12, defects:1, severity:['minor'],                    trace:'settlement note truncates at 256' },
+];
+const visitors = [
+  { role:'judge',       name:'judge-a',       sessionTime:'04:12', stars:4 },
+  { role:'beta user',   name:'beta-user-b',   sessionTime:'07:38', stars:5 },
+  { role:'stakeholder', name:'stakeholder-c', sessionTime:'02:54', stars:3 },
+];
+
+// ── Hooks ─────────────────────────────────────────────────────────────────
+function useInterval(fn, ms) {
+  const saved = useRef(fn);
+  useEffect(() => { saved.current = fn; });
+  useEffect(() => {
+    if (ms == null) return;
+    const id = setInterval(() => saved.current(), ms);
+    return () => clearInterval(id);
+  }, [ms]);
+}
+
+function usePulse(ms = 600) {
+  const [on, set] = useState(false);
+  useInterval(() => set(p => !p), ms);
+  return on;
+}
+
+function useTypewriter(text, cps, speedMul) {
+  const [idx, setIdx] = useState(0);
+  const delay = Math.max(16, Math.round(1000 / (cps * speedMul)));
+  useEffect(() => { setIdx(0); }, [text]);
+  useEffect(() => {
+    if (idx >= text.length) return;
+    const t = setTimeout(() => setIdx(i => Math.min(i + 1, text.length)), delay);
+    return () => clearTimeout(t);
+  }, [idx, text.length, delay]);
+  return text.slice(0, idx);
+}
+
+function useEasedNumber(target, durationMs) {
+  const [val, setVal] = useState(0);
+  const fromRef = useRef(0);
+  useEffect(() => {
+    const from = fromRef.current;
+    const start = Date.now();
+    let raf;
+    const tick = () => {
+      const t = Math.min(1, (Date.now() - start) / durationMs);
+      const e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+      setVal(Math.round(from + (target - from) * e));
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else fromRef.current = target;
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, durationMs]);
+  return val;
+}
+
+// Global runner handle — acts register themselves so keyboard shortcuts work
+const gRunner = { step: () => {}, ff: () => {} };
+
+function useActRunner(beats, { speedMul = 1, started = true, onComplete } = {}) {
+  const ref = useRef({ beats, speedMul, onComplete, idx: -1, timer: null, started });
+  useEffect(() => { ref.current.beats = beats; }, [beats]);
+  useEffect(() => { ref.current.speedMul = speedMul; }, [speedMul]);
+  useEffect(() => { ref.current.onComplete = onComplete; }, [onComplete]);
+
+  const advance = useCallback((idx) => {
+    const s = ref.current;
+    if (idx >= s.beats.length) {
+      ref.current.idx = s.beats.length;
+      s.onComplete?.();
+      return;
+    }
+    s.beats[idx]?.apply?.();
+    ref.current.idx = idx;
+    const delay = Math.max(16, Math.round((s.beats[idx]?.durationMs ?? 200) / s.speedMul));
+    clearTimeout(s.timer);
+    s.timer = setTimeout(() => advance(idx + 1), delay);
+  }, []);
+
+  useEffect(() => {
+    if (!started || beats.length === 0) return;
+    advance(0);
+    return () => clearTimeout(ref.current.timer);
+  }, [started, advance]);
+
+  const step = useCallback(() => {
+    clearTimeout(ref.current.timer);
+    advance(ref.current.idx + 1);
+  }, [advance]);
+
+  const ff = useCallback(() => {
+    clearTimeout(ref.current.timer);
+    const s = ref.current;
+    for (let i = s.idx + 1; i < s.beats.length; i++) s.beats[i]?.apply?.();
+    ref.current.idx = s.beats.length;
+    s.onComplete?.();
+  }, []);
+
+  useEffect(() => {
+    if (started) { gRunner.step = step; gRunner.ff = ff; }
+  }, [started, step, ff]);
+
+  return { step, ff };
+}
+
+// ── Small components ──────────────────────────────────────────────────────
+const SPIN_FRAMES = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
+function Spinner({ color }) {
+  const [i, setI] = useState(0);
+  useInterval(() => setI(n => (n+1) % SPIN_FRAMES.length), 80);
+  return <span style={{ color }}>{SPIN_FRAMES[i]}</span>;
+}
+
+function TW({ text, cps=26, speedMul=1, color, bold, grad }) {
+  const shown = useTypewriter(text, cps, speedMul);
+  if (grad) return <span className="grad" style={{ fontWeight: bold?700:400 }}>{shown}</span>;
+  return <span style={{ color: color||c.body, fontWeight: bold?700:400 }}>{shown}</span>;
+}
+
+function Grad({ children, bold }) {
+  return <span className="grad" style={{ fontWeight: bold?700:400 }}>{children}</span>;
+}
+
+function Tracked({ children, color }) {
+  return <span style={{ color: color||c.label }}><span style={{ color:c.dim }}>⬡ </span>{children}</span>;
+}
+
+function Tick() { return <span style={{ color:c.done }}>✓</span>; }
+function Dot()  { return <span style={{ color:c.dim }}>◌</span>; }
+function Stars({ n }) {
+  return <span style={{ color:c.label }}>{'★'.repeat(n)}{'☆'.repeat(Math.max(0,5-n))}</span>;
+}
+
+// ── Glyphs ────────────────────────────────────────────────────────────────
+function Act1Glyph() {
+  const pulse = usePulse();
+  const dot = pulse ? c.done : c.label;
+  return (
+    <pre style={{ lineHeight:1.4, fontSize:13 }}>
+      <span style={{color:c.dim}}>{'     '}</span><span style={{color:c.live}}>{'╭─────────────╮'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'    '}</span><span style={{color:c.live}}>{'╱ '}</span><span style={{color:c.done}}>{'╭─────────╮'}</span><span style={{color:c.live}}>{' ╲'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'   '}</span><span style={{color:c.live}}>{'│ '}</span><span style={{color:c.done}}>{'╱ '}</span><span style={{color:c.label}}>{'╭─────╮'}</span><span style={{color:c.done}}>{' ╲ '}</span><span style={{color:c.live}}>{'│'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'   '}</span><span style={{color:c.live}}>{'│ '}</span><span style={{color:c.done}}>{'│ '}</span><span style={{color:c.label}}>{'│  '}</span><span style={{color:dot}}>{'●'}</span><span style={{color:c.label}}>{'  │'}</span><span style={{color:c.done}}>{' │ '}</span><span style={{color:c.live}}>{'│'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'   '}</span><span style={{color:c.live}}>{'│ '}</span><span style={{color:c.done}}>{'╲ '}</span><span style={{color:c.label}}>{'╰─────╯'}</span><span style={{color:c.done}}>{' ╱ '}</span><span style={{color:c.live}}>{'│'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'    '}</span><span style={{color:c.live}}>{'╲ '}</span><span style={{color:c.done}}>{'╰─────────╯'}</span><span style={{color:c.live}}>{' ╱'}</span>{'\n'}
+      <span style={{color:c.dim}}>{'     '}</span><span style={{color:c.live}}>{'╰─────────────╯'}</span>
+    </pre>
+  );
+}
+
+function Act2Glyph() {
+  const pulse = usePulse();
+  const band = pulse ? c.done : c.live;
+  return (
+    <pre style={{ lineHeight:1.55 }}>
+      <span style={{color:c.dim}}>{'  ╌╌╌╌╌╌╌╌╌╌╌╌╌'}</span>{'\n'}
+      <span style={{color:c.label}}>{'  ━━━━━━━━━━━━━'}</span>{'\n'}
+      <span style={{color:band}}>{'  ▓▓▓▓▓▓▓▓▓▓▓▓▓'}</span>{'\n'}
+      <span style={{color:c.live}}>{'  ▒▒▒▒▒▒▒▒▒▒▒▒▒'}</span>{'\n'}
+      <span style={{color:c.muted}}>{'  ░░░░░░░░░░░░░'}</span>
+    </pre>
+  );
+}
+
+function Act3Glyph({ active }) {
+  const pulse = usePulse();
+  const cc = (i) => {
+    if (i === active) return pulse ? c.done : c.label;
+    if (i < active) return c.done;
+    return c.dim;
+  };
+  const g = ['◆','●','▲','■'];
+  return (
+    <pre style={{ lineHeight:1.55 }}>
+      <span style={{color:cc(0)}}>{'   ╭─────╮'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(1)}}>{'╭─────╮'}</span>{'\n'}
+      <span style={{color:cc(0)}}>{'   │  '}{g[0]}{'  │'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(1)}}>{'│  '}{g[1]}{'  │'}</span>{'\n'}
+      <span style={{color:cc(0)}}>{'   ╰─────╯'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(1)}}>{'╰─────╯'}</span>{'\n'}
+      <span style={{color:cc(2)}}>{'   ╭─────╮'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(3)}}>{'╭─────╮'}</span>{'\n'}
+      <span style={{color:cc(2)}}>{'   │  '}{g[2]}{'  │'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(3)}}>{'│  '}{g[3]}{'  │'}</span>{'\n'}
+      <span style={{color:cc(2)}}>{'   ╰─────╯'}</span><span style={{color:c.dim}}>{'  '}</span><span style={{color:cc(3)}}>{'╰─────╯'}</span>
+    </pre>
+  );
+}
+
+// ── Logo (Act 1 phase 1) ──────────────────────────────────────────────────
+const LOGO = [
+  "      _                  _  _____  ",
+  "     (_)_   _ _ __  __ _| ||___ /  ",
+  "  _   | | | | | '_ \\/ _` | |  |_ \\ ",
+  " | |_| | |_| | | | | (_| | | ___) |",
+  "  \\___/ \\__,_|_| |_|\\__, |_||____/ ",
+  "                      |___/         ",
+];
+
+function Logo({ speedMul, onDone }) {
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    if (shown >= LOGO.length) {
+      const t = setTimeout(() => onDone?.(), Math.round(500 / speedMul));
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setShown(n => n+1), Math.round(110 / speedMul));
+    return () => clearTimeout(t);
+  }, [shown, speedMul, onDone]);
+  return (
+    <div style={{ textAlign:'center', padding:'12px 0' }}>
+      <pre style={{ display:'inline-block', textAlign:'left', lineHeight:1.55 }}>
+        {LOGO.slice(0, shown).map((line, i) =>
+          <Grad key={i} bold>{line}{'\n'}</Grad>
+        )}
+      </pre>
+      {shown < LOGO.length && <div style={{ color:c.dim, marginTop:4 }}><span className="blink">█</span></div>}
+    </div>
+  );
+}
+
+// ── Act 1 ─────────────────────────────────────────────────────────────────
+const INIT_TASKS = [
+  'Vending Jungle','Provisioning Substrate','Seeding Understory',
+  'Wiring integrations','Opening operator console',
+].map(label => ({ label, state:'pending' }));
+
+function Act1({ speedMul, onComplete, teamName, onLog }) {
+  const [phase, setPhase] = useState('logo');
+  const [tasks, setTasks] = useState(INIT_TASKS.map(t => ({...t})));
+  const [payoff, setPayoff] = useState(false);
+  const cur = useRef(0);
+
+  const emit = useCallback(() => {
+    const e = act1Events[cur.current]; if (!e) return;
+    cur.current++;
+    onLog(e[0].replaceAll('{team}', teamName), e[1]);
+  }, [teamName, onLog]);
+
+  const setT = (i, state) => setTasks(p => p.map((t,j) => j===i ? {...t,state} : t));
+
+  const beats = useMemo(() => [
+    {durationMs:200, apply:()=>setT(0,'active')},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:260, apply:()=>setT(0,'done')},
+    {durationMs:180, apply:()=>setT(1,'active')},
+    {durationMs:200, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:260, apply:()=>setT(1,'done')},
+    {durationMs:180, apply:()=>setT(2,'active')},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:240, apply:()=>emit()},
+    {durationMs:260, apply:()=>setT(2,'done')},
+    {durationMs:180, apply:()=>setT(3,'active')},
+    {durationMs:260, apply:()=>emit()}, // warn
+    {durationMs:540, apply:()=>{}},
+    {durationMs:200, apply:()=>emit()},
+    {durationMs:200, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:260, apply:()=>setT(3,'done')},
+    {durationMs:180, apply:()=>setT(4,'active')},
+    {durationMs:200, apply:()=>emit()},
+    {durationMs:200, apply:()=>emit()},
+    {durationMs:220, apply:()=>emit()},
+    {durationMs:240, apply:()=>emit()},
+    {durationMs:260, apply:()=>setT(4,'done')},
+    {durationMs:600, apply:()=>{}},
+    {durationMs:200, apply:()=>setPayoff(true)},
+    {durationMs:260, apply:()=>emit()},
+    {durationMs:1300,apply:()=>{}},
+    {durationMs:150, apply:()=>{}},
+  ], [emit]);
+
+  useActRunner(beats, { speedMul, started: phase === 'scene', onComplete: phase === 'scene' ? onComplete : undefined });
+
+  if (phase === 'logo') return <Logo speedMul={speedMul} onDone={() => setPhase('scene')} />;
+
+  return (
+    <div style={{ display:'flex', gap:16 }}>
+      <div style={{ width:130, flexShrink:0 }}><Act1Glyph /></div>
+      <div style={{ flex:1 }}>
+        <div style={{ marginBottom:6 }}>
+          <Tracked>{`vending jungle · team ${teamName}`}</Tracked>
+        </div>
+        {tasks.map((t,i) => (
+          <div key={i} style={{ display:'flex', alignItems:'center', gap:8, marginBottom:2 }}>
+            <span style={{ width:16 }}>
+              {t.state==='pending' && <Dot />}
+              {t.state==='active'  && <Spinner color={c.live} />}
+              {t.state==='done'    && <Tick />}
+            </span>
+            <span style={{ color: t.state==='pending' ? c.dim : t.state==='done' ? c.done : c.body }}>
+              {t.label}
+            </span>
+          </div>
+        ))}
+        <div style={{ marginTop:10 }}>
+          {payoff
+            ? <TW text={`Jungle ${teamName} is alive.`} cps={26} speedMul={speedMul} grad bold />
+            : <span style={{color:c.dim}}> </span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Act 2 ─────────────────────────────────────────────────────────────────
+const KIND_SYM = { remove:'−', substitute:'~', extend:'+' };
+const KIND_COL = { remove:c.rare, substitute:c.label, extend:c.done };
+
+function Act2({ speedMul, onComplete, onLog }) {
+  const [rows, setRows] = useState(shapingMoves.map(m => ({ move:m, state:'pending' })));
+  const [payoff, setPayoff] = useState(false);
+  const cur = useRef(0);
+  const emit = useCallback(() => {
+    const e = act2Events[cur.current]; if (!e) return;
+    cur.current++;
+    onLog(e[0], e[1]);
+  }, [onLog]);
+  const setR = (i, state) => setRows(p => p.map((r,j) => j===i ? {...r,state} : r));
+
+  const beats = useMemo(() => [
+    {durationMs:260,apply:()=>setR(0,'applying')},
+    {durationMs:260,apply:()=>emit()},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:260,apply:()=>setR(0,'applied')},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:360,apply:()=>emit()},
+    {durationMs:500,apply:()=>{}},
+    {durationMs:260,apply:()=>setR(1,'applying')},
+    {durationMs:260,apply:()=>emit()},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:260,apply:()=>setR(1,'applied')},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:360,apply:()=>emit()},
+    {durationMs:500,apply:()=>{}},
+    {durationMs:260,apply:()=>setR(2,'applying')},
+    {durationMs:260,apply:()=>emit()},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:260,apply:()=>setR(2,'applied')},
+    {durationMs:320,apply:()=>emit()},
+    {durationMs:360,apply:()=>emit()},
+    {durationMs:600,apply:()=>{}},
+    {durationMs:240,apply:()=>setPayoff(true)},
+    {durationMs:280,apply:()=>emit()},
+    {durationMs:1300,apply:()=>{}},
+    {durationMs:150,apply:()=>{}},
+  ], [emit]);
+
+  useActRunner(beats, { speedMul, onComplete });
+
+  return (
+    <div style={{ display:'flex', gap:16 }}>
+      <div style={{ width:100, flexShrink:0, paddingTop:8 }}><Act2Glyph /></div>
+      <div style={{ flex:1 }}>
+        <div style={{ marginBottom:8 }}><Tracked>shaping understory</Tracked></div>
+        {rows.map((row, i) => {
+          const { move, state } = row;
+          return (
+            <div key={i} style={{ marginBottom:7 }}>
+              <div style={{ display:'flex', gap:6, alignItems:'center' }}>
+                <span style={{ width:16 }}>
+                  {state==='pending'  && <Dot />}
+                  {state==='applying' && <Spinner color={c.live} />}
+                  {state==='applied'  && <Tick />}
+                </span>
+                <span style={{ color:KIND_COL[move.kind], fontWeight:700, width:16 }}>{KIND_SYM[move.kind]}</span>
+                <span style={{ color: state==='pending' ? c.dim : c.body }}>{move.label}</span>
+              </div>
+              {state==='applied' && (
+                <div style={{ paddingLeft:38, marginTop:2 }}>
+                  {move.diff.map((d,j) => {
+                    const col = d[0]==='+' ? c.done : d[0]==='-' ? c.rare : c.label;
+                    return <span key={j}><span style={{color:col}}>{d}</span>{j<move.diff.length-1 && <span style={{color:c.dim}}>  ·  </span>}</span>;
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+        <div style={{ marginTop:4 }}>
+          {payoff
+            ? <TW text="System stayed alive through 3 hot reloads." cps={26} speedMul={speedMul} grad bold />
+            : <span style={{color:c.dim}}> </span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Act 3 ─────────────────────────────────────────────────────────────────
+function PersonaLine({ persona, row, ember, speedMul }) {
+  const ms = Math.max(60, Math.round(600 * speedMul));
+  const sess = useEasedNumber(row.sessionsTarget, ms);
+  const defs = useEasedNumber(row.defectsTarget, ms);
+  const defCol = ember ? c.rare : defs > 0 ? c.label : c.dim;
+  const stateCols = { idle:c.dim, probing:c.live, reporting:c.label, done:c.done };
+  return (
+    <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:3 }}>
+      <span style={{ width:16 }}>
+        {row.state==='idle'      && <Dot />}
+        {row.state==='probing'   && <Spinner color={c.live} />}
+        {row.state==='reporting' && <span style={{color:c.label}}>›</span>}
+        {row.state==='done'      && <Tick />}
+      </span>
+      <span style={{ width:100, color: row.state==='idle' ? c.dim : c.body }}>{persona.role}</span>
+      <span style={{ width:80,  color: stateCols[row.state] }}>{row.state}</span>
+      <span style={{ width:62,  color: c.muted }}>{String(sess).padStart(2,' ')} sess</span>
+      <span style={{ color:defCol, fontWeight:ember?700:400, width:82 }}>{String(defs).padStart(2,' ')} defect{defs===1?'':'s'}</span>
+      <span style={{ fontSize:11, color: row.state==='done' ? c.done : c.dim }}>
+        {row.state==='done' ? `■ 0 critical · ${persona.defects} minor` : ''}
+      </span>
+    </div>
+  );
+}
+
+function DefectTrace({ persona, visible }) {
+  if (!visible) return null;
+  return (
+    <div style={{ marginLeft:16, fontSize:11, color:c.muted, lineHeight:1.55 }}>
+      <span style={{color:c.dim}}>↳ </span>
+      <span style={{color:c.rare}}>!</span>
+      <span style={{color:c.dim}}> trace</span>
+      <span style={{color:c.dim}}>: </span>
+      <span style={{color:c.body}}>{persona.trace}</span>
+    </div>
+  );
+}
+
+function Act3({ speedMul, onComplete, onLog }) {
+  const [rows, setRows] = useState(personas.map(() => ({ state:'idle', sessionsTarget:0, defectsTarget:0 })));
+  const [active, setActive] = useState(-1);
+  const [ember, setEmber] = useState(-1);
+  const [payoff, setPayoff] = useState(false);
+  const cur = useRef(0);
+  const emit = useCallback(() => {
+    const e = act3Events[cur.current]; if (!e) return;
+    cur.current++;
+    onLog(e[0], e[1]);
+  }, [onLog]);
+  const setRow = (i, patch) => setRows(p => p.map((r,j) => j===i ? {...r,...patch} : r));
+
+  const beats = useMemo(() => {
+    const out = [];
+    out.push({durationMs:300,apply:()=>emit()});
+    out.push({durationMs:360,apply:()=>emit()});
+    out.push({durationMs:400,apply:()=>{}});
+    personas.forEach((p, i) => {
+      out.push({durationMs:280,apply:()=>{ setActive(i); setRow(i,{state:'probing',sessionsTarget:p.sessions}); }});
+      out.push({durationMs:340,apply:()=>emit()});
+      out.push({durationMs:600,apply:()=>{}});
+      out.push({durationMs:280,apply:()=>{ setRow(i,{state:'reporting',defectsTarget:p.defects}); if(i===0) setEmber(0); }});
+      out.push({durationMs:340,apply:()=>emit()});
+      out.push({durationMs:280,apply:()=>{ if(i===0) setEmber(-1); }});
+      out.push({durationMs:320,apply:()=>setRow(i,{state:'done'})});
+      out.push({durationMs:280,apply:()=>{}});
+    });
+    out.push({durationMs:360,apply:()=>{ setActive(-1); emit(); }});
+    out.push({durationMs:500,apply:()=>{}});
+    out.push({durationMs:240,apply:()=>setPayoff(true)});
+    out.push({durationMs:320,apply:()=>emit()});
+    out.push({durationMs:1300,apply:()=>{}});
+    out.push({durationMs:150,apply:()=>{}});
+    return out;
+  }, [emit]);
+
+  useActRunner(beats, { speedMul, onComplete });
+
+  return (
+    <div style={{ display:'flex', gap:16 }}>
+      <div style={{ width:120, flexShrink:0, paddingTop:4 }}><Act3Glyph active={active} /></div>
+      <div style={{ flex:1 }}>
+        <div style={{ marginBottom:8 }}><Tracked>dmz evaluation · 4 seeded personas</Tracked></div>
+        {rows.map((row, i) => (
+          <PersonaLine key={i} persona={personas[i]} row={row} ember={ember===i} speedMul={speedMul} />
+        ))}
+        <div style={{ marginTop:8 }}>
+          {payoff
+            ? <>
+                <TW text="DMZ gates: 2 of 2 passed · 6 defects · 0 critical." cps={26} speedMul={speedMul} grad bold />
+                <PromotionGate speedMul={speedMul} />
+              </>
+            : <span style={{color:c.dim}}> </span>}
+        </div>
+        {rows.some(r => r.state === 'done') && (
+          <div style={{ marginTop:6 }}>
+            {rows.map((r, i) => <DefectTrace key={i} persona={personas[i]} visible={r.state==='done'} />)}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Act 4 ─────────────────────────────────────────────────────────────────
+function GalleryTile({ teamName }) {
+  const pulse = usePulse();
+  const star = pulse ? c.done : c.label;
+  const name = teamName.slice(0, 12).padEnd(12, ' ');
+  const W = 32;
+  const bar = '─'.repeat(W);
+  return (
+    <pre style={{ lineHeight:1.55, color:c.done }}>
+      {'╭'}{bar}{'╮'}{'\n'}
+      {'│ '}<span style={{color:c.body, fontWeight:700}}>{'Claims Intake · '}{name}</span>{'│'}{'\n'}
+      {'│ '}<span style={{color:c.muted}}>{'FNOL → settlement · 3 flows      '}</span>{'│'}{'\n'}
+      {'│ '}<span style={{color:c.label}}>{'healthy · 47 tests passing       '}</span>{'│'}{'\n'}
+      {'│ '}<span style={{color:c.muted}}>{'──────────────────────── '}</span><span style={{color:star}}>{'★'}</span>{'  │'}{'\n'}
+      {'╰'}{bar}{'╯'}
+    </pre>
+  );
+}
+
+function Counter({ value, durationMs }) {
+  const v = useEasedNumber(value, durationMs);
+  return <span style={{ color:c.done, fontWeight:700, fontSize:'1.1em' }}>{v}</span>;
+}
+
+function Act4({ speedMul, onComplete, teamName, onLog }) {
+  const [tileVisible, setTileVisible] = useState(false);
+  const [shownVisitors, setShownVisitors] = useState(0);
+  const [showSummary, setShowSummary] = useState(false);
+  const [showPayoff, setShowPayoff] = useState(false);
+  const cur = useRef(0);
+  const emit = useCallback(() => {
+    const e = act4Events[cur.current]; if (!e) return;
+    cur.current++;
+    onLog(e[0].replaceAll('{team}', teamName), e[1]);
+  }, [teamName, onLog]);
+
+  const beats = useMemo(() => {
+    const b = [];
+    b.push({durationMs:340,apply:()=>emit()});
+    b.push({durationMs:320,apply:()=>emit()});
+    b.push({durationMs:200,apply:()=>setTileVisible(true)});
+    b.push({durationMs:500,apply:()=>{}});
+    b.push({durationMs:280,apply:()=>emit()});
+    visitors.forEach((v, i) => {
+      b.push({durationMs:320,apply:()=>{ setShownVisitors(i+1); emit(); }});
+      b.push({durationMs:340,apply:()=>emit()});
+      b.push({durationMs:360,apply:()=>{}});
+    });
+    b.push({durationMs:400,apply:()=>setShowSummary(true)});
+    b.push({durationMs:800,apply:()=>{}});
+    b.push({durationMs:240,apply:()=>setShowPayoff(true)});
+    b.push({durationMs:320,apply:()=>emit()});
+    b.push({durationMs:1300,apply:()=>{}});
+    b.push({durationMs:150,apply:()=>{}});
+    return b;
+  }, [emit]);
+
+  useActRunner(beats, { speedMul, onComplete });
+
+  return (
+    <div style={{ display:'flex', gap:16, alignItems:'flex-start' }}>
+      <div style={{ flexShrink:0 }}>
+        <div style={{ marginBottom:4 }}><Tracked>canopy · gallery</Tracked></div>
+        {tileVisible
+          ? <GalleryTile teamName={teamName} />
+          : <div style={{ height:96 }} />}
+      </div>
+      <div style={{ flex:1 }}>
+        <div style={{ marginBottom:6 }}><Tracked>visitors</Tracked></div>
+        <div style={{ minHeight:62 }}>
+          {visitors.slice(0, shownVisitors).map((v, i) => (
+            <div key={i} style={{ display:'flex', gap:10, marginBottom:2 }}>
+              <span style={{ width:78, color:c.muted }}>{v.role}</span>
+              <span style={{ width:100,color:c.body }}>{v.name}</span>
+              <span style={{ width:44, color:c.muted }}>{v.sessionTime}</span>
+              <Stars n={v.stars} />
+            </div>
+          ))}
+        </div>
+        {showSummary && (
+          <div style={{ marginTop:6 }}>
+            <div><Grad><Tracked>sprint summary</Tracked></Grad></div>
+            <div style={{ display:'flex', gap:28, marginTop:4, marginBottom:4 }}>
+              {[['moves',3],['dmz',1],['visits',3]].map(([label, val]) => (
+                <div key={label}>
+                  <Counter value={val} durationMs={700} />
+                  <div style={{ color:c.dim }}>{label}</div>
+                </div>
+              ))}
+            </div>
+            <IntegrationContract teamName={teamName} />
+            {showPayoff && (
+              <div style={{ marginTop:4 }}>
+                <TW text={`Jungle ${teamName} · sprint complete · contract published.`} cps={26} speedMul={speedMul} color={c.body} bold />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// EXPANSIONS — Act 0, Multi-Jungle, Act 5, Operator Console, enhancements
+// ═══════════════════════════════════════════════════════════════════════
+
+// ── Act 0: Marketplace Install ─────────────────────────────────────────
+const act0Events = [
+  ['aws-marketplace: subscription confirmed · product=jungl3-control-plane', 'body'],
+  ['iam: creating cross-account role JungleControlPlaneRole', 'body'],
+  ['cfn: jungl3-cp stack CREATE_IN_PROGRESS', 'body'],
+  ['cfn: vpc + private subnets created', 'body'],
+  ['cfn: ecs cluster jungl3-cp online', 'body'],
+  ['cfn: api-gateway endpoint provisioned', 'body'],
+  ['cfn: rds postgres (cp-state) accepting connections', 'body'],
+  ['cfn: stack CREATE_COMPLETE · 4m 18s', 'body'],
+  ['control-plane: healthy · region us-east-1 · account {account}', 'body'],
+  ['control-plane: ready to vend jungles', 'highlight'],
+];
+const INSTALL_TASKS = [
+  'AWS Marketplace subscribe',
+  'Deploy CloudFormation stack',
+  'Provision Control Plane VPC',
+  'Start jungl3-cp ECS cluster',
+  'Open API gateway',
+].map(label => ({ label, state:'pending' }));
+
+function CfnProgress({ pct }) {
+  const W = 32;
+  const filled = Math.floor(W * pct / 100);
+  return (
+    <span>
+      <span style={{color:c.done}}>{'█'.repeat(filled)}</span>
+      <span style={{color:c.dim}}>{'░'.repeat(W - filled)}</span>
+      <span style={{color:c.muted}}>{' '}{String(pct).padStart(3,' ')}%</span>
+    </span>
+  );
+}
+
+function Act0({ speedMul, onComplete, onLog }) {
+  const [tasks, setTasks] = useState(INSTALL_TASKS.map(t => ({...t})));
+  const [pct, setPct] = useState(0);
+  const [payoff, setPayoff] = useState(false);
+  const cur = useRef(0);
+  const emit = useCallback(() => {
+    const e = act0Events[cur.current]; if (!e) return;
+    cur.current++;
+    onLog(e[0].replaceAll('{account}','123456789012'), e[1]);
+  }, [onLog]);
+  const setT = (i, state) => setTasks(p => p.map((t,j) => j===i ? {...t,state} : t));
+
+  const beats = useMemo(() => [
+    {durationMs:250, apply:()=>setT(0,'active')},
+    {durationMs:280, apply:()=>emit()},
+    {durationMs:240, apply:()=>setT(0,'done')},
+    {durationMs:200, apply:()=>setT(1,'active')},
+    {durationMs:260, apply:()=>emit()},
+    {durationMs:220, apply:()=>setPct(12)},
+    {durationMs:260, apply:()=>emit()},
+    {durationMs:220, apply:()=>setPct(28)},
+    {durationMs:260, apply:()=>setT(1,'done')},
+    {durationMs:200, apply:()=>setT(2,'active')},
+    {durationMs:260, apply:()=>emit()},
+    {durationMs:240, apply:()=>setPct(48)},
+    {durationMs:240, apply:()=>setT(2,'done')},
+    {durationMs:200, apply:()=>setT(3,'active')},
+    {durationMs:260, apply:()=>emit()},
+    {durationMs:220, apply:()=>setPct(68)},
+    {durationMs:260, apply:()=>emit()},
+    {durationMs:220, apply:()=>setPct(86)},
+    {durationMs:240, apply:()=>setT(3,'done')},
+    {durationMs:200, apply:()=>setT(4,'active')},
+    {durationMs:260, apply:()=>emit()},
+    {durationMs:220, apply:()=>setPct(100)},
+    {durationMs:260, apply:()=>emit()},
+    {durationMs:240, apply:()=>setT(4,'done')},
+    {durationMs:600, apply:()=>{}},
+    {durationMs:240, apply:()=>setPayoff(true)},
+    {durationMs:280, apply:()=>emit()},
+    {durationMs:1200, apply:()=>{}},
+  ], [emit]);
+  useActRunner(beats, { speedMul, onComplete });
+
+  return (
+    <div style={{ display:'flex', gap:18 }}>
+      <div style={{ width:180, flexShrink:0, paddingTop:4 }}>
+        <pre style={{ lineHeight:1.35, fontSize:11 }}>
+          <span style={{color:c.dim}}>{' your aws account       '}</span>{'\n'}
+          <span style={{color:c.done}}>{'╭───────────────────╮'}</span>{'\n'}
+          <span style={{color:c.done}}>{'│ '}</span><span style={{color:c.label,fontWeight:700}}>{'aws marketplace  '}</span><span style={{color:c.done}}>{'│'}</span>{'\n'}
+          <span style={{color:c.done}}>{'│ '}</span><span style={{color:c.muted}}>{'jungl3-control-plane'.padEnd(17)}</span><span style={{color:c.done}}>{'│'}</span>{'\n'}
+          <span style={{color:c.done}}>{'╰─────────┬─────────╯'}</span>{'\n'}
+          <span style={{color:c.live}}>{'          │ subscribe'}</span>{'\n'}
+          <span style={{color:c.live}}>{'          ▼'}</span>{'\n'}
+          <span style={{color: pct>0 ? c.done : c.dim}}>{'╭───────────────────╮'}</span>{'\n'}
+          <span style={{color: pct>0 ? c.done : c.dim}}>{'│ '}</span><span style={{color: pct>0 ? c.label : c.dim, fontWeight:700}}>{'cloudformation   '}</span><span style={{color: pct>0 ? c.done : c.dim}}>{'│'}</span>{'\n'}
+          <span style={{color: pct>0 ? c.done : c.dim}}>{'│ '}</span><span style={{color:c.muted}}>{('jungl3-cp ' + String(pct).padStart(3,' ') + '%').padEnd(17)}</span><span style={{color: pct>0 ? c.done : c.dim}}>{'│'}</span>{'\n'}
+          <span style={{color: pct>0 ? c.done : c.dim}}>{'╰─────────┬─────────╯'}</span>{'\n'}
+          <span style={{color: pct>=100 ? c.live : c.dim}}>{'          │ provision'}</span>{'\n'}
+          <span style={{color: pct>=100 ? c.live : c.dim}}>{'          ▼'}</span>{'\n'}
+          <span style={{color: payoff ? c.label : c.dim}}>{'╭═══════════════════╮'}</span>{'\n'}
+          <span style={{color: payoff ? c.label : c.dim}}>{'║ '}</span><span style={{color: payoff ? c.grad1 : c.dim, fontWeight:700}}>{'control plane    '}</span><span style={{color: payoff ? c.label : c.dim}}>{'║'}</span>{'\n'}
+          <span style={{color: payoff ? c.label : c.dim}}>{'║ '}</span><span style={{color: payoff ? c.done : c.dim}}>{(payoff ? '● online' : '○ pending').padEnd(17)}</span><span style={{color: payoff ? c.label : c.dim}}>{'║'}</span>{'\n'}
+          <span style={{color: payoff ? c.label : c.dim}}>{'╰═══════════════════╯'}</span>
+        </pre>
+      </div>
+      <div style={{ flex:1 }}>
+        <div style={{ marginBottom:6 }}><Tracked>installing · jungl3 control plane</Tracked></div>
+        {tasks.map((t,i) => (
+          <div key={i} style={{ display:'flex', alignItems:'center', gap:8, marginBottom:2 }}>
+            <span style={{ width:16 }}>
+              {t.state==='pending' && <Dot />}
+              {t.state==='active'  && <Spinner color={c.live} />}
+              {t.state==='done'    && <Tick />}
+            </span>
+            <span style={{ color: t.state==='pending' ? c.dim : t.state==='done' ? c.done : c.body }}>
+              {t.label}
+            </span>
+          </div>
+        ))}
+        <div style={{ marginTop:8, fontSize:12 }}>
+          <span style={{color:c.dim}}>{'cfn stack  '}</span><CfnProgress pct={pct} />
+        </div>
+        <div style={{ marginTop:10 }}>
+          {payoff
+            ? <TW text="Control Plane installed. Ready to vend jungles." cps={26} speedMul={speedMul} grad bold />
+            : <span style={{color:c.dim}}> </span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Multi-Jungle Control Plane View (interstitial) ─────────────────────
+const OTHER_TEAMS = [
+  { name:'nova',   act:1, status:'vending',    pct:34 },
+  { name:'delta',  act:3, status:'probing',    pct:72 },
+  { name:'ember',  act:2, status:'shaping',    pct:51 },
+];
+
+function JungleGlyph({ state, mine }) {
+  const col = state === 'queued' ? c.dim
+            : state === 'vending' ? c.live
+            : state === 'shaping' ? c.label
+            : state === 'probing' ? c.done
+            : c.muted;
+  return (
+    <pre style={{ display:'inline-block', lineHeight:1.1, fontSize:10, color:col, fontWeight: mine?700:400, margin:0 }}>
+      {state==='queued'  && "· · ·\n · · \n· · ·"}
+      {state==='vending' && "▒ ▒ ▒\n░ ▓ ░\n▒ ▒ ▒"}
+      {state==='shaping' && "♠ ♣ ♠\n ╎ ╎ \n╌╌╌╌╌"}
+      {state==='probing' && "○─○─○\n│ ▲ │\n○─○─○"}
+    </pre>
+  );
+}
+
+function MultiJungle({ teamName, onContinue }) {
+  const [phase, setPhase] = useState(0);
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase(1), 1400);
+    const t2 = setTimeout(() => onContinue?.(), 3200);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [onContinue]);
+
+  const statusCol = { vending:c.live, shaping:c.label, probing:c.done, queued:c.dim };
+  const mine = { name:teamName, act:0, status:'queued', pct:0 };
+  const rows = [mine, ...OTHER_TEAMS];
+
+  return (
+    <div style={{ padding:'8px 0' }}>
+      <div style={{ display:'flex', alignItems:'baseline', gap:12, marginBottom:12 }}>
+        <Tracked>control plane · us-east-1</Tracked>
+        <span style={{ color:c.dim, fontSize:11 }}>·</span>
+        <span style={{ color:c.muted, fontSize:11 }}>{rows.length} active jungles · 1 queued</span>
+        <span style={{ flex:1 }} />
+        <span style={{ color:c.done, fontSize:11 }}>●</span>
+        <span style={{ color:c.dim, fontSize:11 }}>healthy</span>
+      </div>
+      <div style={{ fontSize:12 }}>
+        <div style={{ display:'flex', color:c.dim, marginBottom:6, borderBottom:`1px solid ${c.dim}33`, paddingBottom:3, textTransform:'uppercase', letterSpacing:1, fontSize:10 }}>
+          <span style={{ width:22 }} />
+          <span style={{ width:54 }}>glyph</span>
+          <span style={{ width:118 }}>jungle</span>
+          <span style={{ width:52 }}>act</span>
+          <span style={{ width:92 }}>status</span>
+          <span style={{ width:260 }}>progress</span>
+        </div>
+        {rows.map((r, i) => {
+          const isMine = r.name === teamName;
+          return (
+            <div key={i} style={{ display:'flex', alignItems:'center', marginBottom:6, color: isMine ? c.body : c.muted, background: isMine ? '#0a1a0f' : 'transparent', padding: isMine ? '2px 0' : 0 }}>
+              <span style={{ width:22, textAlign:'center' }}>
+                {isMine ? <span style={{color:c.grad1, fontWeight:700}}>▸</span> : <span style={{color:c.dim}}>·</span>}
+              </span>
+              <span style={{ width:54 }}><JungleGlyph state={r.status} mine={isMine} /></span>
+              <span style={{ width:118, fontWeight: isMine?700:400 }}>jungle-{r.name}</span>
+              <span style={{ width:52, color:c.dim }}>{r.act === 0 ? '—' : `act ${r.act}`}</span>
+              <span style={{ width:92, color: statusCol[r.status] }}>{r.status}</span>
+              <span style={{ width:260 }}><CfnProgress pct={r.pct} /></span>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ marginTop:18, paddingTop:10, borderTop:`1px solid ${c.dim}22` }}>
+        {phase === 1
+          ? <TW text={`› vending jungle-${teamName} on control plane…`} cps={28} speedMul={1} grad bold />
+          : <span style={{color:c.dim}}><span className="blink">█</span> initializing control plane view…</span>}
+      </div>
+    </div>
+  );
+}
+
+// ── Act 3 Enhancement: Promotion Gate screen ────────────────────────────
+function PromotionGate({ speedMul }) {
+  const [phase, setPhase] = useState(0);
+  useEffect(() => {
+    const ts = [
+      setTimeout(() => setPhase(1), 300),
+      setTimeout(() => setPhase(2), 700),
+      setTimeout(() => setPhase(3), 1100),
+      setTimeout(() => setPhase(4), 1500),
+      setTimeout(() => setPhase(5), 2000),
+    ];
+    return () => ts.forEach(clearTimeout);
+  }, []);
+  const rows = [
+    ['zero critical defects',         '0/0'],
+    ['fnol flow · 100% traversal',    '4/4'],
+    ['a11y score ≥ 95',               '97'],
+    ['maker-checker · non-bypassable','ok'],
+  ];
+  const allDone = phase > rows.length;
+  return (
+    <div style={{ marginTop:12, paddingLeft:0 }}>
+      <div style={{ display:'flex', alignItems:'baseline', gap:8, marginBottom:6 }}>
+        <span style={{ color:c.label, fontWeight:700, letterSpacing:1, fontSize:11, textTransform:'uppercase' }}>promotion gate</span>
+        <span style={{ color:c.dim, fontSize:10 }}>— must pass to reach canopy</span>
+      </div>
+      <div style={{ border:`1px solid ${c.moss}`, padding:'6px 10px', background:'#08130b', maxWidth:460 }}>
+        {rows.map(([label, metric], i) => (
+          <div key={i} style={{ display:'flex', gap:8, alignItems:'center', marginBottom:3, fontSize:12 }}>
+            <span style={{ width:14 }}>{phase > i ? <Tick /> : <Dot />}</span>
+            <span style={{ color: phase > i ? c.body : c.dim, flex:1 }}>{label}</span>
+            <span style={{ color: phase > i ? c.muted : c.dim, fontSize:11, fontFamily:'monospace' }}>{metric}</span>
+            <span style={{ color: phase > i ? c.done : c.dim, fontSize:10, fontWeight:700, width:36, textAlign:'right' }}>
+              {phase > i ? 'PASS' : '—'}
+            </span>
+          </div>
+        ))}
+        {allDone && (
+          <div style={{ marginTop:6, paddingTop:6, borderTop:`1px dashed ${c.moss}`, display:'flex', alignItems:'center', gap:10 }}>
+            <pre style={{ color:c.done, lineHeight:1.0, fontSize:10, margin:0 }}>
+              {'╭───╮\n│ ✓ │\n╰───╯'}
+            </pre>
+            <div>
+              <div style={{ color:c.grad1, fontWeight:700, fontSize:12, letterSpacing:1 }}>PROMOTED</div>
+              <div style={{ color:c.dim, fontSize:10 }}>signed · jungl3-cp · {new Date().toISOString().slice(0,10)}</div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Act 5: Maker-Checker Live Workflow ──────────────────────────────────
+const act5Events = [
+  ['intake: FNOL-2024-0917 received · auto total $7,420', 'body'],
+  ['policy-api: coverage verified · comprehensive · limit $25,000', 'body'],
+  ['adjuster: casey assigned · triage complete', 'body'],
+  ['adjuster: settlement proposed · $12,450 (parts + labor)', 'body'],
+  ['workflow: threshold $10,000 exceeded · checker required', 'highlight'],
+  ['iam: CheckerAboveThreshold evaluated for user casey → deny (maker)', 'body'],
+  ['notify: jordan paged as checker · 18s response', 'body'],
+  ['checker: jordan reviewing · parts quote validated', 'body'],
+  ['checker: approval granted · rationale logged', 'body'],
+  ['payments-api: disbursement queued · $12,450 to policyholder', 'body'],
+  ['claim FNOL-2024-0917 · settled under maker-checker · audit trail sealed', 'highlight'],
+];
+
+function Act5({ speedMul, onComplete, teamName, onLog }) {
+  const [stage, setStage] = useState(0); // 0 intake, 1 maker, 2 threshold, 3 checker, 4 settled
+  const [amount, setAmount] = useState(0);
+  const [thresholdFlash, setThresholdFlash] = useState(false);
+  const [payoff, setPayoff] = useState(false);
+  const cur = useRef(0);
+  const emit = useCallback(() => {
+    const e = act5Events[cur.current]; if (!e) return;
+    cur.current++;
+    onLog(e[0], e[1]);
+  }, [onLog]);
+  const amt = useEasedNumber(amount, 700);
+
+  const beats = useMemo(() => [
+    {durationMs:300, apply:()=>setStage(1)},
+    {durationMs:320, apply:()=>emit()},
+    {durationMs:320, apply:()=>emit()},
+    {durationMs:280, apply:()=>emit()},
+    {durationMs:280, apply:()=>{ setAmount(12450); emit(); }},
+    {durationMs:500, apply:()=>{}},
+    {durationMs:240, apply:()=>{ setStage(2); setThresholdFlash(true); emit(); }},
+    {durationMs:400, apply:()=>setThresholdFlash(false)},
+    {durationMs:280, apply:()=>emit()},
+    {durationMs:320, apply:()=>{ setStage(3); emit(); }},
+    {durationMs:320, apply:()=>emit()},
+    {durationMs:360, apply:()=>emit()},
+    {durationMs:320, apply:()=>{ setStage(4); emit(); }},
+    {durationMs:600, apply:()=>{}},
+    {durationMs:240, apply:()=>setPayoff(true)},
+    {durationMs:320, apply:()=>emit()},
+    {durationMs:1300, apply:()=>{}},
+  ], [emit]);
+  useActRunner(beats, { speedMul, onComplete });
+
+  const roleCol = (who, active) => active ? c.label : c.dim;
+
+  return (
+    <div style={{ display:'flex', gap:16 }}>
+      <div style={{ width:140, flexShrink:0 }}>
+        <pre style={{ lineHeight:1.5, fontSize:12 }}>
+          <span style={{color: stage>=1 ? c.done : c.dim}}>{'  ┌──────────┐'}</span>{'\n'}
+          <span style={{color: stage>=1 ? c.done : c.dim}}>{'  │ '}</span><span style={{color: roleCol('maker', stage>=1 && stage<=2)}}>{'maker   '}</span><span style={{color: stage>=1 ? c.done : c.dim}}>{'│'}</span>{'\n'}
+          <span style={{color: stage>=1 ? c.done : c.dim}}>{'  │ '}</span><span style={{color: c.muted}}>{'casey   '}</span><span style={{color: stage>=1 ? c.done : c.dim}}>{'│'}</span>{'\n'}
+          <span style={{color: stage>=1 ? c.done : c.dim}}>{'  └────┬─────┘'}</span>{'\n'}
+          <span style={{color: stage>=2 ? c.rare : c.dim}}>{'       │ '}</span><span style={{ color: thresholdFlash ? c.rare : stage>=2 ? c.label : c.dim, fontWeight: thresholdFlash?700:400 }}>{'> $10k'}</span>{'\n'}
+          <span style={{color: stage>=3 ? c.done : c.dim}}>{'  ┌────┴─────┐'}</span>{'\n'}
+          <span style={{color: stage>=3 ? c.done : c.dim}}>{'  │ '}</span><span style={{color: roleCol('checker', stage>=3 && stage<=3)}}>{'checker '}</span><span style={{color: stage>=3 ? c.done : c.dim}}>{'│'}</span>{'\n'}
+          <span style={{color: stage>=3 ? c.done : c.dim}}>{'  │ '}</span><span style={{color: c.muted}}>{'jordan  '}</span><span style={{color: stage>=3 ? c.done : c.dim}}>{'│'}</span>{'\n'}
+          <span style={{color: stage>=3 ? c.done : c.dim}}>{'  └──────────┘'}</span>
+        </pre>
+      </div>
+      <div style={{ flex:1 }}>
+        <div style={{ marginBottom:8 }}><Tracked>claim FNOL-2024-0917 · settlement workflow</Tracked></div>
+        <div style={{ fontSize:12, lineHeight:1.8 }}>
+          <div style={{ display:'flex', gap:8 }}>
+            <span style={{ width:110, color:c.dim }}>policy</span>
+            <span style={{ color: stage>=1 ? c.body : c.dim }}>comprehensive · limit $25,000</span>
+          </div>
+          <div style={{ display:'flex', gap:8 }}>
+            <span style={{ width:110, color:c.dim }}>proposed</span>
+            <span style={{ color: stage>=1 ? c.body : c.dim, fontWeight:700 }}>${amt.toLocaleString()}</span>
+          </div>
+          <div style={{ display:'flex', gap:8 }}>
+            <span style={{ width:110, color:c.dim }}>threshold</span>
+            <span style={{ color: thresholdFlash ? c.rare : stage>=2 ? c.label : c.dim, fontWeight: thresholdFlash?700:400 }}>
+              $10,000 {stage>=2 ? '· EXCEEDED' : ''}
+            </span>
+          </div>
+          <div style={{ display:'flex', gap:8 }}>
+            <span style={{ width:110, color:c.dim }}>checker</span>
+            <span style={{ color: stage>=3 ? c.body : c.dim }}>{stage>=4 ? 'jordan · approved (18s)' : stage>=3 ? 'jordan · reviewing' : '—'}</span>
+          </div>
+          <div style={{ display:'flex', gap:8 }}>
+            <span style={{ width:110, color:c.dim }}>status</span>
+            <span style={{ color: stage>=4 ? c.done : c.dim, fontWeight: stage>=4?700:400 }}>{stage>=4 ? 'SETTLED · audit sealed' : 'pending'}</span>
+          </div>
+        </div>
+        <div style={{ marginTop:10 }}>
+          {payoff
+            ? <TW text="Maker-checker: non-bypassable. Audit trail sealed." cps={26} speedMul={speedMul} grad bold />
+            : <span style={{color:c.dim}}> </span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Integration Contract (Act 4 addon) ──────────────────────────────────
+function IntegrationContract({ teamName }) {
+  const [shown, setShown] = useState(0);
+  const rows = [
+    ['name',         `jungle-${teamName}/claims-intake`],
+    ['version',      '0.1.0'],
+    ['health',       'GET /health → 200 · <200ms p95'],
+    ['personas',     'analyst · policyholder · auditor · adjuster'],
+    ['telemetry',    'OTLP → canopy/observability'],
+    ['auth',         'cognito-pool / jungl3-visitors'],
+    ['sla',          '99.5% · 30 days'],
+  ];
+  useEffect(() => {
+    if (shown >= rows.length) return;
+    const t = setTimeout(() => setShown(n => n+1), 140);
+    return () => clearTimeout(t);
+  }, [shown]);
+  const W = 56;
+  const hr = '─'.repeat(W);
+  return (
+    <div style={{ marginTop:6, fontSize:11 }}>
+      <pre style={{ color:c.moss, lineHeight:1.4, margin:0 }}>
+        <span>{'╭'}{hr}{'╮'}</span>{'\n'}
+        <span>{'│ '}</span>
+        <span style={{color:c.grad1, fontWeight:700, letterSpacing:2}}>{'INTEGRATION CONTRACT'}</span>
+        <span style={{color:c.dim}}>{'  v1'}</span>
+        <span style={{color:c.moss}}>{'                     │'}</span>{'\n'}
+        <span>{'├'}{hr}{'┤'}</span>
+      </pre>
+      <div style={{ border:`1px solid ${c.moss}`, borderTop:'none', padding:'4px 10px', background:'#08130b', maxWidth:520 }}>
+        {rows.slice(0, shown).map(([k, v], i) => (
+          <div key={i} style={{ display:'flex', gap:8, marginBottom:1 }}>
+            <span style={{ width:70, color:c.dim, textTransform:'uppercase', fontSize:10, letterSpacing:1 }}>{k}</span>
+            <span style={{ color: i===0 ? c.body : c.muted, fontWeight: i===0?700:400 }}>{v}</span>
+          </div>
+        ))}
+        {shown >= rows.length && (
+          <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:4, paddingTop:4, borderTop:`1px dashed ${c.moss}` }}>
+            <span style={{ color:c.done, fontSize:10 }}>◆ sealed</span>
+            <span style={{ color:c.dim, fontSize:10 }}>sha256:</span>
+            <span style={{ color:c.muted, fontSize:10, fontFamily:'monospace' }}>7e1a…b4c2</span>
+            <span style={{ flex:1 }} />
+            <span style={{ color:c.label, fontSize:10 }}>published → canopy</span>
+          </div>
+        )}
+      </div>
+      <pre style={{ color:c.moss, lineHeight:1.4, margin:0 }}>
+        {'╰'}{hr}{'╯'}
+      </pre>
+    </div>
+  );
+}
+
+// ── Operator Console ────────────────────────────────────────────────────
+const OP_HELP = [
+  ['jungle list',                   'show all active jungles'],
+  ['jungle status <name>',          'health + act progress'],
+  ['jungle logs <name> --tail',     'stream recent events'],
+  ['jungle teardown <name>',        'deallocate a jungle'],
+  ['gallery list',                  'browse Canopy gallery'],
+  ['help',                          'show this help'],
+  ['clear',                         'clear the screen'],
+];
+
+function OperatorConsole({ teamName }) {
+  const [banner, setBanner] = useState(0);
+  const [history, setHistory] = useState([]);
+  const [input, setInput] = useState('');
+  const [cmdHistory, setCmdHistory] = useState([]);
+  const [histIdx, setHistIdx] = useState(-1);
+  const inputRef = useRef(null);
+  const scrollRef = useRef(null);
+
+  useEffect(() => { inputRef.current?.focus(); }, []);
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [history.length, banner]);
+
+  // Animated welcome banner
+  useEffect(() => {
+    if (banner >= 6) return;
+    const t = setTimeout(() => setBanner(b => b+1), 180);
+    return () => clearTimeout(t);
+  }, [banner]);
+
+  const push = (items) => setHistory(h => [...h, ...items]);
+
+  // Highlight jungl3 syntax in a command string
+  const renderCmd = (cmd) => {
+    const parts = cmd.split(/\s+/);
+    return parts.map((p, i) => {
+      const col = i === 0 ? c.grad1 : p.startsWith('--') ? c.label : p.startsWith('<') ? c.dim : c.body;
+      return <span key={i}><span style={{color:col}}>{p}</span>{i < parts.length-1 ? ' ' : ''}</span>;
+    });
+  };
+
+  const run = (cmd) => {
+    const trimmed = cmd.trim();
+    if (!trimmed) return;
+    setCmdHistory(ch => [...ch, trimmed]);
+    setHistIdx(-1);
+    push([{ kind:'prompt', text:trimmed }]);
+    const [head, ...rest] = trimmed.split(/\s+/);
+    if (head === 'help') {
+      push([{ kind:'title', text:'commands' }, ...OP_HELP.map(([cmd, d]) => ({ kind:'help', cmd, desc:d }))]);
+    } else if (head === 'clear') {
+      setHistory([]);
+    } else if (head === 'jungle' && rest[0] === 'list') {
+      push([
+        { kind:'thead', cols:['NAME','ACT','STATUS','AGE','HEALTH'] },
+        { kind:'trow',  cols:[`jungle-${teamName}`, '5', 'settled', '1h 02m', '●'], mine:true },
+        { kind:'trow',  cols:['jungle-nova',  '1', 'vending',  '4m',    '●'] },
+        { kind:'trow',  cols:['jungle-delta', '3', 'probing',  '28m',   '●'] },
+        { kind:'trow',  cols:['jungle-ember', '2', 'shaping',  '12m',   '●'] },
+      ]);
+    } else if (head === 'jungle' && rest[0] === 'status') {
+      const name = rest[1] || teamName;
+      push([
+        { kind:'title', text:`jungle-${name}` },
+        { kind:'kv', k:'state',    v:'settled',                  tag:'ok' },
+        { kind:'kv', k:'region',   v:'us-east-1' },
+        { kind:'kv', k:'tests',    v:'47 passing · 0 failed',    tag:'ok' },
+        { kind:'kv', k:'personas', v:'4 seeded · 6 defects (0 critical)' },
+        { kind:'kv', k:'visitors', v:'3 · avg 4.0★' },
+        { kind:'kv', k:'uptime',   v:'1h 02m' },
+      ]);
+    } else if (head === 'jungle' && rest[0] === 'logs') {
+      push([
+        { kind:'logline', ts:'22:14:03', src:'canopy',     text:'judge-a session expired' },
+        { kind:'logline', ts:'22:14:11', src:'understory', text:'postgres backup rotated' },
+        { kind:'logline', ts:'22:14:29', src:'heartbeat',  text:'all services green' },
+        { kind:'logline', ts:'22:14:44', src:'synthetic',  text:'drift check · no anomalies' },
+      ]);
+    } else if (head === 'jungle' && rest[0] === 'teardown') {
+      const name = rest[1] || teamName;
+      push([
+        { kind:'warn', text:`teardown jungle-${name}? [y/N] y` },
+        { kind:'out',  text:`  ⤷ resources released · state archived · ${Math.floor(Math.random()*8)+2}s`, dim:true },
+      ]);
+    } else if (head === 'gallery' && rest[0] === 'list') {
+      push([
+        { kind:'title', text:'canopy · gallery' },
+        { kind:'star', stars:5, who:'beta-user-b',   what:'claims-intake · "feels shipped"' },
+        { kind:'star', stars:4, who:'judge-a',       what:'claims-intake · missed one label' },
+        { kind:'star', stars:3, who:'stakeholder-c', what:'needs more reporting' },
+      ]);
+    } else {
+      push([{ kind:'err', text:`unknown command: ${head}. try 'help'.` }]);
+    }
+  };
+
+  const handleKey = (e) => {
+    if (e.key === 'Enter') { run(input); setInput(''); return; }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (cmdHistory.length === 0) return;
+      const i = histIdx < 0 ? cmdHistory.length - 1 : Math.max(0, histIdx - 1);
+      setHistIdx(i); setInput(cmdHistory[i] || '');
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (histIdx < 0) return;
+      const i = histIdx + 1;
+      if (i >= cmdHistory.length) { setHistIdx(-1); setInput(''); }
+      else { setHistIdx(i); setInput(cmdHistory[i]); }
+    }
+  };
+
+  const bannerLines = [
+    { text:'╭──────────────────────────────────────────────────────────╮', col:c.moss },
+    { text:'│  jungl3 operator console                         v0.1.0  │', col:c.moss, accents:[[3, 'jungl3 operator console', c.grad1, 700], [50, 'v0.1.0', c.dim]] },
+    { text:'│  connected · control-plane us-east-1 · account …012      │', col:c.moss, accents:[[3, 'connected', c.done]] },
+    { text:`│  active jungle  ▸  jungle-${teamName.padEnd(30)} │`, col:c.moss, accents:[[3,'active jungle',c.dim],[19,'▸',c.label],[23,`jungle-${teamName}`,c.body,700]] },
+    { text:'├──────────────────────────────────────────────────────────┤', col:c.moss },
+    { text:"│  type 'help' for commands · 'clear' to wipe · ↑/↓ history │", col:c.muted },
+    { text:'╰──────────────────────────────────────────────────────────╯', col:c.moss },
+  ];
+
+  const quickRefs = [
+    ['jungle list',            'list all'],
+    ['jungle status <name>',   'inspect'],
+    ['jungle logs <name>',     'tail events'],
+    ['gallery list',           'canopy ratings'],
+    ['help',                   'all commands'],
+  ];
+
+  const renderRow = (h, i) => {
+    if (h.kind === 'prompt') return (
+      <div key={i} style={{ marginTop:4, display:'flex', gap:6 }}>
+        <span style={{color:c.done, fontWeight:700}}>jungl3›</span>
+        <span>{renderCmd(h.text)}</span>
+      </div>
+    );
+    if (h.kind === 'title') return (
+      <div key={i} style={{ marginTop:2, color:c.label, textTransform:'uppercase', letterSpacing:1, fontSize:10 }}>{h.text}</div>
+    );
+    if (h.kind === 'help') return (
+      <div key={i} style={{ display:'flex', gap:10, paddingLeft:8 }}>
+        <span style={{ color:c.grad1, width:200, fontWeight:600 }}>{h.cmd}</span>
+        <span style={{ color:c.muted }}>{h.desc}</span>
+      </div>
+    );
+    if (h.kind === 'thead') return (
+      <div key={i} style={{ display:'flex', color:c.dim, textTransform:'uppercase', fontSize:10, letterSpacing:1, borderBottom:`1px solid ${c.dim}33`, paddingBottom:2, marginTop:2 }}>
+        {h.cols.map((col, j) => (
+          <span key={j} style={{ width: j===0?200 : j===1?60 : j===2?90 : j===3?80 : 40 }}>{col}</span>
+        ))}
+      </div>
+    );
+    if (h.kind === 'trow') return (
+      <div key={i} style={{ display:'flex', color: h.mine ? c.body : c.muted, background: h.mine ? '#0a1a0f' : 'transparent' }}>
+        {h.cols.map((col, j) => (
+          <span key={j} style={{
+            width: j===0?200 : j===1?60 : j===2?90 : j===3?80 : 40,
+            fontWeight: h.mine && j===0 ? 700 : 400,
+            color: j===4 ? c.done : (j===2 && col==='settled') ? c.done : (j===2 && col==='vending') ? c.live : (j===2 && col==='probing') ? c.label : undefined,
+          }}>{j===0 && h.mine ? '▸ ' : j===0 ? '  ' : ''}{col}</span>
+        ))}
+      </div>
+    );
+    if (h.kind === 'kv') return (
+      <div key={i} style={{ display:'flex', gap:8, paddingLeft:8 }}>
+        <span style={{ color:c.dim, width:80, textTransform:'uppercase', fontSize:10, letterSpacing:1 }}>{h.k}</span>
+        <span style={{ color: h.tag==='ok' ? c.done : c.body }}>{h.v}</span>
+      </div>
+    );
+    if (h.kind === 'logline') return (
+      <div key={i} style={{ display:'flex', gap:8, fontSize:11 }}>
+        <span style={{ color:c.dim }}>{h.ts}</span>
+        <span style={{ color:c.label, width:90 }}>{h.src}</span>
+        <span style={{ color:c.muted }}>{h.text}</span>
+      </div>
+    );
+    if (h.kind === 'star') return (
+      <div key={i} style={{ display:'flex', gap:10, paddingLeft:8 }}>
+        <span style={{ color:c.done, width:60 }}>{'★'.repeat(h.stars)}<span style={{color:c.dim}}>{'☆'.repeat(5-h.stars)}</span></span>
+        <span style={{ color:c.body, width:140 }}>{h.who}</span>
+        <span style={{ color:c.muted }}>{h.what}</span>
+      </div>
+    );
+    if (h.kind === 'err')  return <div key={i} style={{color:c.rare, paddingLeft:8}}>✗ {h.text}</div>;
+    if (h.kind === 'warn') return <div key={i} style={{color:c.label, paddingLeft:8}}>! {h.text}</div>;
+    if (h.kind === 'info') return <div key={i} style={{color:c.muted, paddingLeft:8}}>{h.text}</div>;
+    return <div key={i} style={{color: h.dim ? c.dim : c.body, paddingLeft:8}}>{h.text}</div>;
+  };
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', height:'100%', fontSize:12 }}>
+      <div style={{ display:'flex', flex:1, gap:16, minHeight:0 }}>
+        <div ref={scrollRef} style={{ flex:1, overflowY:'auto', paddingRight:6 }}>
+          <pre style={{ lineHeight:1.45, margin:0, marginBottom:6 }}>
+            {bannerLines.slice(0, banner).map((l, i) => (
+              <div key={i} style={{ color:l.col }}>{l.text}</div>
+            ))}
+            {banner >= bannerLines.length && <span className="blink" style={{color:c.done}}>▂</span>}
+          </pre>
+          {history.map(renderRow)}
+        </div>
+        <div style={{ width:200, flexShrink:0, borderLeft:`1px solid ${c.dim}22`, paddingLeft:12 }}>
+          <div style={{ color:c.dim, textTransform:'uppercase', letterSpacing:1, fontSize:10, marginBottom:6 }}>quick reference</div>
+          {quickRefs.map(([cmd, d], i) => (
+            <div key={i} style={{ marginBottom:6 }}>
+              <div style={{ color:c.grad1, fontSize:11, fontWeight:600 }}>{cmd}</div>
+              <div style={{ color:c.dim, fontSize:10 }}>{d}</div>
+            </div>
+          ))}
+          <div style={{ marginTop:16, paddingTop:10, borderTop:`1px solid ${c.dim}22`, fontSize:10, color:c.dim, lineHeight:1.8 }}>
+            <div><span style={{color:c.label}}>↑/↓</span> history</div>
+            <div><span style={{color:c.label}}>enter</span> run</div>
+            <div><span style={{color:c.label}}>clear</span> wipe</div>
+          </div>
+        </div>
+      </div>
+      <div style={{ display:'flex', alignItems:'center', gap:6, paddingTop:8, borderTop:`1px solid ${c.dim}33`, marginTop:8 }}>
+        <span style={{color:c.done, fontWeight:700}}>jungl3›</span>
+        <input
+          ref={inputRef}
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={handleKey}
+          className="team-input"
+          style={{ flex:1, borderBottom:'none', width:'auto' }}
+          placeholder="type a command · 'help' for list · ↑/↓ history"
+        />
+        <span className="blink" style={{color:c.done}}>█</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Frame ─────────────────────────────────────────────────────────────────
+const ACT_TITLES = {
+  0:'Marketplace Install', 1:'Enter Jungle', 2:'Shape Understory',
+  3:'Refine in DMZ', 4:'Reach Canopy', 5:'Maker-Checker',
+};
+
+function TopBar({ act, elapsed }) {
+  const mm = String(Math.floor(elapsed/60)).padStart(2,'0');
+  const ss = String(elapsed%60).padStart(2,'0');
+  const label = act === 'op' ? 'Operator Console' : act === 'multi' ? 'Control Plane' : (ACT_TITLES[act] || '');
+  const tag   = act === 'op' ? 'shell' : act === 'multi' ? 'plane' : `act ${act}`;
+  return (
+    <div className="topbar">
+      <span style={{color:c.label}}>jungl3</span>
+      <span style={{color:c.dim}}>·</span>
+      <span style={{color:c.done}}>{tag}</span>
+      <span style={{color:c.dim}}>·</span>
+      <span style={{color:c.body}}>{label}</span>
+      <span style={{flex:1}} />
+      <span style={{color:c.dim}}>{mm}:{ss}</span>
+    </div>
+  );
+}
+
+function LogPane({ logs }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (ref.current) ref.current.scrollTop = ref.current.scrollHeight;
+  }, [logs.length]);
+  const visible = logs.slice(-7);
+  return (
+    <div className="log-pane" ref={ref}>
+      {visible.map((entry, i) => {
+        const col  = entry.tone==='highlight' ? c.done : entry.tone==='warn' ? c.rare : c.muted;
+        const pre  = entry.tone==='highlight' ? '▶ '   : entry.tone==='warn' ? '! '   : '  ';
+        const preCol = entry.tone==='highlight' ? c.done : entry.tone==='warn' ? c.rare : c.dim;
+        return (
+          <div key={i} className="log-line" style={{color:col}}>
+            <span style={{color:preCol}}>{pre}</span>{entry.text}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function Footer({ console: isConsole }) {
+  const keys = isConsole
+    ? [['type','jungle list · help'],['enter','run'],['r','restart demo']]
+    : [['space','advance'],['→','fast-forward'],['←','replay act'],['r','restart'],['q','quit']];
+  return (
+    <div className="footer">
+      {keys.map(([k,l]) => (
+        <span key={k}>
+          <span style={{color:c.label,fontWeight:700}}>[{k}]</span>
+          <span style={{color:c.dim}}> {l}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// ── Team Name Prompt ──────────────────────────────────────────────────────
+const DEFAULT_TEAM = 'aurora';
+function sanitize(s) { return s.toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,24); }
+
+function TeamNamePrompt({ onSubmit }) {
+  const [val, setVal] = useState('');
+  const [done, setDone] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => { ref.current?.focus(); }, []);
+
+  const submit = (name) => {
+    const clean = sanitize(name) || DEFAULT_TEAM;
+    setDone(true);
+    setTimeout(() => onSubmit(clean), 350);
+  };
+
+  return (
+    <div className="prompt-screen">
+      <pre style={{ display:'inline-block', textAlign:'left', lineHeight:1.55, marginBottom:20 }}>
+        {LOGO.map((line, i) => <Grad key={i} bold>{line}{'\n'}</Grad>)}
+      </pre>
+      <div style={{ marginBottom:14 }}>
+        <span style={{color:c.label}}>ENTER JUNGLE</span>
+        <span style={{color:c.dim}}> · name your jungle</span>
+      </div>
+      <div style={{ display:'inline-flex', alignItems:'center', gap:8 }}>
+        <span style={{color:c.dim}}>›</span>
+        <input
+          ref={ref}
+          className="team-input"
+          value={val}
+          placeholder={DEFAULT_TEAM}
+          onChange={e => setVal(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter')  submit(val);
+            if (e.key === 'Escape') submit('');
+          }}
+        />
+      </div>
+      <div style={{ marginTop:14, color:c.dim, fontSize:'0.85em', lineHeight:2 }}>
+        <span style={{color:c.label}}>[enter]</span> confirm&nbsp;&nbsp;
+        <span style={{color:c.label}}>[esc]</span> use default ({DEFAULT_TEAM})
+      </div>
+      {done && <div style={{ marginTop:10, color:c.done }}>entering jungle…</div>}
+    </div>
+  );
+}
+
+// ── App ───────────────────────────────────────────────────────────────────
+function App() {
+  const [phase, setPhase] = useState('prompt');
+  const [teamName, setTeamName] = useState(DEFAULT_TEAM);
+  const [act, setAct]  = useState(0);
+  const [actKey, setActKey] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+  const [logs, setLogs] = useState([]);
+  const startRef = useRef(Date.now());
+
+  useInterval(() => {
+    if (phase === 'play') setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
+  }, 1000);
+
+  const handleLog = useCallback((text, tone) => {
+    setLogs(p => [...p, { text, tone }]);
+  }, []);
+
+  const handleActComplete = useCallback(() => {
+    setAct(prev => {
+      // 0 → multiJungle interstitial → 1 → 2 → 3 → 4 → 5 → console
+      if (prev === 0) { setActKey(k => k+1); return 'multi'; }
+      if (prev === 'multi') { setActKey(k => k+1); return 1; }
+      if (prev >= 5) { setPhase('console'); return prev; }
+      setActKey(k => k+1);
+      return prev + 1;
+    });
+  }, []);
+
+  const handleTeamSubmit = (name) => {
+    setTeamName(name);
+    startRef.current = Date.now();
+    setElapsed(0);
+    setPhase('play');
+  };
+
+  useEffect(() => {
+    const down = (e) => {
+      if (phase === 'prompt' || phase === 'console') return;
+      if (e.key === ' ')          { e.preventDefault(); gRunner.step(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); gRunner.ff(); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); setActKey(k => k+1); }
+      if (e.key === 'r') { setLogs([]); startRef.current = Date.now(); setElapsed(0); setAct(0); setActKey(k => k+1); setPhase('play'); }
+    };
+    window.addEventListener('keydown', down);
+    return () => window.removeEventListener('keydown', down);
+  }, [phase]);
+
+  if (phase === 'prompt') {
+    return (
+      <div className="terminal">
+        <TeamNamePrompt onSubmit={handleTeamSubmit} />
+      </div>
+    );
+  }
+
+  if (phase === 'console') {
+    return (
+      <div className="terminal">
+        <TopBar act={'op'} elapsed={elapsed} />
+        <div className="act-area" style={{ display:'flex' }}>
+          <OperatorConsole teamName={teamName} />
+        </div>
+        <Footer console />
+      </div>
+    );
+  }
+
+  const shared = { speedMul:1, onComplete:handleActComplete, teamName, onLog:handleLog };
+  const k = `${act}-${actKey}`;
+  const displayAct = typeof act === 'number' ? act : '·';
+
+  return (
+    <div className="terminal">
+      <TopBar act={displayAct} elapsed={elapsed} />
+      <div className="act-area">
+        {act === 0 && <Act0 key={k} {...shared} />}
+        {act === 'multi' && <MultiJungle key={k} teamName={teamName} onContinue={handleActComplete} />}
+        {act === 1 && <Act1 key={k} {...shared} />}
+        {act === 2 && <Act2 key={k} {...shared} />}
+        {act === 3 && <Act3 key={k} {...shared} />}
+        {act === 4 && <Act4 key={k} {...shared} />}
+        {act === 5 && <Act5 key={k} {...shared} />}
+      </div>
+      <LogPane logs={logs} />
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

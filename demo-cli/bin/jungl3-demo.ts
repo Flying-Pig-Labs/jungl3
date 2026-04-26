@@ -5,7 +5,7 @@ import { App } from '../src/App.js';
 import { sanitizeTeamName } from '../src/components/TeamNamePrompt.js';
 
 interface Args {
-  act: 1 | 2 | 3 | 4;
+  act: 0 | 1 | 2 | 3 | 4 | 5;
   actExplicit: boolean;
   fast: boolean;
   theme: 'light' | 'dark';
@@ -15,7 +15,7 @@ interface Args {
 
 function parseArgs(argv: readonly string[]): Args {
   const args: Args = {
-    act: 1,
+    act: 0,
     actExplicit: false,
     fast: false,
     theme: 'dark',
@@ -34,10 +34,10 @@ function parseArgs(argv: readonly string[]): Args {
         break;
       case '--act': {
         const v = argv[++i];
-        if (!v) fail('--act requires a value (1..4)');
+        if (!v) fail('--act requires a value (0..5)');
         const n = Number(v);
-        if (!Number.isInteger(n) || n < 1 || n > 4) fail(`--act must be 1..4 (got ${v})`);
-        args.act = n as 1 | 2 | 3 | 4;
+        if (!Number.isInteger(n) || n < 0 || n > 5) fail(`--act must be 0..5 (got ${v})`);
+        args.act = n as 0 | 1 | 2 | 3 | 4 | 5;
         args.actExplicit = true;
         break;
       }
@@ -77,17 +77,21 @@ This is a demo. No network calls. No AWS. No real infrastructure. Every line
 of output is a hardcoded fixture; every transition is a local timer.
 
 Usage:
-  jungl3-demo                  Full four-act walkthrough at default speed (~90s)
-                               Starts by prompting for a jungle name.
-  jungl3-demo --team <name>    Skip the prompt; use <name> as the jungle name.
-                               Name is sanitized to [a-z0-9-].
-  jungl3-demo --act <1|2|3|4>  Jump to a single act and exit after it.
-                               (Skips the prompt; uses 'aurora' or --team.)
-  jungl3-demo --fast           Collapse all timers (under 5s total).
-                               Skips the prompt.
-  jungl3-demo --theme <light|dark>
-                               Default: dark.
-  jungl3-demo --help           This message.
+  jungl3-demo                       Full walkthrough at default speed (~140s).
+                                    Starts at Marketplace Install (Act 0) and
+                                    runs through Maker-Checker (Act 5), then
+                                    drops into the operator console.
+  jungl3-demo --team <name>         Skip the prompt; use <name> as the jungle name.
+                                    Name is sanitized to [a-z0-9-].
+  jungl3-demo --act <0|1|2|3|4|5>   Jump to a single act and exit after it.
+                                    0 = Marketplace Install, 1 = Enter Jungle,
+                                    2 = Shape Understory, 3 = Refine in DMZ,
+                                    4 = Reach Canopy, 5 = Maker-Checker.
+                                    (Skips the prompt; uses 'aurora' or --team.)
+  jungl3-demo --fast                Collapse all timers (under 5s total).
+                                    Skips the prompt.
+  jungl3-demo --theme <light|dark>  Default: dark.
+  jungl3-demo --help                This message.
 
 Keys during playback:
   space   Advance one beat

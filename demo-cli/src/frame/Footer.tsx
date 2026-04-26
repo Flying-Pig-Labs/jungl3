@@ -3,16 +3,39 @@ import { Box, Text } from 'ink';
 import { c } from '../theme.js';
 
 /**
- * Keybind footer. Spaced, uppercase, dim — the site's label treatment.
- * We deliberately do not box or underline this; the divider above the log
- * pane already separates the stack.
+ * Keybind footer. The console phase swaps to a different binding set since
+ * `space`/`←`/`→` belong to the playback runner and the operator console
+ * consumes typed input directly.
  */
-export function Footer(): React.ReactElement {
+export function Footer({
+  console: isConsole = false,
+}: { console?: boolean } = {}): React.ReactElement {
+  const keys: Array<readonly [string, string]> = isConsole
+    ? [
+        ['type', 'jungle list · help'],
+        ['enter', 'run'],
+        ['r', 'restart demo'],
+        ['q', 'quit'],
+      ]
+    : [
+        ['space', 'advance'],
+        ['→', 'fast-forward'],
+        ['←', 'replay act'],
+        ['^R', 'restart'],
+        ['q', 'quit'],
+      ];
+
   return (
-    <Box flexDirection="row" paddingX={2} justifyContent="space-between">
-      <Text color={c.dim}>
-        <Text color={c.muted}>SPACE</Text> STEP   <Text color={c.muted}>→</Text> FFWD   <Text color={c.muted}>←</Text> REPLAY   <Text color={c.muted}>R</Text> RESTART   <Text color={c.muted}>Q</Text> QUIT
-      </Text>
+    <Box flexDirection="row" paddingX={2}>
+      {keys.map(([k, label], i) => (
+        <Box key={k} flexDirection="row">
+          <Text color={c.label} bold>
+            [{k}]
+          </Text>
+          <Text color={c.dim}> {label}</Text>
+          {i < keys.length - 1 ? <Text color={c.dim}>{'   '}</Text> : null}
+        </Box>
+      ))}
     </Box>
   );
 }
