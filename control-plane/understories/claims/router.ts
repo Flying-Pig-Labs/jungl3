@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { IntegrationContractV0 } from '../../../contracts/integration-contract.v0';
 import { PAGE } from './page';
+import { SCENARIO, acknowledgeBy } from './scenario';
 import { Claim, ClaimStatus, WorkflowError, parseAction, transition, validateNewClaim } from './workflow';
 
 /** Storage the router needs. `expect` makes every write conditional: null = must not exist yet. */
@@ -33,6 +34,7 @@ export async function route(store: ClaimStore, jungleId: string, req: Req, now: 
       const contract: IntegrationContractV0 = { prototype_id: jungleId };
       return json(200, contract);
     }
+    if (method === 'GET' && path === '/scenario') return json(200, SCENARIO);
     if (path === '/claims') {
       if (method === 'GET') {
         const claims = await store.list();
@@ -41,7 +43,7 @@ export async function route(store: ClaimStore, jungleId: string, req: Req, now: 
       if (method === 'POST') {
         const fields = validateNewClaim(parseBody(req.body));
         const t = now();
-        const claim: Claim = { claim_id: `CLM-${randomUUID().slice(0, 8).toUpperCase()}`, status: 'submitted', ...fields, created_at: t, updated_at: t };
+        const claim: Claim = { claim_id: `CLM-${randomUUID().slice(0, 8).toUpperCase()}`, status: 'submitted', ...fields, suspected_fraud: false, acknowledge_by: acknowledgeBy(t), created_at: t, updated_at: t };
         await store.put(claim, null);
         return json(201, claim);
       }

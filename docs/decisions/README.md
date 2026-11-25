@@ -73,6 +73,7 @@ Decisions evolve. When a new decision overrides an older one:
 | [0009](./0009-audit-trail-is-append-only-hash-chained.md) | Accepted | Audit trail is a separate append-only hash-chained store |
 | [0010](./0010-seeder-and-reaper-patterns.md) | Accepted | Seeder and Reaper patterns for install and teardown |
 | [0011](./0011-canopy-and-ai-first-dmz.md) | Accepted | Canopy is the human exposure surface; DMZ is the AI evaluation surface |
+| [0013](./0013-cdk-is-the-iac-authoring-tool.md) | Accepted | CDK (TypeScript) is the IaC authoring tool; run-time-launched stacks are plain templates |
 
 ## Candidate ADRs and status
 

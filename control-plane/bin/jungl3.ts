@@ -3,6 +3,7 @@
  * Operator CLI for the v0.1 Control Plane.
  *   jungl3 vend <settings.json>     vend one Jungle per team, wait, print each URL
  *   jungl3 reap <settings.json>     delete every team's Jungle, wait, verify nothing is left
+ *   jungl3 surge <settings.json> <wave> <count>   add the same burst of new claims to every team's Jungle
  * Uses the AWS credentials and region already in the environment.
  */
 import { CloudFormationClient, DescribeStacksCommand, waitUntilStackCreateComplete, waitUntilStackDeleteComplete } from '@aws-sdk/client-cloudformation';
@@ -64,14 +65,30 @@ async function reap(s: EventSettingsV0, reapFn: string): Promise<boolean> {
   return results.every(Boolean);
 }
 
+async function surge(s: EventSettingsV0, wave: string, count: number): Promise<boolean> {
+  const results = await Promise.all(s.teams.map(async (team) => {
+    try {
+      const fnName = (await outputs(jungleStackName(s.event_id, team))).ApiFunctionName;
+      const r = await invoke<{ written: number }>(fnName, { surge: { wave, count } });
+      console.log(`surged  ${team}  wave=${wave}  ${r.written} new claims`);
+      return true;
+    } catch (e) {
+      console.error(`FAILED  ${team}  ${(e as Error).message}`);
+      return false;
+    }
+  }));
+  return results.every(Boolean);
+}
+
 async function main(): Promise<void> {
-  const [command, file] = process.argv.slice(2);
-  if ((command !== 'vend' && command !== 'reap') || !file) {
-    console.error('usage: jungl3 vend <settings.json> | jungl3 reap <settings.json>');
+  const [command, file, wave, count] = process.argv.slice(2);
+  if (!['vend', 'reap', 'surge'].includes(command) || !file || (command === 'surge' && (!wave || !count))) {
+    console.error('usage: jungl3 vend <settings.json> | jungl3 reap <settings.json> | jungl3 surge <settings.json> <wave> <count>');
     process.exit(2);
   }
   // A reap must still work after ends_at has passed, so only vend checks that it is in the future.
-  const s = parseEventSettings(JSON.parse(readFileSync(file, 'utf8')), command === 'vend' ? new Date() : new Date(0));
+  const s = parseEventSettings(JSON.parse(readFileSync(file, 'utf8')), command === 'reap' ? new Date(0) : new Date());
+  if (command === 'surge') process.exit((await surge(s, wave, Number(count))) ? 0 : 1);
   const cp = await outputs(CONTROL_PLANE_STACK);
   const ok = command === 'vend' ? await vend(s, cp.VendFunctionName) : await reap(s, cp.ReapFunctionName);
   process.exit(ok ? 0 : 1);

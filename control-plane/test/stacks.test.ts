@@ -11,7 +11,7 @@ describe('Jungle template', () => {
   test('is self-contained: no CDK asset or bootstrap references', () => {
     const text = JSON.stringify(raw);
     expect(text).not.toMatch(/cdk-hnb659fds|BootstrapVersion|AssetParameters/);
-    expect(Object.keys(raw.Parameters as object).sort()).toEqual(['ApiCodeKey', 'CodeBucket', 'InstallId', 'Seed', 'SeederCodeKey', 'TeamName']);
+    expect(Object.keys(raw.Parameters as object).sort()).toEqual(['ApiCodeKey', 'CodeBucket', 'InstallId', 'PermissionsBoundaryArn', 'ReapAt', 'ReapFunctionArn', 'SchedulerRoleArn', 'Seed', 'SeederCodeKey', 'TeamName']);
   });
   test('has exactly the v0.1 resources', () => {
     t.resourceCountIs('AWS::DynamoDB::Table', 1);
@@ -31,6 +31,21 @@ describe('Jungle template', () => {
     t.allResourcesProperties('AWS::Lambda::Function', {
       LoggingConfig: { LogGroup: Match.anyValue() },
       Environment: { Variables: Match.objectLike({ INSTALL_ID: Match.anyValue(), JUNGLE_ID: Match.anyValue(), TABLE_NAME: Match.anyValue() }) },
+    });
+  });
+  test('every role carries the permissions boundary', () => {
+    t.resourceCountIs('AWS::IAM::Role', 2);
+    t.allResourcesProperties('AWS::IAM::Role', { PermissionsBoundary: { Ref: 'PermissionsBoundaryArn' } });
+  });
+  test('the API and the table have hard rate caps', () => {
+    t.hasResourceProperties('AWS::ApiGatewayV2::Stage', { DefaultRouteSettings: { ThrottlingRateLimit: 20, ThrottlingBurstLimit: 40 } });
+    t.hasResourceProperties('AWS::DynamoDB::Table', { OnDemandThroughput: { MaxReadRequestUnits: 100, MaxWriteRequestUnits: 50 } });
+  });
+  test('a one-time schedule calls the reaper at ReapAt', () => {
+    t.hasResourceProperties('AWS::Scheduler::Schedule', {
+      ScheduleExpression: { 'Fn::Join': ['', ['at(', { Ref: 'ReapAt' }, ')']] },
+      ScheduleExpressionTimezone: 'UTC',
+      Target: Match.objectLike({ Arn: { Ref: 'ReapFunctionArn' }, RoleArn: { Ref: 'SchedulerRoleArn' } }),
     });
   });
   test('table is on-demand, and the seed is passed to the seeder', () => {
@@ -61,7 +76,25 @@ describe('Control Plane stack', () => {
   test('IAM powers are limited to jungl3-* roles', () => {
     const statements = Object.values(t.findResources('AWS::IAM::Policy')).flatMap((p) => p.Properties.PolicyDocument.Statement as { Action: string | string[]; Resource: unknown }[]);
     const iamStatements = statements.filter((s) => [s.Action].flat().some((a) => a.startsWith('iam:') && a !== 'iam:PassRole'));
-    expect(iamStatements).toHaveLength(1);
-    expect(JSON.stringify(iamStatements[0].Resource)).toMatch(/:role\/jungl3-\*/);
+    expect(iamStatements.length).toBeGreaterThan(0);
+    for (const s of iamStatements) expect(JSON.stringify(s.Resource)).toMatch(/:role\/jungl3-\*/);
+  });
+  test('roles can only be created or changed with the boundary attached, and the boundary cannot be removed', () => {
+    const statements = Object.values(t.findResources('AWS::IAM::Policy')).flatMap((p) => p.Properties.PolicyDocument.Statement as { Action: string | string[]; Condition?: unknown }[]);
+    const writers = statements.filter((s) => [s.Action].flat().some((a) => ['iam:CreateRole', 'iam:PutRolePolicy', 'iam:AttachRolePolicy'].includes(a)));
+    expect(writers).toHaveLength(1);
+    expect(JSON.stringify(writers[0].Condition)).toMatch(/iam:PermissionsBoundary/);
+    expect(policies).not.toMatch(/PutRolePermissionsBoundary|DeleteRolePermissionsBoundary/);
+  });
+  test('the boundary allows only table data access and log writes', () => {
+    const boundary = Object.values(t.findResources('AWS::IAM::ManagedPolicy'))[0].Properties.PolicyDocument.Statement as { Action: string[] }[];
+    const actions = boundary.flatMap((s) => s.Action);
+    expect(actions.every((a) => a.startsWith('dynamodb:') || a.startsWith('logs:'))).toBe(true);
+    expect(actions).not.toContain('dynamodb:DeleteTable');
+  });
+  test('only the scheduler role may invoke the reaper on a schedule', () => {
+    t.hasResourceProperties('AWS::IAM::Role', {
+      AssumeRolePolicyDocument: { Statement: [Match.objectLike({ Principal: { Service: 'scheduler.amazonaws.com' } })] },
+    });
   });
 });

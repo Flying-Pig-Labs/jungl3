@@ -1,5 +1,6 @@
 import { envContext, log } from './log';
-import { route } from './router';
+import { ConflictError, route } from './router';
+import { surgeClaims } from './scenario';
 import { DynamoClaimStore } from './store';
 
 const store = new DynamoClaimStore(process.env.TABLE_NAME ?? '');
@@ -12,8 +13,29 @@ interface HttpEvent {
   requestContext: { requestId: string; http: { method: string } };
 }
 
-/** API Gateway HTTP API (payload v2) entry point for the claims Understory. */
-export async function handler(event: HttpEvent) {
+interface SurgeEvent { surge: { wave: string; count: number } }
+
+/** Direct invoke by the organizer: adds a burst of claims. Idempotent per wave. */
+async function surge(e: SurgeEvent, traceId: string) {
+  const ctx = envContext(traceId);
+  const seed = process.env.SEED;
+  if (!seed) throw new Error('missing environment variable SEED');
+  let written = 0;
+  for (const claim of surgeClaims(seed, e.surge.wave, e.surge.count, new Date().toISOString())) {
+    try {
+      await store.put(claim, null);
+      written++;
+    } catch (err) {
+      if (!(err instanceof ConflictError)) throw err;
+    }
+  }
+  log(ctx, 'info', 'surge', { wave: e.surge.wave, requested: e.surge.count, written });
+  return { wave: e.surge.wave, requested: e.surge.count, written };
+}
+
+/** Entry point: API Gateway HTTP API (payload v2) requests, plus the organizer's direct surge invoke. */
+export async function handler(event: HttpEvent | SurgeEvent, context: { awsRequestId: string }) {
+  if ('surge' in event) return surge(event, context.awsRequestId);
   const ctx = envContext(event.headers?.['x-amzn-trace-id'] ?? event.requestContext.requestId);
   const method = event.requestContext.http.method;
   const body = event.body && event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString('utf8') : event.body;

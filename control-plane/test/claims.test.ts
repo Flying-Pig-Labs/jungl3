@@ -1,9 +1,10 @@
 import { ClaimStore, ConflictError, route } from '../understories/claims/router';
+import { SCENARIO, surgeClaims } from '../understories/claims/scenario';
 import { SEED_COUNT, seedClaims } from '../understories/claims/seed';
 import { Claim, ClaimStatus, WorkflowError, transition } from '../understories/claims/workflow';
 
 const NOW = '2026-11-25T12:00:00.000Z';
-const base: Claim = { claim_id: 'CLM-1', status: 'submitted', claimant: 'A', description: 'd', amount_cents: 100, created_at: NOW, updated_at: NOW };
+const base: Claim = { claim_id: 'CLM-1', status: 'submitted', claimant: 'A', description: 'd', amount_cents: 100, line_of_business: 'auto', suspected_fraud: false, acknowledge_by: NOW, created_at: NOW, updated_at: NOW };
 
 describe('workflow', () => {
   test('submitted -> assigned -> approved', () => {
@@ -57,7 +58,7 @@ describe('router', () => {
 
   test('create, assign, approve, and the change persists', async () => {
     const store = new MemoryStore();
-    const created = await call(store, 'POST', '/claims', { claimant: 'Avery', description: 'Hail', amount_cents: 120000 });
+    const created = await call(store, 'POST', '/claims', { claimant: 'Avery', description: 'Hail', amount_cents: 120000, line_of_business: 'homeowners' });
     expect(created.status).toBe(201);
     const id = JSON.parse(created.body).claim_id;
     expect((await call(store, 'PATCH', `/claims/${id}`, { action: 'approve' })).status).toBe(400);
@@ -67,9 +68,11 @@ describe('router', () => {
     expect(JSON.parse((await call(store, 'GET', '/claims')).body).claims).toHaveLength(1);
   });
   test.each([
-    ['no claimant', { description: 'x', amount_cents: 1 }],
-    ['fractional amount', { claimant: 'a', description: 'x', amount_cents: 1.5 }],
-    ['negative amount', { claimant: 'a', description: 'x', amount_cents: -1 }],
+    ['no claimant', { description: 'x', amount_cents: 1, line_of_business: 'auto' }],
+    ['fractional amount', { claimant: 'a', description: 'x', amount_cents: 1.5, line_of_business: 'auto' }],
+    ['negative amount', { claimant: 'a', description: 'x', amount_cents: -1, line_of_business: 'auto' }],
+    ['no line of business', { claimant: 'a', description: 'x', amount_cents: 100 }],
+    ['an unknown line of business', { claimant: 'a', description: 'x', amount_cents: 100, line_of_business: 'marine' }],
   ])('rejects a new claim with %s', async (_n, body) => {
     expect((await call(new MemoryStore(), 'POST', '/claims', body)).status).toBe(400);
   });
@@ -93,5 +96,47 @@ describe('router', () => {
     expect(page.body).not.toMatch(/innerHTML/);
     expect((await call(new MemoryStore(), 'GET', '/nope')).status).toBe(404);
     expect((await call(new MemoryStore(), 'DELETE', '/claims/CLM-1')).status).toBe(404);
+  });
+});
+
+describe('scenario', () => {
+  test('seeded claims carry the scenario fields, with the deadline 10 days after creation', () => {
+    for (const c of seedClaims('s1')) {
+      expect(SCENARIO.lines_of_business).toContain(c.line_of_business);
+      expect(typeof c.suspected_fraud).toBe('boolean');
+      expect(Date.parse(c.acknowledge_by) - Date.parse(c.created_at)).toBe(10 * 86_400_000);
+    }
+  });
+  test('a new claim gets a deadline and is not flagged', async () => {
+    const r = await route(new MemoryStore(), 'j', { method: 'POST', path: '/claims', body: JSON.stringify({ claimant: 'A', description: 'd', amount_cents: 5, line_of_business: 'auto' }) }, () => NOW);
+    expect(JSON.parse(r.body)).toMatchObject({ suspected_fraud: false, acknowledge_by: '2026-12-05T12:00:00.000Z' });
+  });
+  test('/scenario says the rules are illustrative', async () => {
+    const r = await route(new MemoryStore(), 'j', { method: 'GET', path: '/scenario' });
+    expect(JSON.parse(r.body)).toMatchObject({ illustrative: true, acknowledge_within_days: 10 });
+  });
+  test('a surge is deterministic, all submitted, and distinct from the seed claims', () => {
+    const a = surgeClaims('s1', 'storm-1', 40, NOW);
+    expect(JSON.stringify(a)).toBe(JSON.stringify(surgeClaims('s1', 'storm-1', 40, NOW)));
+    expect(a).toHaveLength(40);
+    expect(a.every((c) => c.status === 'submitted' && c.claim_id.startsWith('SRG-storm-1-'))).toBe(true);
+    expect(new Set(a.map((c) => c.claim_id)).size).toBe(40);
+  });
+  test('running the same surge wave twice adds nothing the second time', async () => {
+    const store = new MemoryStore();
+    let conflicts = 0;
+    for (let run = 0; run < 2; run++) {
+      for (const c of surgeClaims('s1', 'w', 5, NOW)) {
+        try { await store.put(c, null); } catch (e) { if (e instanceof ConflictError) conflicts++; else throw e; }
+      }
+    }
+    expect(store.items.size).toBe(5);
+    expect(conflicts).toBe(5);
+  });
+  test.each([[0], [501], [1.5]])('rejects a surge of %s claims', (count) => {
+    expect(() => surgeClaims('s1', 'w', count, NOW)).toThrow();
+  });
+  test('rejects a bad wave name', () => {
+    expect(() => surgeClaims('s1', 'Wave One', 5, NOW)).toThrow();
   });
 });

@@ -1,4 +1,5 @@
 import { createHmac } from 'node:crypto';
+import { DAY_MS, LINES, acknowledgeBy } from './scenario';
 import { Claim, ClaimStatus } from './workflow';
 
 /**
@@ -11,7 +12,6 @@ const LOSSES = ['Rear-end collision at an intersection', 'Hail damage to roof an
 const ADJUSTERS = ['Sam Calloway', 'Pat Nguyen', 'Lee Brandt'];
 const STATUSES: ClaimStatus[] = ['submitted', 'submitted', 'assigned', 'assigned', 'approved', 'denied'];
 const BASE_MS = Date.UTC(2026, 0, 5, 14, 0, 0);
-const DAY_MS = 86_400_000;
 
 export const SEED_COUNT = 12;
 
@@ -28,6 +28,9 @@ export function seedClaims(seed: string, count: number = SEED_COUNT): Claim[] {
       claimant: CLAIMANTS[h[0] % CLAIMANTS.length],
       description: LOSSES[h[1] % LOSSES.length],
       amount_cents: 25_000 + (h.readUInt32BE(10) % 1_975_000),
+      line_of_business: LINES[h[4] % LINES.length],
+      suspected_fraud: h[5] % 8 === 0,
+      acknowledge_by: acknowledgeBy(new Date(created).toISOString()),
       ...(status === 'submitted' ? {} : { adjuster: ADJUSTERS[h[3] % ADJUSTERS.length] }),
       created_at: new Date(created).toISOString(),
       updated_at: new Date(updated).toISOString(),

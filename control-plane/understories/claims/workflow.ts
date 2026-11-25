@@ -1,4 +1,6 @@
 /** The Claim entity and its three-state workflow: submitted -> assigned -> approved | denied. Pure; no I/O. */
+import { LINES, LineOfBusiness } from './scenario';
+
 export type ClaimStatus = 'submitted' | 'assigned' | 'approved' | 'denied';
 
 export interface Claim {
@@ -7,6 +9,10 @@ export interface Claim {
   claimant: string;
   description: string;
   amount_cents: number;
+  line_of_business: LineOfBusiness;
+  /** Illustrative scenario fields; see scenario.ts. */
+  suspected_fraud: boolean;
+  acknowledge_by: string;
   adjuster?: string;
   created_at: string;
   updated_at: string;
@@ -18,7 +24,7 @@ export class WorkflowError extends Error {}
 
 export const MAX_AMOUNT_CENTS = 100_000_000;
 
-export function validateNewClaim(input: unknown): Pick<Claim, 'claimant' | 'description' | 'amount_cents'> {
+export function validateNewClaim(input: unknown): Pick<Claim, 'claimant' | 'description' | 'amount_cents' | 'line_of_business'> {
   const o = (typeof input === 'object' && input !== null ? input : {}) as Record<string, unknown>;
   const text = (v: unknown, max: number) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
   if (!text(o.claimant, 80)) throw new WorkflowError('claimant is required (80 chars max)');
@@ -26,7 +32,8 @@ export function validateNewClaim(input: unknown): Pick<Claim, 'claimant' | 'desc
   if (!Number.isInteger(o.amount_cents) || (o.amount_cents as number) <= 0 || (o.amount_cents as number) > MAX_AMOUNT_CENTS) {
     throw new WorkflowError(`amount_cents must be a whole number from 1 to ${MAX_AMOUNT_CENTS}`);
   }
-  return { claimant: (o.claimant as string).trim(), description: (o.description as string).trim(), amount_cents: o.amount_cents as number };
+  if (!LINES.includes(o.line_of_business as LineOfBusiness)) throw new WorkflowError(`line_of_business must be one of: ${LINES.join(', ')}`);
+  return { line_of_business: o.line_of_business as LineOfBusiness, claimant: (o.claimant as string).trim(), description: (o.description as string).trim(), amount_cents: o.amount_cents as number };
 }
 
 export function parseAction(input: unknown): ClaimAction {

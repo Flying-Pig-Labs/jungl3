@@ -8,6 +8,14 @@ const need = (name: string): string => {
   return v;
 };
 
+/** Hours after ends_at before the reaper deletes a Jungle, so judging can overrun. */
+export const REAP_GRACE_HOURS = 48;
+
+/** ends_at plus the grace period, as the UTC `yyyy-mm-ddThh:mm:ss` that EventBridge Scheduler's at() takes. */
+export function reapAt(endsAt: string): string {
+  return new Date(Date.parse(endsAt) + REAP_GRACE_HOURS * 3_600_000).toISOString().slice(0, 19);
+}
+
 export interface VendInput { event_id: string; team: string; ends_at: string; seed: string }
 
 /** Starts one team's Jungle. Returns as soon as CloudFormation accepts the stack; the caller waits for it. */
@@ -30,6 +38,10 @@ export async function handler(input: VendInput, context: { awsRequestId: string 
       { ParameterKey: 'CodeBucket', ParameterValue: need('CODE_BUCKET') },
       { ParameterKey: 'ApiCodeKey', ParameterValue: need('API_CODE_KEY') },
       { ParameterKey: 'SeederCodeKey', ParameterValue: need('SEEDER_CODE_KEY') },
+      { ParameterKey: 'PermissionsBoundaryArn', ParameterValue: need('BOUNDARY_ARN') },
+      { ParameterKey: 'ReapAt', ParameterValue: reapAt(s.ends_at) },
+      { ParameterKey: 'ReapFunctionArn', ParameterValue: need('REAP_FUNCTION_ARN') },
+      { ParameterKey: 'SchedulerRoleArn', ParameterValue: need('SCHEDULER_ROLE_ARN') },
     ],
     Tags: [
       { Key: 'jungl3:event_id', Value: s.event_id },

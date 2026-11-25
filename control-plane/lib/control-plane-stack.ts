@@ -42,9 +42,29 @@ export class ControlPlaneStack extends Stack {
       actions: ['apigateway:GET', 'apigateway:POST', 'apigateway:PUT', 'apigateway:PATCH', 'apigateway:DELETE', 'apigateway:TagResource', 'apigateway:UntagResource'],
       resources: [`arn:${this.partition}:apigateway:${this.region}::/apis`, `arn:${this.partition}:apigateway:${this.region}::/apis/*`, `arn:${this.partition}:apigateway:${this.region}::/tags/*`],
     }));
+    // The boundary caps what any role inside a Jungle can ever do, whatever policies it is given.
+    const boundary = new iam.ManagedPolicy(this, 'JungleBoundary', {
+      description: 'Upper limit for every IAM role inside a Jungl3 Jungle.',
+      statements: [
+        new iam.PolicyStatement({ actions: ['dynamodb:GetItem', 'dynamodb:PutItem', 'dynamodb:UpdateItem', 'dynamodb:DeleteItem', 'dynamodb:Query', 'dynamodb:Scan', 'dynamodb:BatchGetItem', 'dynamodb:BatchWriteItem', 'dynamodb:ConditionCheckItem', 'dynamodb:DescribeTable'], resources: [arn('dynamodb', 'table/jungl3-*')] }),
+        new iam.PolicyStatement({ actions: ['logs:CreateLogStream', 'logs:PutLogEvents'], resources: [arn('logs', 'log-group:/jungl3/*:*')] }),
+      ],
+    });
+    const jungleRoles = arn('iam', 'role/jungl3-*', '');
+    // CloudFormation may create or change a Jungle role only while that role carries the boundary,
+    // and has no permission to remove or swap a boundary.
     cfnRole.addToPolicy(new iam.PolicyStatement({
-      actions: ['iam:CreateRole', 'iam:DeleteRole', 'iam:GetRole', 'iam:PassRole', 'iam:TagRole', 'iam:UntagRole', 'iam:PutRolePolicy', 'iam:DeleteRolePolicy', 'iam:GetRolePolicy', 'iam:AttachRolePolicy', 'iam:DetachRolePolicy'],
-      resources: [arn('iam', 'role/jungl3-*', '')],
+      actions: ['iam:CreateRole', 'iam:PutRolePolicy', 'iam:DeleteRolePolicy', 'iam:AttachRolePolicy', 'iam:DetachRolePolicy'],
+      resources: [jungleRoles],
+      conditions: { StringEquals: { 'iam:PermissionsBoundary': boundary.managedPolicyArn } },
+    }));
+    cfnRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['iam:DeleteRole', 'iam:GetRole', 'iam:GetRolePolicy', 'iam:PassRole', 'iam:TagRole', 'iam:UntagRole'],
+      resources: [jungleRoles],
+    }));
+    cfnRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['scheduler:CreateSchedule', 'scheduler:UpdateSchedule', 'scheduler:DeleteSchedule', 'scheduler:GetSchedule'],
+      resources: [arn('scheduler', 'schedule/default/jungl3-*')],
     }));
     apiCode.grantRead(cfnRole);
     seederCode.grantRead(cfnRole);
@@ -61,7 +81,18 @@ export class ControlPlaneStack extends Stack {
       environment,
     });
 
+    const reap = fn('Reap', 'reap', { CFN_ROLE_ARN: cfnRole.roleArn });
+    const schedulerRole = new iam.Role(this, 'ReapSchedulerRole', {
+      assumedBy: new iam.ServicePrincipal('scheduler.amazonaws.com'),
+      description: 'EventBridge Scheduler assumes this to call the reap Lambda at ends_at.',
+    });
+    reap.grantInvoke(schedulerRole);
+    cfnRole.addToPolicy(new iam.PolicyStatement({ actions: ['iam:PassRole'], resources: [schedulerRole.roleArn] }));
+
     const vend = fn('Vend', 'vend', {
+      BOUNDARY_ARN: boundary.managedPolicyArn,
+      REAP_FUNCTION_ARN: reap.functionArn,
+      SCHEDULER_ROLE_ARN: schedulerRole.roleArn,
       TEMPLATE_URL: template.httpUrl,
       CODE_BUCKET: apiCode.s3BucketName,
       API_CODE_KEY: apiCode.s3ObjectKey,
@@ -72,7 +103,6 @@ export class ControlPlaneStack extends Stack {
     vend.addToRolePolicy(new iam.PolicyStatement({ actions: ['cloudformation:CreateStack', 'cloudformation:DescribeStacks'], resources: [jungleStacks] }));
     vend.addToRolePolicy(new iam.PolicyStatement({ actions: ['iam:PassRole'], resources: [cfnRole.roleArn] }));
 
-    const reap = fn('Reap', 'reap', { CFN_ROLE_ARN: cfnRole.roleArn });
     reap.addToRolePolicy(new iam.PolicyStatement({ actions: ['cloudformation:DeleteStack', 'cloudformation:DescribeStacks'], resources: [jungleStacks] }));
     reap.addToRolePolicy(new iam.PolicyStatement({ actions: ['cloudformation:ListStacks', 'tag:GetResources'], resources: ['*'] }));
     reap.addToRolePolicy(new iam.PolicyStatement({ actions: ['iam:PassRole'], resources: [cfnRole.roleArn] }));
