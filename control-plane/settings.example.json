@@ -1,0 +1,6 @@
+{
+  "event_id": "dev-smoke",
+  "teams": ["alpha"],
+  "ends_at": "2027-03-28T18:00:00-04:00",
+  "seed": "smoke-1"
+}
